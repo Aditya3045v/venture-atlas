@@ -1,15 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { prisma, ensureDatabaseSeeded } from '../../lib/db';
-import { ArticleItem, AuditLogItem } from '../../types';
+import { fetchAdminDashboardStats } from '@/lib/supabase-db';
+import { ArticleItem, AuditLogItem } from '@/types';
 import {
-  FileText,
   Clock,
   CheckCircle2,
-  TrendingUp,
   AlertCircle,
   Plus,
-  ArrowRight,
   Eye,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -17,34 +14,15 @@ import { formatDistanceToNow } from 'date-fns';
 export const revalidate = 0;
 
 export default async function AdminDashboardPage() {
-  await ensureDatabaseSeeded();
-
-  const [
+  const {
     totalPublished,
     totalDrafts,
     totalInReview,
     totalScheduled,
+    totalViews,
     articles,
     auditLogs,
-    totalViews,
-  ] = await Promise.all([
-    prisma.article.count({ where: { status: 'PUBLISHED' } }),
-    prisma.article.count({ where: { status: 'DRAFT' } }),
-    prisma.article.count({ where: { status: 'IN_REVIEW' } }),
-    prisma.article.count({ where: { status: 'SCHEDULED' } }),
-    prisma.article.findMany({
-      take: 6,
-      orderBy: { updatedAt: 'desc' },
-      include: { category: true, author: true },
-    }),
-    prisma.auditLog.findMany({
-      take: 5,
-      orderBy: { createdAt: 'desc' },
-    }),
-    prisma.article.aggregate({
-      _sum: { viewCount: true },
-    }),
-  ]);
+  } = await fetchAdminDashboardStats();
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
@@ -123,7 +101,7 @@ export default async function AdminDashboardPage() {
             <Eye size={16} className="text-purple-500" />
           </div>
           <div className="text-2xl sm:text-3xl font-black font-display text-text-primary">
-            {(totalViews._sum.viewCount || 0).toLocaleString()}
+            {totalViews.toLocaleString()}
           </div>
           <div className="text-[10px] font-mono text-purple-600 dark:text-purple-400">
             Cumulative verified views
@@ -148,7 +126,7 @@ export default async function AdminDashboardPage() {
           </div>
 
           <div className="rounded-2xl border border-border bg-surface shadow-card divide-y divide-border overflow-hidden">
-            {(articles as unknown as ArticleItem[]).map(article => (
+            {articles.map(article => (
               <div
                 key={article.id}
                 className="p-4 flex items-center justify-between gap-4 hover:bg-surface-muted transition-colors"
@@ -159,7 +137,7 @@ export default async function AdminDashboardPage() {
                       className="px-2 py-0.2 rounded text-[9px] font-bold uppercase text-white"
                       style={{ backgroundColor: article.category?.color || '#2563EB' }}
                     >
-                      {article.category?.name}
+                      {article.category?.name || 'News'}
                     </span>
                     <span className="text-text-tertiary">·</span>
                     <span
@@ -205,7 +183,7 @@ export default async function AdminDashboardPage() {
           </div>
 
           <div className="p-4 rounded-2xl border border-border bg-surface shadow-card space-y-3">
-            {(auditLogs as unknown as AuditLogItem[]).map(log => (
+            {auditLogs.map(log => (
               <div key={log.id} className="text-xs font-mono space-y-1 pb-3 border-b border-border last:border-0 last:pb-0">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-text-primary">{log.action}</span>

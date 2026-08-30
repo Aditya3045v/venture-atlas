@@ -1,22 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { prisma, ensureDatabaseSeeded } from '../../../lib/db';
-import { BlogItem } from '../../../types';
-import { Plus, Edit3, Trash2, BookOpen, Clock } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { fetchBlogs } from '@/lib/supabase-db';
+import { Plus, Edit3 } from 'lucide-react';
 
 export const revalidate = 0;
 
 export default async function AdminBlogsPage() {
-  await ensureDatabaseSeeded();
-
-  const blogs = await prisma.blogPost.findMany({
-    include: {
-      category: true,
-      author: true,
-    },
-    orderBy: { updatedAt: 'desc' },
-  });
+  const blogs = await fetchBlogs(50);
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -75,7 +65,7 @@ export default async function AdminBlogsPage() {
                       className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase text-white inline-block"
                       style={{ backgroundColor: blog.category?.color || '#2563EB' }}
                     >
-                      {blog.category?.name}
+                      {blog.category?.name || 'Essay'}
                     </span>
                   </td>
 

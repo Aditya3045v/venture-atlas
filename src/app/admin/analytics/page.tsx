@@ -1,25 +1,11 @@
 import React from 'react';
-import { prisma, ensureDatabaseSeeded } from '../../../lib/db';
-import { BarChart3, TrendingUp, Eye, Search, Smartphone, Monitor } from 'lucide-react';
+import { fetchAdminAnalytics } from '@/lib/supabase-db';
+import { TrendingUp, Smartphone, Monitor } from 'lucide-react';
 
 export const revalidate = 0;
 
 export default async function AdminAnalyticsPage() {
-  await ensureDatabaseSeeded();
-
-  const [articles, categories] = await Promise.all([
-    prisma.article.findMany({
-      where: { status: 'PUBLISHED' },
-      orderBy: { viewCount: 'desc' },
-      take: 5,
-      include: { category: true },
-    }),
-    prisma.category.findMany({
-      include: {
-        _count: { select: { articles: true } },
-      },
-    }),
-  ]);
+  const { topArticles, categoryStats } = await fetchAdminAnalytics();
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
@@ -43,7 +29,7 @@ export default async function AdminAnalyticsPage() {
         </h2>
 
         <div className="rounded-2xl border border-border bg-surface shadow-card divide-y divide-border overflow-hidden">
-          {articles.map((art, idx) => (
+          {topArticles.map((art, idx) => (
             <div key={art.id} className="p-4 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3 min-w-0">
                 <span className="w-6 h-6 rounded-lg bg-surface-muted border border-border flex items-center justify-center font-mono font-bold text-xs text-text-primary shrink-0">
@@ -54,7 +40,7 @@ export default async function AdminAnalyticsPage() {
                     {art.title}
                   </div>
                   <div className="text-[10px] font-mono text-text-tertiary">
-                    {art.category?.name} · {art.wordCount} words
+                    {art.category?.name || 'Story'} · {art.wordCount} words
                   </div>
                 </div>
               </div>
@@ -78,7 +64,7 @@ export default async function AdminAnalyticsPage() {
             Coverage Desk Volume
           </h3>
           <div className="space-y-3">
-            {categories.map(cat => (
+            {categoryStats.map(cat => (
               <div key={cat.id} className="space-y-1">
                 <div className="flex justify-between text-xs font-mono">
                   <span className="font-semibold text-text-primary">{cat.name}</span>

@@ -1,18 +1,11 @@
 import React from 'react';
-import { prisma, ensureDatabaseSeeded } from '../../../lib/db';
-import { AuditLogItem } from '../../../types';
-import { History, Shield, Lock, AlertCircle, FileText, CheckCircle2 } from 'lucide-react';
+import { fetchAdminAuditLogs } from '@/lib/supabase-db';
 import { formatDistanceToNow, format } from 'date-fns';
 
 export const revalidate = 0;
 
 export default async function AdminAuditPage() {
-  await ensureDatabaseSeeded();
-
-  const logs = await prisma.auditLog.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 50,
-  });
+  const logs = await fetchAdminAuditLogs();
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -41,7 +34,7 @@ export default async function AdminAuditPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border font-mono text-xs">
-              {logs.map(log => (
+              {logs.map((log: any) => (
                 <tr key={log.id} className="hover:bg-surface-muted/50 transition-colors">
                   <td className="p-4">
                     <span className="font-bold text-text-primary bg-surface-muted px-2 py-1 rounded border border-border">
@@ -66,7 +59,7 @@ export default async function AdminAuditPage() {
                   </td>
 
                   <td className="p-4 text-text-tertiary max-w-xs truncate">
-                    {log.metadata || '—'}
+                    {typeof log.metadata === 'object' ? JSON.stringify(log.metadata) : log.metadata || '—'}
                   </td>
 
                   <td className="p-4 text-right text-text-tertiary whitespace-nowrap">
