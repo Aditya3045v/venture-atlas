@@ -1,23 +1,13 @@
 import React from 'react';
-import { prisma, ensureDatabaseSeeded } from '../../lib/db';
-import { StoryCard } from '../../components/news/StoryCard';
-import { ArticleItem } from '../../types';
+import { fetchArticles } from '@/lib/supabase-db';
+import { StoryCard } from '@/components/news/StoryCard';
+import { ArticleItem } from '@/types';
 import { Bookmark } from 'lucide-react';
 
 export const revalidate = 0;
 
 export default async function BookmarksPage() {
-  await ensureDatabaseSeeded();
-
-  // In MVP, we fetch published articles that are marked or recent for library
-  const articles = await prisma.article.findMany({
-    where: { status: 'PUBLISHED' },
-    include: {
-      category: true,
-      author: true,
-    },
-    take: 6,
-  });
+  const articles = await fetchArticles({ limit: 6 });
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -48,7 +38,7 @@ export default async function BookmarksPage() {
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {(articles as unknown as ArticleItem[]).map(article => (
+        {articles.map(article => (
           <StoryCard key={article.id} article={{ ...article, isSaved: true }} />
         ))}
       </div>

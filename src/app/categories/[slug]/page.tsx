@@ -1,6 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
+import { fetchCategories, fetchArticles } from '@/lib/supabase-db';
 import { StoryCard } from '@/components/news/StoryCard';
 import { CategoryStrip } from '@/components/news/CategoryStrip';
 import { ArticleItem, CategoryItem } from '@/types';
@@ -13,10 +13,8 @@ interface CategoryPageProps {
 }
 
 export async function generateMetadata({ params }: CategoryPageProps) {
-  await ensureDatabaseSeeded();
-  const category = await prisma.category.findUnique({
-    where: { slug: params.slug },
-  });
+  const categories = await fetchCategories();
+  const category = categories.find(c => c.slug === params.slug);
 
   if (!category) return { title: 'Category Not Found' };
 
@@ -27,27 +25,12 @@ export async function generateMetadata({ params }: CategoryPageProps) {
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  await ensureDatabaseSeeded();
-
-  const [category, allCategories, articles] = await Promise.all([
-    prisma.category.findUnique({
-      where: { slug: params.slug },
-    }),
-    prisma.category.findMany({
-      orderBy: { order: 'asc' },
-    }),
-    prisma.article.findMany({
-      where: {
-        category: { slug: params.slug },
-        status: 'PUBLISHED',
-      },
-      include: {
-        category: true,
-        author: true,
-      },
-      orderBy: { publishedAt: 'desc' },
-    }),
+  const [allCategories, articles] = await Promise.all([
+    fetchCategories(),
+    fetchArticles({ categorySlug: params.slug, limit: 30 }),
   ]);
+
+  const category = allCategories.find(c => c.slug === params.slug);
 
   if (!category) {
     notFound();

@@ -1,14 +1,14 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
+import { fetchArticleBySlug, fetchArticles } from '@/lib/supabase-db';
 import { ArticleItem } from '@/types';
 import { constructMetadata, generateArticleJsonLd } from '@/lib/seo';
 import { formatSimpleMarkdown } from '@/lib/sanitize';
 import { StoryCard } from '@/components/news/StoryCard';
-import { ArrowLeft, Clock, ExternalLink, BookOpen, Share2 } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { IconBolt } from '@tabler/icons-react';
-import { formatDistanceToNow, format } from 'date-fns';
+import { format } from 'date-fns';
 
 export const revalidate = 0;
 
@@ -17,60 +17,30 @@ interface ArticlePageProps {
 }
 
 export async function generateMetadata({ params }: ArticlePageProps) {
-  await ensureDatabaseSeeded();
-  const article = await prisma.article.findUnique({
-    where: { slug: params.slug },
-  });
+  const article = await fetchArticleBySlug(params.slug);
 
   if (!article) return { title: 'Article Not Found' };
 
   return constructMetadata({
     title: article.title,
     description: article.summary,
-    image: article.coverImage,
+    image: article.coverImage || undefined,
     url: `https://ventureatlas.io/articles/${article.slug}`,
   });
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  await ensureDatabaseSeeded();
-
-  const article = await prisma.article.findUnique({
-    where: { slug: params.slug },
-    include: {
-      category: true,
-      author: true,
-      tags: { include: { tag: true } },
-    },
-  });
+  const article = await fetchArticleBySlug(params.slug);
 
   if (!article) {
     notFound();
   }
 
-  // Increment view count
-  try {
-    await prisma.article.update({
-      where: { id: article.id },
-      data: { viewCount: { increment: 1 } },
-    });
-  } catch (err) {
-    // Non-critical background view increment
-  }
-
   // Fetch related stories
-  const relatedArticles = await prisma.article.findMany({
-    where: {
-      categoryId: article.categoryId,
-      id: { not: article.id },
-      status: 'PUBLISHED',
-    },
-    include: {
-      category: true,
-      author: true,
-    },
-    take: 3,
-  });
+  const relatedArticles = (await fetchArticles({
+    categorySlug: article.category?.slug,
+    limit: 4,
+  })).filter(a => a.id !== article.id).slice(0, 3);
 
   const formattedDate = article.publishedAt
     ? format(new Date(article.publishedAt), 'MMMM d, yyyy · h:mm a')
@@ -177,12 +147,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           {article.tags && article.tags.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 pt-2">
               <span className="text-xs font-mono text-text-tertiary uppercase">Tags:</span>
-              {article.tags.map(t => (
+              {article.tags.map((t: any) => (
                 <span
-                  key={t.tag.id}
+                  key={t.tag?.id || t.id || t.name}
                   className="px-2.5 py-1 rounded-lg bg-surface-muted border border-border text-xs font-mono font-medium text-text-secondary"
                 >
-                  #{t.tag.name}
+                  #{t.tag?.name || t.name}
                 </span>
               ))}
             </div>
