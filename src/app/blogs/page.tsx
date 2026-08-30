@@ -1,23 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
-import { BlogItem } from '@/types';
-import { BookOpen, ArrowRight, Clock, User } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { fetchBlogs } from '@/lib/supabase-db';
+import { BookOpen, Clock } from 'lucide-react';
 
 export const revalidate = 0;
 
 export default async function BlogsPage() {
-  await ensureDatabaseSeeded();
-
-  const blogs = await prisma.blogPost.findMany({
-    where: { status: 'PUBLISHED' },
-    include: {
-      category: true,
-      author: true,
-    },
-    orderBy: { publishedAt: 'desc' },
-  });
+  const blogs = await fetchBlogs(50);
 
   return (
     <div className="space-y-10 max-w-5xl mx-auto select-none">
@@ -35,7 +24,7 @@ export default async function BlogsPage() {
         </p>
       </div>
 
-      {/* Blog Cards Grid with Subtle Ambient Low-Opacity Background Colors */}
+      {/* Blog Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {blogs.map((blog, idx) => {
           const cardBgGradients = [
@@ -44,10 +33,6 @@ export default async function BlogsPage() {
             'bg-gradient-to-br from-purple-500/[0.07] via-surface-card to-surface-card dark:from-purple-500/[0.08] dark:via-[#111113] dark:to-[#111113] border-purple-500/20 hover:border-purple-500/40',
             'bg-gradient-to-br from-rose-500/[0.07] via-surface-card to-surface-card dark:from-rose-500/[0.08] dark:via-[#111113] dark:to-[#111113] border-rose-500/20 hover:border-rose-500/40',
           ];
-
-          const timeAgo = blog.publishedAt
-            ? formatDistanceToNow(new Date(blog.publishedAt), { addSuffix: true })
-            : 'Recently';
 
           return (
             <Link

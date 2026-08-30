@@ -1,11 +1,10 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
-import { BlogItem } from '@/types';
+import { fetchBlogBySlug } from '@/lib/supabase-db';
 import { constructMetadata } from '@/lib/seo';
 import { formatSimpleMarkdown } from '@/lib/sanitize';
-import { ArrowLeft, Clock, BookOpen, Share2 } from 'lucide-react';
+import { ArrowLeft, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 
 export const revalidate = 0;
@@ -15,31 +14,20 @@ interface BlogPageProps {
 }
 
 export async function generateMetadata({ params }: BlogPageProps) {
-  await ensureDatabaseSeeded();
-  const blog = await prisma.blogPost.findUnique({
-    where: { slug: params.slug },
-  });
+  const blog = await fetchBlogBySlug(params.slug);
 
   if (!blog) return { title: 'Essay Not Found' };
 
   return constructMetadata({
     title: blog.title,
     description: blog.excerpt,
-    image: blog.coverImage,
+    image: blog.coverImage || undefined,
     url: `https://ventureatlas.io/blogs/${blog.slug}`,
   });
 }
 
 export default async function SingleBlogPage({ params }: BlogPageProps) {
-  await ensureDatabaseSeeded();
-
-  const blog = await prisma.blogPost.findUnique({
-    where: { slug: params.slug },
-    include: {
-      category: true,
-      author: true,
-    },
-  });
+  const blog = await fetchBlogBySlug(params.slug);
 
   if (!blog) {
     notFound();
@@ -70,7 +58,7 @@ export default async function SingleBlogPage({ params }: BlogPageProps) {
               className="px-3 py-1 rounded-md font-bold uppercase text-white shadow-sm"
               style={{ backgroundColor: blog.category?.color || '#2563EB' }}
             >
-              {blog.category?.name}
+              {blog.category?.name || 'Essay'}
             </span>
             <span className="text-text-tertiary">·</span>
             <div className="flex items-center gap-1 text-text-secondary">

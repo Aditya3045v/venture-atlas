@@ -1,23 +1,18 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
+import { fetchCaseStudyBySlug, fetchCaseStudies } from '@/lib/supabase-db';
 import { CaseStudyItem } from '@/types';
 import { constructMetadata } from '@/lib/seo';
 import { formatSimpleMarkdown } from '@/lib/sanitize';
 import {
   ArrowLeft,
   Clock,
-  Briefcase,
-  TrendingUp,
-  Building2,
-  CheckCircle2,
-  Share2,
   AlertTriangle,
   Lightbulb,
+  CheckCircle2,
 } from 'lucide-react';
 import { IconBriefcase } from '@tabler/icons-react';
-import { format } from 'date-fns';
 
 export const revalidate = 0;
 
@@ -26,43 +21,27 @@ interface CaseStudyPageProps {
 }
 
 export async function generateMetadata({ params }: CaseStudyPageProps) {
-  await ensureDatabaseSeeded();
-  const cs = await prisma.caseStudy.findUnique({
-    where: { slug: params.slug },
-  });
+  const cs = await fetchCaseStudyBySlug(params.slug);
 
   if (!cs) return { title: 'Case Study Not Found' };
 
   return constructMetadata({
     title: `${cs.company} Case Study: ${cs.title}`,
     description: cs.summary,
-    image: cs.coverImage,
+    image: cs.coverImage || undefined,
     url: `https://ventureatlas.io/case-studies/${cs.slug}`,
   });
 }
 
 export default async function SingleCaseStudyPage({ params }: CaseStudyPageProps) {
-  await ensureDatabaseSeeded();
-
-  const cs = await prisma.caseStudy.findUnique({
-    where: { slug: params.slug },
-    include: {
-      category: true,
-      author: true,
-    },
-  });
+  const cs = await fetchCaseStudyBySlug(params.slug);
 
   if (!cs) {
     notFound();
   }
 
-  const related = await prisma.caseStudy.findMany({
-    where: {
-      id: { not: cs.id },
-      status: 'PUBLISHED',
-    },
-    take: 2,
-  });
+  const allCs = await fetchCaseStudies(4);
+  const related = allCs.filter(item => item.id !== cs.id).slice(0, 2);
 
   return (
     <div className="max-w-4xl mx-auto space-y-10 select-none">

@@ -1,24 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
-import { CaseStudyItem } from '@/types';
-import { Briefcase, ArrowRight, TrendingUp, Building2, CheckCircle2 } from 'lucide-react';
+import { fetchCaseStudies } from '@/lib/supabase-db';
+import { Briefcase, ArrowRight, TrendingUp } from 'lucide-react';
 import { IconBriefcase } from '@tabler/icons-react';
-import { formatDistanceToNow } from 'date-fns';
 
 export const revalidate = 0;
 
 export default async function CaseStudiesPage() {
-  await ensureDatabaseSeeded();
-
-  const caseStudies = await prisma.caseStudy.findMany({
-    where: { status: 'PUBLISHED' },
-    include: {
-      category: true,
-      author: true,
-    },
-    orderBy: { publishedAt: 'desc' },
-  });
+  const caseStudies = await fetchCaseStudies(50);
 
   const featured = caseStudies[0];
   const remaining = caseStudies.slice(1);
@@ -113,7 +102,7 @@ export default async function CaseStudiesPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {(remaining as unknown as CaseStudyItem[]).map(cs => (
+          {remaining.map(cs => (
             <article
               key={cs.id}
               className="ios-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-4 group"

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
+import { prisma } from '@/lib/db';
 import { logAuditEvent } from '@/lib/audit';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
-export async function POST(req: NextRequest) {
-  await ensureDatabaseSeeded();
+export const dynamic = 'force-dynamic';
 
+export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
 
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    // 1. Create or sync user in Supabase Auth
+    // 1. Create or sync user in Supabase Auth & Database
     let supabaseUserId = null;
     try {
       const { data: existingUser } = await supabaseAdmin.auth.admin.listUsers();
@@ -34,37 +34,58 @@ export async function POST(req: NextRequest) {
       } else {
         supabaseUserId = match.id;
       }
+
+      // Also record in supabase subscribers table
+      try {
+        await supabaseAdmin.from('newsletter_subscribers').upsert({
+          email: normalizedEmail,
+          source: 'LANDING_PAGE_GATE',
+        });
+      } catch {
+        // ignore
+      }
     } catch (sbErr) {
       console.warn('Supabase user creation notice:', sbErr);
     }
 
-    // 2. Upsert in Prisma Database
-    const [subscriber, userRecord] = await Promise.all([
-      prisma.newsletterSubscriber.upsert({
-        where: { email: normalizedEmail },
-        update: {},
-        create: {
-          email: normalizedEmail,
-          source: 'LANDING_PAGE_GATE',
-        },
-      }),
-      prisma.user.upsert({
-        where: { email: normalizedEmail },
-        update: {},
-        create: {
-          email: normalizedEmail,
-          name: normalizedEmail.split('@')[0],
-          role: 'USER',
-          passwordHash: 'supabase-authenticated',
-          plan: 'READER',
-        },
-      }),
-    ]);
+    // 2. Upsert in Prisma Database if available
+    try {
+      await Promise.all([
+        prisma.newsletterSubscriber.upsert({
+          where: { email: normalizedEmail },
+          update: {},
+          create: {
+            email: normalizedEmail,
+            source: 'LANDING_PAGE_GATE',
+          },
+        }),
+        prisma.user.upsert({
+          where: { email: normalizedEmail },
+          update: {},
+          create: {
+            email: normalizedEmail,
+            name: normalizedEmail.split('@')[0],
+            role: 'USER',
+            passwordHash: 'supabase-authenticated',
+            plan: 'READER',
+          },
+        }),
+      ]);
+    } catch {
+      // safe fallback
+    }
 
     await logAuditEvent({
       action: 'UNLOCK_NEWS_FEED',
       entityType: 'USER',
-      entityId: userRecord.id,
+      actor: {
+        id: supabaseUserId || `usr-${normalizedEmail}`,
+        email: normalizedEmail,
+        name: normalizedEmail.split('@')[0],
+        role: 'USER',
+        plan: 'READER',
+        mfaEnabled: false,
+      },
       metadata: { email: normalizedEmail, supabaseId: supabaseUserId },
     });
 
