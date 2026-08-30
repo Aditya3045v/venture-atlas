@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #F8F9FA;
+    --surface: #FFFFFF;
+    --surface-muted: #F1F3F5;
+    --surface-card: #FFFFFF;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-tertiary: #94A3B8;
+    --border: #E2E8F0;
+    --brand: #0F172A;
+    --brand-strong: #000000;
+    --brand-muted: #F1F5F9;
+    --accent-blue: #0066FF;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --info: #3B82F6;
+  }
+
+  /* Deep Black iOS-style OLED Dark Mode */
+  .dark {
+    --background: #000000;
+    --surface: #0A0A0C;
+    --surface-muted: #161618;
+    --surface-card: #111113;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-tertiary: #71717A;
+    --border: rgba(255, 255, 255, 0.1);
+    --brand: #FACC15;
+    --brand-strong: #FDE047;
+    --brand-muted: #1C1C1E;
+    --accent-blue: #0A84FF;
+    --success: #30D158;
+    --warning: #FF9F0A;
+    --danger: #FF453A;
+    --info: #0A84FF;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Accessibility Engine Classes */
+html.font-size-sm {
+  font-size: 14px;
+}
+html.font-size-base {
+  font-size: 16px;
+}
+html.font-size-lg {
+  font-size: 18px;
+}
+html.font-size-xl {
+  font-size: 20px;
+}
+
+html.dyslexic-mode {
+  letter-spacing: 0.05em;
+  word-spacing: 0.12em;
+}
+
+html.dyslexic-mode p,
+html.dyslexic-mode h1,
+html.dyslexic-mode h2,
+html.dyslexic-mode h3 {
+  line-height: 1.85 !important;
+}
+
+html.high-contrast {
+  --border: #000000;
+  --text-secondary: #000000;
+}
+
+html.dark.high-contrast {
+  --border: #FFFFFF;
+  --text-secondary: #F4F4F5;
+}
+
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+  transform: none !important;
+}
+
+/* iOS Frosted Glass and Card utilities */
+.ios-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dark .ios-glass {
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.ios-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-card:hover {
+  transform: translateY(-2px);
+}
+
+.dark .ios-card {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
+}
+
+.dark .ios-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.8);
+}
+
+/* Custom editorial styles */
+.editorial-prose p {
+  margin-bottom: 1.25rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.editorial-prose h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.editorial-prose h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.editorial-prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.editorial-prose li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.editorial-prose blockquote {
+  border-left: 3px solid var(--text-primary);
+  padding-left: 1.25rem;
+  font-style: italic;
+  margin: 1.5rem 0;
+  color: var(--text-primary);
+}
+
+/* Hide scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

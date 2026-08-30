@@ -1,0 +1,214 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  name         String
+  passwordHash String
+  role         String      @default("USER") // USER, AUTHOR, EDITOR, ADMIN
+  avatar       String?
+  plan         String      @default("FREE")
+  mfaEnabled   Boolean     @default(false)
+  mfaSecret    String?
+  bio          String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  articles     Article[]
+  blogPosts    BlogPost[]
+  caseStudies  CaseStudy[]
+  bookmarks    Bookmark[]
+  auditLogs    AuditLog[]
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String   @default("LANDING_PAGE")
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  slug        String      @unique
+  description String?
+  color       String      @default("#3B82F6")
+  order       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  articles    Article[]
+  blogPosts   BlogPost[]
+  caseStudies CaseStudy[]
+}
+
+model Tag {
+  id        String       @id @default(cuid())
+  name      String       @unique
+  slug      String       @unique
+  createdAt DateTime     @default(now())
+  articles  ArticleTag[]
+}
+
+model ArticleTag {
+  id        String   @id @default(cuid())
+  articleId String
+  tagId     String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, tagId])
+}
+
+model Article {
+  id               String       @id @default(cuid())
+  type             String       @default("NEWS")
+  title            String
+  slug             String       @unique
+  summary          String       // Concise 60-word summary
+  body             String       // Full article markdown
+  sourceName       String?
+  sourceUrl        String?
+  sourceAuthor     String?
+  categoryId       String
+  category         Category     @relation(fields: [categoryId], references: [id])
+  authorId         String?
+  author           User?        @relation(fields: [authorId], references: [id])
+  coverImage       String?
+  photoCredit      String?
+  readTimeMinutes  Int          @default(1)
+  wordCount        Int          @default(60)
+  status           String       @default("DRAFT")
+  isFeatured       Boolean      @default(false)
+  isTrending       Boolean      @default(false)
+  scheduledFor     DateTime?
+  publishedAt      DateTime?
+  viewCount        Int          @default(0)
+  seoTitle         String?
+  seoDescription   String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  tags             ArticleTag[]
+  bookmarks        Bookmark[]
+  viewEvents       ViewEvent[]
+
+  @@index([status, publishedAt])
+  @@index([categoryId, status])
+  @@index([slug])
+}
+
+model BlogPost {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  excerpt         String
+  body            String
+  coverImage      String?
+  authorId        String?
+  author          User?     @relation(fields: [authorId], references: [id])
+  categoryId      String
+  category        Category  @relation(fields: [categoryId], references: [id])
+  readTimeMinutes Int       @default(4)
+  status          String    @default("DRAFT")
+  publishedAt     DateTime?
+  seoTitle        String?
+  seoDescription  String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([slug])
+}
+
+model CaseStudy {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  company         String
+  companyLogo     String?
+  valuation       String?
+  stage           String?
+  keyMetric       String?
+  summary         String
+  challenge       String?
+  strategy        String?
+  outcome         String?
+  body            String
+  coverImage      String?
+  categoryId      String
+  category        Category  @relation(fields: [categoryId], references: [id])
+  authorId        String?
+  author          User?     @relation(fields: [authorId], references: [id])
+  readTimeMinutes Int       @default(8)
+  status          String    @default("PUBLISHED")
+  publishedAt     DateTime? @default(now())
+  viewCount       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([slug])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, articleId])
+}
+
+model MediaAsset {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  url          String
+  mimeType     String
+  sizeBytes    Int
+  width        Int?
+  height       Int?
+  uploadedBy   String?
+  createdAt    DateTime @default(now())
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorId     String?
+  actorEmail  String?
+  actorRole   String?
+  action      String
+  entityType  String
+  entityId    String?
+  metadata    String?
+  ipHash      String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [actorId], references: [id])
+
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+model ViewEvent {
+  id        String   @id @default(cuid())
+  articleId String
+  path      String
+  referrer  String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
+  @@index([createdAt])
+}
