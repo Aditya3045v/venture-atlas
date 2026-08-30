@@ -16,6 +16,7 @@ export const Header: React.FC = () => {
   const navLinks = [
     { label: 'Feed', href: '/' },
     { label: 'Startups', href: '/categories/startups' },
+    { label: 'Crypto', href: '/categories/crypto' },
     { label: 'Funding', href: '/categories/funding' },
     { label: 'Venture Capital', href: '/categories/venture-capital' },
     { label: 'Case Studies', href: '/case-studies' },

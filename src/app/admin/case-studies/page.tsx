@@ -1,22 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
-import { CaseStudyItem } from '@/types';
-import { Plus, Edit3, Trash2, Briefcase, TrendingUp } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { fetchCaseStudies } from '@/lib/supabase-db';
+import { Plus, Edit3 } from 'lucide-react';
 
 export const revalidate = 0;
 
 export default async function AdminCaseStudiesPage() {
-  await ensureDatabaseSeeded();
-
-  const caseStudies = await prisma.caseStudy.findMany({
-    include: {
-      category: true,
-      author: true,
-    },
-    orderBy: { updatedAt: 'desc' },
-  });
+  const caseStudies = await fetchCaseStudies(50);
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">

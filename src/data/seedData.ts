@@ -35,18 +35,25 @@ export const SEED_CATEGORIES = [
     order: 5,
   },
   {
+    name: 'Crypto & Web3',
+    slug: 'crypto',
+    description: 'Layer-1 networks, DeFi liquidity protocols, zero-knowledge proofs, and sovereign token economics',
+    color: '#06B6D4',
+    order: 6,
+  },
+  {
     name: 'Fintech',
     slug: 'fintech',
     description: 'Neobanks, cross-border rails, payments infrastructure and regulation',
     color: '#EC4899',
-    order: 6,
+    order: 7,
   },
   {
     name: 'Markets & M&A',
     slug: 'markets-and-m-and-a',
     description: 'IPOs, secondary market liquidity, acquisitions and macro conditions',
     color: '#3B82F6',
-    order: 7,
+    order: 8,
   },
 ];
 
@@ -248,6 +255,59 @@ The program pairs YC's standard $500,000 equity check with up to $1,000,000 in n
     publishedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
     viewCount: 8900,
     tags: ['Deeptech', 'Nuclear', 'YC', 'Grants'],
+  },
+  {
+    title: 'Monad Closes $225M Round Led by Paradigm to Ship 10,000 TPS Parallelized EVM',
+    slug: 'monad-closes-225m-paradigm-parallelized-evm',
+    summary: 'Layer-1 blockchain Monad secured $225M in funding led by Paradigm, with support from Electric Capital and Greenoaks. The network introduces pipelined execution and asynchronous state commitments to scale Ethereum Virtual Machine throughput past 10,000 transactions per second.',
+    body: `### Parallelizing the EVM
+    
+Monad Labs, founded by former Jump Trading high-frequency systems engineers, raised $225 million in growth financing led by crypto venture powerhouse Paradigm.
+
+The capital will fund developer ecosystem grants, testnet auditing, and global validator node distribution ahead of mainnet launch.
+
+#### Core Technical Innovations:
+1. **Parallel Execution**: Processes non-overlapping transactions simultaneously rather than sequentially.
+2. **MonadDb**: Custom native database optimized for SSD read/write operations with zero disk thrashing.
+3. **Full Bytecode Compatibility**: Developers deploy standard Solidity smart contracts without code modifications.`,
+    categorySlug: 'crypto',
+    sourceName: 'CoinDesk',
+    sourceUrl: 'https://coindesk.com/business/monad-funding-round',
+    sourceAuthor: 'Nicolette Thorne',
+    coverImage: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
+    photoCredit: 'MONAD LABS / DEVNET',
+    readTimeMinutes: 2,
+    wordCount: 45,
+    status: 'PUBLISHED',
+    isFeatured: false,
+    isTrending: true,
+    publishedAt: new Date(Date.now() - 90 * 60 * 1000).toISOString(),
+    viewCount: 14200,
+    tags: ['Crypto', 'Layer 1', 'EVM', 'Paradigm'],
+  },
+  {
+    title: 'Ethereum L2 Base Crosses 4.5M Daily Active Addresses with Sub-Cent Gas Costs',
+    slug: 'base-crosses-4-5m-daily-active-addresses-sub-cent-gas',
+    summary: 'Coinbase-incubated Layer-2 network Base set an all-time throughput record, registering 4.5 million daily active addresses. The adoption surge is powered by EIP-4844 data blobs reducing average transaction fees to $0.003 across onchain social and micro-payments applications.',
+    body: `### The Sub-Cent Fee Era
+    
+Base recorded its highest daily transaction volume since launching on the OP Stack, processing over 38 million operations in a single 24-hour cycle.
+
+Institutional stablecoin velocity on Base reached $3.2 billion weekly, with consumer applications driving 64% of total network interactions.`,
+    categorySlug: 'crypto',
+    sourceName: 'Blockworks',
+    sourceUrl: 'https://blockworks.co/news/base-l2-throughput-record',
+    sourceAuthor: 'Dashiell Chen',
+    coverImage: 'https://images.unsplash.com/photo-1622979135225-d2ba269bc1df?auto=format&fit=crop&w=1200&q=80',
+    photoCredit: 'BLOCKWORKS RESEARCH',
+    readTimeMinutes: 2,
+    wordCount: 42,
+    status: 'PUBLISHED',
+    isFeatured: false,
+    isTrending: true,
+    publishedAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+    viewCount: 11900,
+    tags: ['Ethereum', 'Layer 2', 'Base', 'DeFi'],
   },
 ];
 

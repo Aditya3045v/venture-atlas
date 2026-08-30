@@ -1,6 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
+import { fetchCaseStudyById, fetchCategories } from '@/lib/supabase-db';
 import { CaseStudyEditorForm } from '@/components/admin/CaseStudyEditorForm';
 import { CaseStudyItem, CategoryItem } from '@/types';
 
@@ -11,15 +11,9 @@ interface EditCaseStudyPageProps {
 }
 
 export default async function EditCaseStudyPage({ params }: EditCaseStudyPageProps) {
-  await ensureDatabaseSeeded();
-
   const [cs, categories] = await Promise.all([
-    prisma.caseStudy.findUnique({
-      where: { id: params.id },
-    }),
-    prisma.category.findMany({
-      orderBy: { order: 'asc' },
-    }),
+    fetchCaseStudyById(params.id),
+    fetchCategories(),
   ]);
 
   if (!cs) {

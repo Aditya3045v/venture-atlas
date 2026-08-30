@@ -1,6 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
+import { fetchArticleById, fetchCategories } from '@/lib/supabase-db';
 import { ArticleEditorForm } from '@/components/admin/ArticleEditorForm';
 import { ArticleItem, CategoryItem } from '@/types';
 
@@ -11,19 +11,9 @@ interface EditArticlePageProps {
 }
 
 export default async function EditArticlePage({ params }: EditArticlePageProps) {
-  await ensureDatabaseSeeded();
-
   const [article, categories] = await Promise.all([
-    prisma.article.findUnique({
-      where: { id: params.id },
-      include: {
-        category: true,
-        tags: { include: { tag: true } },
-      },
-    }),
-    prisma.category.findMany({
-      orderBy: { order: 'asc' },
-    }),
+    fetchArticleById(params.id),
+    fetchCategories(),
   ]);
 
   if (!article) {

@@ -1,22 +1,12 @@
 import React from 'react';
-import { prisma, ensureDatabaseSeeded } from '../../../lib/db';
-import { UserRole } from '../../../types';
-import { Users, Shield, KeyRound, CheckCircle2 } from 'lucide-react';
+import { fetchAdminUsers } from '@/lib/supabase-db';
+import { CheckCircle2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 export const revalidate = 0;
 
 export default async function AdminUsersPage() {
-  await ensureDatabaseSeeded();
-
-  const users = await prisma.user.findMany({
-    orderBy: { createdAt: 'asc' },
-    include: {
-      _count: {
-        select: { articles: true, bookmarks: true },
-      },
-    },
-  });
+  const users = await fetchAdminUsers();
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -45,7 +35,7 @@ export default async function AdminUsersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {users.map(user => (
+              {users.map((user: any) => (
                 <tr key={user.id} className="hover:bg-surface-muted/50 transition-colors">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
@@ -97,7 +87,7 @@ export default async function AdminUsersPage() {
                   </td>
 
                   <td className="p-4 text-right font-mono text-xs font-bold text-text-primary">
-                    {user._count.articles}
+                    {user._count?.articles || 0}
                   </td>
 
                   <td className="p-4 text-right font-mono text-xs text-text-tertiary">

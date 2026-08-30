@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '../providers/ToastProvider';
+import { useTheme } from '../providers/ThemeProvider';
 import PhoneMockupBasic from '@/components/ui/phone-mockups-1';
 import ClientFeedback from '@/components/ui/testimonial';
 import { GradientBackground } from '@/components/ui/favorites';
@@ -15,9 +16,18 @@ import {
 export const LandingView: React.FC = () => {
   const router = useRouter();
   const { toast } = useToast();
+  const { setTheme } = useTheme();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+
+  useEffect(() => {
+    // Ensure light mode by default on the landing page
+    const saved = localStorage.getItem('va_dark_theme');
+    if (!saved || saved === 'false') {
+      setTheme(false);
+    }
+  }, [setTheme]);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
