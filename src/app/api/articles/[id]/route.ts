@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
-import { supabaseAdmin } from '@/lib/supabase/admin';
-import { fetchArticleById } from '@/lib/supabase-db';
 import { articleSchema } from '@/lib/validation';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, canEdit, canPublish } from '@/lib/auth/staff';
 import { logAuditEvent } from '@/lib/audit';
 import { countWords } from '@/lib/sanitize';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,9 +14,14 @@ interface RouteContext {
 
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
-    const article = await fetchArticleById(params.id);
+    const supabase = createServerSupabaseClient();
+    const { data: article, error } = await supabase
+      .from('articles')
+      .select('*, category:categories(*), author:profiles(*)')
+      .eq('id', params.id)
+      .single();
 
-    if (!article) {
+    if (error || !article) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
@@ -29,73 +33,80 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 
 export async function PUT(req: NextRequest, { params }: RouteContext) {
   const user = await getCurrentUser();
+  if (!user || !canEdit(user.role)) {
+    return NextResponse.json({ error: 'Unauthorized: Edit privileges required' }, { status: 403 });
+  }
 
   try {
+    const supabase = createServerSupabaseClient();
+
+    // Check existing article ownership
+    const { data: existing, error: findError } = await supabase
+      .from('articles')
+      .select('id, author_id, status, slug')
+      .eq('id', params.id)
+      .single();
+
+    if (findError || !existing) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
+    }
+
+    // Permission enforcement: WRITER can only edit own drafts
+    if (user.role === 'WRITER') {
+      if (existing.author_id !== user.id) {
+        return NextResponse.json(
+          { error: 'PERMISSION_DENIED: Writers can only edit their own stories.' },
+          { status: 403 }
+        );
+      }
+    }
+
     const json = await req.json();
     const validated = articleSchema.parse(json);
+
+    // Permission enforcement: WRITER cannot publish directly
+    if (user.role === 'WRITER' && validated.status === 'PUBLISHED') {
+      return NextResponse.json(
+        { error: 'PERMISSION_DENIED: Writers cannot publish articles directly.' },
+        { status: 403 }
+      );
+    }
+
     const words = countWords(validated.summary);
 
-    // 1. Try Supabase
-    try {
-      await supabaseAdmin
-        .from('articles')
-        .update({
-          title: validated.title,
-          summary: validated.summary,
-          body: validated.body,
-          category_id: validated.categoryId,
-          source_name: validated.sourceName,
-          source_url: validated.sourceUrl,
-          source_author: validated.sourceAuthor,
-          cover_image: validated.coverImage,
-          photo_credit: validated.photoCredit,
-          word_count: words,
-          read_time_minutes: Math.max(1, Math.ceil(words / 40)),
-          status: validated.status,
-          is_featured: validated.isFeatured,
-          is_trending: validated.isTrending,
-          seo_title: validated.seoTitle,
-          seo_description: validated.seoDescription,
-        })
-        .eq('id', params.id);
-    } catch {
-      // fallback
+    const updatePayload = {
+      title: validated.title,
+      summary: validated.summary,
+      body: validated.body,
+      category_id: validated.categoryId,
+      source_name: validated.sourceName || null,
+      source_url: validated.sourceUrl || null,
+      source_author: validated.authorName || validated.sourceAuthor || user.name,
+      cover_image: validated.coverImage || null,
+      photo_credit: validated.photoCredit || null,
+      word_count: words,
+      read_time_minutes: Math.max(1, Math.ceil(words / 40)),
+      status: validated.status as any,
+      is_featured: validated.isFeatured || false,
+      is_trending: validated.isTrending || false,
+      scheduled_for: validated.scheduledFor ? new Date(validated.scheduledFor).toISOString() : null,
+      published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
+      seo_title: validated.seoTitle || null,
+      seo_description: validated.seoDescription || null,
+      canvas_data: validated.canvasData || null,
+    };
+
+    const { data: updated, error: updateError } = await supabase
+      .from('articles')
+      .update(updatePayload)
+      .eq('id', params.id)
+      .select()
+      .single();
+
+    if (updateError) {
+      return NextResponse.json({ error: updateError.message }, { status: 400 });
     }
 
-    // 2. Try Prisma
-    let updated = null;
-    try {
-      const existing = await prisma.article.findUnique({ where: { id: params.id } });
-      if (existing) {
-        updated = await prisma.article.update({
-          where: { id: params.id },
-          data: {
-            title: validated.title,
-            summary: validated.summary,
-            body: validated.body,
-            categoryId: validated.categoryId,
-            sourceName: validated.sourceName,
-            sourceUrl: validated.sourceUrl,
-            sourceAuthor: validated.sourceAuthor,
-            coverImage: validated.coverImage,
-            photoCredit: validated.photoCredit,
-            wordCount: words,
-            readTimeMinutes: Math.max(1, Math.ceil(words / 40)),
-            status: validated.status,
-            isFeatured: validated.isFeatured,
-            isTrending: validated.isTrending,
-            scheduledFor: validated.scheduledFor ? new Date(validated.scheduledFor) : null,
-            publishedAt: validated.status === 'PUBLISHED' && !existing.publishedAt ? new Date() : existing.publishedAt,
-            seoTitle: validated.seoTitle,
-            seoDescription: validated.seoDescription,
-          },
-        });
-      }
-    } catch {
-      // fallback
-    }
-
-    // Log Audit
     await logAuditEvent({
       action: 'UPDATE_ARTICLE',
       entityType: 'ARTICLE',
@@ -104,29 +115,53 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       metadata: { title: validated.title, status: validated.status },
     });
 
-    return NextResponse.json({ article: updated || { id: params.id, ...validated } });
+    // Invalidate caches
+    try {
+      revalidateTag('articles');
+      if (updated?.slug) {
+        revalidateTag(`article:${updated.slug}`);
+        revalidatePath(`/articles/${updated.slug}`);
+      }
+      if (existing?.slug && existing.slug !== updated?.slug) {
+        revalidateTag(`article:${existing.slug}`);
+        revalidatePath(`/articles/${existing.slug}`);
+      }
+      revalidatePath('/');
+      revalidatePath('/articles');
+    } catch {
+      // ignore
+    }
+
+    return NextResponse.json({ article: updated });
   } catch (error: any) {
     if (error.errors) {
       return NextResponse.json({ error: error.errors[0]?.message || 'Validation error' }, { status: 400 });
     }
-    return NextResponse.json({ error: 'Failed to update article' }, { status: 500 });
+    return NextResponse.json({ error: error?.message || 'Failed to update article' }, { status: 500 });
   }
 }
 
 export async function DELETE(req: NextRequest, { params }: RouteContext) {
   const user = await getCurrentUser();
+  if (!user || !canPublish(user.role)) {
+    return NextResponse.json({ error: 'Unauthorized: Editor or Admin privileges required to delete' }, { status: 403 });
+  }
 
   try {
-    try {
-      await supabaseAdmin.from('articles').delete().eq('id', params.id);
-    } catch {
-      // fallback
-    }
+    const supabase = createServerSupabaseClient();
+    const { data: existing } = await supabase
+      .from('articles')
+      .select('slug')
+      .eq('id', params.id)
+      .single();
 
-    try {
-      await prisma.article.delete({ where: { id: params.id } });
-    } catch {
-      // fallback
+    const { error } = await supabase
+      .from('articles')
+      .delete()
+      .eq('id', params.id);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     await logAuditEvent({
@@ -136,6 +171,19 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
       actor: user,
       metadata: { id: params.id },
     });
+
+    // Invalidate caches
+    try {
+      revalidateTag('articles');
+      if (existing?.slug) {
+        revalidateTag(`article:${existing.slug}`);
+        revalidatePath(`/articles/${existing.slug}`);
+      }
+      revalidatePath('/');
+      revalidatePath('/articles');
+    } catch {
+      // ignore
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

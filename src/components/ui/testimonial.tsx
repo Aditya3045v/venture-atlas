@@ -28,11 +28,11 @@ export function ClientFeedback() {
 
   return (
     <section
-      className="relative w-full mx-auto rounded-3xl py-12 select-none"
+      className="relative w-full mx-auto rounded-3xl py-4 select-none"
       ref={testimonialRef}
     >
       {/* Section Header */}
-      <article className="max-w-screen-md mx-auto text-center space-y-3 px-4">
+      <article className="max-w-screen-md mx-auto text-center space-y-2 px-4">
         <TimelineContent
           as="h2"
           className="text-3xl sm:text-4xl md:text-5xl font-black font-display uppercase tracking-tight text-text-primary"
@@ -54,7 +54,7 @@ export function ClientFeedback() {
       </article>
 
       {/* 3-Column Bento Grid Layout (Matching Exact Reference) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3.5 w-full py-8 px-2 sm:px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3.5 w-full py-4 px-2 sm:px-4">
         {/* Column 1 (Left) */}
         <div className="flex flex-col space-y-3.5 h-full">
           {/* Top Tall Light Card with Architectural Grid */}

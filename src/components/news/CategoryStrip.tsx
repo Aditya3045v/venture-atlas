@@ -12,16 +12,16 @@ interface CategoryStripProps {
 export const CategoryStrip: React.FC<CategoryStripProps> = ({ categories, activeSlug = 'all' }) => {
   return (
     <div className="w-full overflow-x-auto no-scrollbar py-2 my-2 select-none">
-      <div className="flex items-center gap-1.5 p-1.5 bg-surface-muted/70 dark:bg-black/60 rounded-full border border-border/60 backdrop-blur-md w-max">
+      <div className="flex items-center gap-2 p-1.5 bg-surface-muted/80 dark:bg-black/60 rounded-2xl border border-border/70 backdrop-blur-md w-max">
         <Link
           href="/"
-          className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight whitespace-nowrap transition-all duration-200 active:scale-95 ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold tracking-tight whitespace-nowrap transition-all duration-200 active:scale-95 flex items-center gap-1.5 ${
             activeSlug === 'all'
-              ? 'bg-surface text-text-primary font-black shadow-xs border border-border/80 dark:bg-amber-400 dark:text-black dark:border-amber-400 dark:shadow-[0_0_15px_rgba(250,204,21,0.3)]'
-              : 'text-text-secondary hover:text-text-primary dark:hover:text-amber-300 hover:bg-surface/50'
+              ? 'bg-amber-400 text-black font-black shadow-md border border-amber-400'
+              : 'bg-surface/80 dark:bg-neutral-900/60 text-text-secondary hover:text-text-primary border border-border/50'
           }`}
         >
-          All Desks
+          <span>🔥 All Desks</span>
         </Link>
 
         {categories.map(cat => {
@@ -30,13 +30,17 @@ export const CategoryStrip: React.FC<CategoryStripProps> = ({ categories, active
             <Link
               key={cat.slug}
               href={`/categories/${cat.slug}`}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight whitespace-nowrap transition-all duration-200 active:scale-95 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold tracking-tight whitespace-nowrap transition-all duration-200 active:scale-95 flex items-center gap-1.5 ${
                 isActive
-                  ? 'bg-surface text-text-primary font-black shadow-xs border border-border/80 dark:bg-amber-400 dark:text-black dark:border-amber-400 dark:shadow-[0_0_15px_rgba(250,204,21,0.3)]'
-                  : 'text-text-secondary hover:text-text-primary dark:hover:text-amber-300 hover:bg-surface/50'
+                  ? 'bg-amber-400 text-black font-black shadow-md border border-amber-400'
+                  : 'bg-surface/80 dark:bg-neutral-900/60 text-text-secondary hover:text-text-primary border border-border/50'
               }`}
             >
-              {cat.name}
+              <span
+                className="w-2 h-2 rounded-full shrink-0"
+                style={{ backgroundColor: cat.color || '#3B82F6' }}
+              />
+              <span>{cat.name}</span>
             </Link>
           );
         })}

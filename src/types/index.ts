@@ -1,4 +1,4 @@
-export type UserRole = 'USER' | 'AUTHOR' | 'EDITOR' | 'ADMIN';
+export type UserRole = 'USER' | 'WRITER' | 'AUTHOR' | 'EDITOR' | 'ADMIN';
 
 export type ContentStatus =
   | 'DRAFT'
@@ -36,6 +36,49 @@ export interface TagItem {
   slug: string;
 }
 
+export interface CanvasMetric {
+  id: string;
+  label: string;
+  value: string;
+  subValue?: string;
+  icon: 'calendar' | 'unicorn' | 'funding' | 'building' | 'users' | 'trending' | 'dollar' | 'award';
+  color?: string;
+}
+
+export interface CanvasCalloutBox {
+  id: string;
+  title: string;
+  content: string;
+  icon: 'trending' | 'star' | 'lightbulb' | 'alert' | 'award' | 'target' | 'rocket' | 'briefcase' | 'zap' | 'shield' | 'check';
+  variant: 'green' | 'blue' | 'amber' | 'rose' | 'purple' | 'slate' | 'custom';
+  customBg?: string;
+  customBorder?: string;
+  customTextColor?: string;
+}
+
+export interface CanvasProfile {
+  founderName?: string;
+  founderRole?: string;
+  founderAvatar?: string;
+  businessModelTitle?: string;
+  businessModelPoints?: string[];
+}
+
+export interface CanvasHeader {
+  bannerBg?: string;
+  founderPhoto?: string;
+  companyLogo?: string;
+  tagline?: string;
+  heroHeadline?: string;
+}
+
+export interface CanvasData {
+  header?: CanvasHeader;
+  metrics?: CanvasMetric[];
+  profile?: CanvasProfile;
+  calloutBoxes?: CanvasCalloutBox[];
+}
+
 export interface ArticleItem {
   id: string;
   type: string;
@@ -46,6 +89,8 @@ export interface ArticleItem {
   sourceName?: string | null;
   sourceUrl?: string | null;
   sourceAuthor?: string | null;
+  authorName?: string | null;
+  authorRole?: string | null;
   categoryId: string;
   category?: CategoryItem;
   authorId?: string | null;
@@ -60,12 +105,15 @@ export interface ArticleItem {
   scheduledFor?: Date | string | null;
   publishedAt?: Date | string | null;
   viewCount: number;
+  likeCount?: number;
+  isLiked?: boolean;
   seoTitle?: string | null;
   seoDescription?: string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
   tags?: { tag: TagItem }[];
   isSaved?: boolean;
+  canvasData?: CanvasData | null;
 }
 
 export interface BlogItem {
@@ -76,16 +124,22 @@ export interface BlogItem {
   body: string;
   coverImage?: string | null;
   authorId?: string | null;
+  authorName?: string | null;
+  authorRole?: string | null;
   author?: UserProfile | null;
   categoryId: string;
   category?: CategoryItem;
   readTimeMinutes: number;
   status: ContentStatus;
   publishedAt?: Date | string | null;
+  viewCount?: number;
+  likeCount?: number;
+  isLiked?: boolean;
   seoTitle?: string | null;
   seoDescription?: string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
+  canvasData?: CanvasData | null;
 }
 
 export interface CaseStudyItem {
@@ -106,13 +160,19 @@ export interface CaseStudyItem {
   categoryId: string;
   category?: CategoryItem;
   authorId?: string | null;
+  authorName?: string | null;
+  authorRole?: string | null;
   author?: UserProfile | null;
   readTimeMinutes: number;
   status: ContentStatus;
   publishedAt?: Date | string | null;
   viewCount: number;
+  likeCount?: number;
+  isLiked?: boolean;
   createdAt: Date | string;
   updatedAt: Date | string;
+  isSaved?: boolean;
+  canvasData?: CanvasData | null;
 }
 
 export interface AuditLogItem {
@@ -141,3 +201,14 @@ export interface MediaAssetItem {
   uploadedBy?: string | null;
   createdAt: Date | string;
 }
+
+export interface NavigationItem {
+  id: string;
+  label: string;
+  href: string;
+  orderNum: number;
+  isActive: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+}
+

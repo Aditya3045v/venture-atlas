@@ -2,10 +2,10 @@ import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/features/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
   theme: {
@@ -36,9 +36,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['"Space Grotesk"', 'sans-serif'],
-        body: ['"Plus Jakarta Sans"', '"Inter"', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', '"Space Mono"', 'monospace'],
+        display: ['var(--font-display)', '"Space Grotesk"', 'sans-serif'],
+        body: ['var(--font-body)', '"Plus Jakarta Sans"', 'var(--font-inter)', '"Inter"', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', '"JetBrains Mono"', '"Space Mono"', 'monospace'],
       },
       boxShadow: {
         'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',

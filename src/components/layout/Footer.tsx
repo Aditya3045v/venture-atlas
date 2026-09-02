@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
             Venture Atlas is an independent editorial intelligence publication reporting on technology, venture capital, and startups in 60-word briefs, long-form essays, and architectural case studies.
           </p>
           <div className="text-[11px] font-mono text-text-tertiary">
-            © {new Date().getFullYear()} Venture Atlas Media Inc.
+            © {new Date().getFullYear()} Venture Atlas Media Inc. All rights reserved.
           </div>
         </div>
 
@@ -33,12 +33,12 @@ export const Footer: React.FC = () => {
             Desks & Categories
           </h4>
           <ul className="space-y-2 text-xs font-medium text-text-secondary">
-            <li><Link href="/categories/startups" className="hover:text-text-primary transition-colors">Early Stage Startups</Link></li>
-            <li><Link href="/categories/funding" className="hover:text-text-primary transition-colors">Venture & Seed Funding</Link></li>
-            <li><Link href="/categories/venture-capital" className="hover:text-text-primary transition-colors">Venture Capital Funds</Link></li>
-            <li><Link href="/categories/ai-and-tech" className="hover:text-text-primary transition-colors">Artificial Intelligence</Link></li>
-            <li><Link href="/categories/fintech" className="hover:text-text-primary transition-colors">Fintech & Global Rails</Link></li>
-            <li><Link href="/categories/markets-and-m-and-a" className="hover:text-text-primary transition-colors">Public Markets & M&A</Link></li>
+            <li><Link href="/categories/unicorn" className="hover:text-text-primary transition-colors">Unicorn</Link></li>
+            <li><Link href="/categories/failure" className="hover:text-text-primary transition-colors">Failure & Post-Mortems</Link></li>
+            <li><Link href="/categories/finance" className="hover:text-text-primary transition-colors">Finance & Venture Lending</Link></li>
+            <li><Link href="/categories/crypto-web3" className="hover:text-text-primary transition-colors">Crypto Web3</Link></li>
+            <li><Link href="/categories/founder-biography" className="hover:text-text-primary transition-colors">Founder Biography</Link></li>
+            <li><Link href="/case-studies" className="hover:text-text-primary transition-colors">Case Studies</Link></li>
           </ul>
         </div>
 
@@ -57,13 +57,16 @@ export const Footer: React.FC = () => {
 
         <div>
           <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-text-primary mb-3">
-            Editorial Standards
+            Compliance & Standards
           </h4>
-          <p className="text-xs text-text-secondary leading-relaxed mb-3">
-            All news briefs and case study teardowns are fact-checked and verified against primary SEC filings, financial ledgers, and founder interviews.
-          </p>
+          <ul className="space-y-2 text-xs font-medium text-text-secondary mb-4">
+            <li><Link href="/privacy" className="hover:text-text-primary transition-colors">Privacy Policy & GDPR</Link></li>
+            <li><Link href="/terms" className="hover:text-text-primary transition-colors">Terms of Service</Link></li>
+            <li><Link href="/cookies" className="hover:text-text-primary transition-colors">Cookie Preferences</Link></li>
+            <li><Link href="/imprint" className="hover:text-text-primary transition-colors">Publisher Imprint & Contact</Link></li>
+          </ul>
           <div className="inline-block px-2.5 py-1 rounded-full bg-surface border border-border/80 text-[10px] font-mono font-bold text-text-tertiary">
-            WCAG 2.2 AA ACCESSIBLE
+            WCAG 2.1 AA ACCESSIBLE
           </div>
         </div>
       </div>
