@@ -26,9 +26,6 @@ export default async function CoreHomePage() {
 
   return (
     <div className="select-none">
-      {/* Short skippable welcome sequence for new readers */}
-      <WelcomeOverlay />
-
       {/* 1. Mobile & Tablet Dedicated View */}
       <div className="block lg:hidden">
         <HomeMobileView
