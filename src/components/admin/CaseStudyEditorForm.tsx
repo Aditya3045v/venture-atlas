@@ -7,12 +7,45 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
 import { CanvasBlockEditor } from './CanvasBlockEditor';
-import { ArrowLeft, Send, Palette, FileText } from 'lucide-react';
+import { ArrowLeft, Send, Palette, FileText, Image as ImageIcon, X } from 'lucide-react';
 
 interface CaseStudyEditorFormProps {
   initialCaseStudy?: CaseStudyItem | null;
   categories: CategoryItem[];
 }
+
+const COVER_PRESETS = [
+  {
+    label: '🦄 Unicorn Scale',
+    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Enterprise Lens',
+  },
+  {
+    label: '📈 Capital Markets',
+    url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Capital Markets',
+  },
+  {
+    label: '⚡ AI & Compute',
+    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Compute Lab',
+  },
+  {
+    label: '🌐 Crypto Protocol',
+    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Web3 Protocol',
+  },
+  {
+    label: '👤 Founder Leadership',
+    url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Founder Archive',
+  },
+  {
+    label: '🏢 Modern Enterprise',
+    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Architecture',
+  },
+];
 
 export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
   initialCaseStudy,
@@ -138,9 +171,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
     };
 
     try {
-      const url = initialCaseStudy
-        ? `/api/case-studies/${initialCaseStudy.id}`
-        : '/api/case-studies';
+      const url = initialCaseStudy ? `/api/case-studies/${initialCaseStudy.id}` : '/api/case-studies';
       const method = initialCaseStudy ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -150,7 +181,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       });
 
       if (res.ok) {
-        toast('Case study saved successfully', 'success');
+        toast('Case study teardown saved successfully', 'success');
         window.location.href = '/admin/case-studies';
       } else {
         const data = await res.json();
@@ -163,10 +194,76 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
     }
   };
 
+  const renderCoverPhotoCard = () => (
+    <div className="p-4 rounded-xl border border-border bg-surface-muted/50 space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <ImageIcon size={15} className="text-brand" />
+          <label className="text-xs font-mono font-bold uppercase text-text-primary">
+            Cover Photo & Teardown Media
+          </label>
+        </div>
+        {coverImage && (
+          <button
+            type="button"
+            onClick={() => setCoverImage('')}
+            className="text-[10px] font-mono text-red-500 hover:underline flex items-center gap-1 cursor-pointer"
+          >
+            <X size={11} /> Clear Photo
+          </button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="md:col-span-8 space-y-2">
+          <input
+            type="url"
+            value={coverImage}
+            onChange={e => setCoverImage(e.target.value)}
+            placeholder="https://images.unsplash.com/..."
+            className="w-full text-xs font-mono p-2.5 bg-surface border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+          />
+
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {COVER_PRESETS.map(preset => (
+              <button
+                key={preset.label}
+                type="button"
+                onClick={() => {
+                  setCoverImage(preset.url);
+                  toast(`Applied ${preset.label} photo`, 'info');
+                }}
+                className="px-2 py-0.5 rounded-lg border border-border bg-surface hover:bg-border/60 text-[10px] font-mono text-text-secondary hover:text-text-primary transition-all active:scale-95 cursor-pointer"
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="md:col-span-4">
+          <div className="relative w-full h-28 rounded-xl overflow-hidden bg-surface border border-border flex items-center justify-center">
+            {coverImage ? (
+              <img
+                src={coverImage}
+                alt="Cover Preview"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="text-center p-2 text-text-tertiary">
+                <ImageIcon size={20} className="mx-auto opacity-40 mb-1" />
+                <span className="text-[9px] font-mono uppercase block">No Image</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
+    <div className="space-y-6 max-w-5xl mx-auto">
+      <div className="flex items-center justify-between pb-4 border-b border-border">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -177,17 +274,17 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
           </button>
           <div>
             <div className="text-xs font-mono font-bold uppercase text-text-tertiary">
-              {initialCaseStudy ? 'EDITING CASE STUDY' : 'CREATE STARTUP CASE STUDY'}
+              {initialCaseStudy ? 'EDITING TEARDOWN' : 'CREATE BLUEPRINT TEARDOWN'}
             </div>
             <h1 className="text-2xl font-black font-display uppercase tracking-tight text-text-primary">
-              {initialCaseStudy ? 'Update Case Study' : 'New Company Teardown'}
+              {initialCaseStudy ? 'Edit Case Study' : 'New Visual Case Study'}
             </h1>
           </div>
         </div>
 
-        {/* Studio Switcher & Action Buttons */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-1 bg-surface-muted p-1 rounded-xl border border-border">
+        <div className="flex items-center gap-2">
+          {/* Mode Switcher */}
+          <div className="flex items-center bg-surface-muted p-1 rounded-xl border border-border">
             <button
               type="button"
               onClick={() => setEditorMode('canvas')}
@@ -226,12 +323,12 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
             onClick={() => handleSubmit('PUBLISHED')}
             isLoading={submitting}
           >
-            Publish Teardown
+            Publish Now
           </Button>
         </div>
       </div>
 
-      {/* Mode 1: Visual Canvas Studio */}
+      {/* Mode 1: Canvas Visual Designer */}
       {editorMode === 'canvas' && (
         <div className="space-y-6">
           <div className="p-5 rounded-2xl border border-border bg-surface shadow-card space-y-4">
@@ -283,6 +380,9 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
               />
             </div>
           </div>
+
+          {/* Dedicated Cover Photo Section */}
+          {renderCoverPhotoCard()}
 
           {/* Visual Canvas Block Editor */}
           <CanvasBlockEditor
@@ -365,13 +465,8 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
             />
           </div>
 
-          <Input
-            label="Cover Image URL"
-            type="url"
-            value={coverImage}
-            onChange={e => setCoverImage(e.target.value)}
-            placeholder="https://images.unsplash.com/..."
-          />
+          {/* Dedicated Cover Photo Section */}
+          {renderCoverPhotoCard()}
         </div>
       )}
     </div>

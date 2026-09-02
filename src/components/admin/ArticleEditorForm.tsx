@@ -27,12 +27,51 @@ import {
   AlertTriangle,
   RotateCcw,
   Sparkles,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 interface ArticleEditorFormProps {
   initialArticle?: ArticleItem | null;
   categories: CategoryItem[];
 }
+
+const COVER_PRESETS = [
+  {
+    label: '🦄 Unicorn Scale',
+    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Enterprise Lens',
+  },
+  {
+    label: '📈 Capital Markets',
+    url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Capital Markets',
+  },
+  {
+    label: '⚡ AI & Compute',
+    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Compute Lab',
+  },
+  {
+    label: '🌐 Crypto Web3',
+    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Web3 Protocol',
+  },
+  {
+    label: '👤 Founder Leadership',
+    url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Founder Archive',
+  },
+  {
+    label: '🏢 Modern Enterprise',
+    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Architecture',
+  },
+  {
+    label: '💥 Post-Mortem Glitch',
+    url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Cautionary Lens',
+  },
+];
 
 function generateSlug(text: string): string {
   return text
@@ -181,7 +220,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     }
   };
 
-  const discardRestorableDraft = () => {
+  const discardDraft = () => {
     try {
       localStorage.removeItem(autosaveKey);
       setHasRestorableDraft(false);
@@ -336,8 +375,8 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     sourceName: sourceName || null,
     sourceUrl: sourceUrl || null,
     sourceAuthor: sourceAuthor || null,
-    coverImage: coverImage || 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
-    photoCredit: photoCredit || null,
+    coverImage: coverImage.trim() || 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+    photoCredit: photoCredit.trim() || 'Unsplash / Enterprise Lens',
     readTimeMinutes: Math.max(1, Math.ceil(wordCount / 60)),
     wordCount,
     status,
@@ -359,16 +398,14 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       toast('Please enter a headline', 'error');
       return;
     }
+
     if (!summary.trim()) {
-      toast('Please enter the 60-word summary', 'error');
+      toast('Please provide a 60-word summary overview', 'error');
       return;
     }
-    if (wordCount > 60) {
-      toast(`Word budget exceeded: ${wordCount}/60 words. Please trim ${wordCount - 60} words before saving.`, 'error');
-      return;
-    }
-    if (coverImage && !photoCredit.trim()) {
-      toast('Photo credit / image alt text is required when a cover image is provided.', 'error');
+
+    if (isOverWordBudget) {
+      toast(`Summary exceeds 60 words (${wordCount}/60). Please condense.`, 'error');
       return;
     }
 
@@ -436,6 +473,115 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     }
   };
 
+  const renderCoverPhotoCard = () => (
+    <div className="p-5 rounded-2xl border border-border bg-surface shadow-card space-y-4">
+      <div className="flex items-center justify-between border-b border-border/60 pb-3">
+        <div className="flex items-center gap-2">
+          <ImageIcon size={16} className="text-brand" />
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-text-primary">
+            Cover Photo & Editorial Media
+          </span>
+        </div>
+        {coverImage && (
+          <button
+            type="button"
+            onClick={() => {
+              setCoverImage('');
+              setPhotoCredit('');
+            }}
+            className="text-[11px] font-mono text-red-500 hover:underline flex items-center gap-1 cursor-pointer"
+          >
+            <X size={12} /> Clear Photo
+          </button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+        {/* Left: Inputs & Presets */}
+        <div className="md:col-span-7 space-y-3">
+          <div>
+            <label className="text-xs font-mono font-bold uppercase text-text-tertiary block mb-1">
+              Cover Image URL
+            </label>
+            <input
+              type="url"
+              value={coverImage}
+              onChange={e => setCoverImage(e.target.value)}
+              placeholder="https://images.unsplash.com/..."
+              className="w-full text-xs font-mono p-2.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-mono font-bold uppercase text-text-tertiary block mb-1">
+              Photo Credit / License Attribution
+            </label>
+            <input
+              type="text"
+              value={photoCredit}
+              onChange={e => setPhotoCredit(e.target.value)}
+              placeholder="Unsplash / Enterprise Lens"
+              className="w-full text-xs font-mono p-2.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+            />
+          </div>
+
+          {/* 1-Click Curated Presets */}
+          <div className="pt-2">
+            <label className="text-[10px] font-mono font-bold uppercase text-text-tertiary block mb-1.5">
+              1-Click Curated Editorial Photos:
+            </label>
+            <div className="flex flex-wrap gap-1.5">
+              {COVER_PRESETS.map(preset => (
+                <button
+                  key={preset.label}
+                  type="button"
+                  onClick={() => {
+                    setCoverImage(preset.url);
+                    setPhotoCredit(preset.credit);
+                    toast(`Applied ${preset.label} photo`, 'info');
+                  }}
+                  className="px-2.5 py-1 rounded-lg border border-border bg-surface-muted hover:bg-border/60 text-[11px] font-mono text-text-secondary hover:text-text-primary transition-all active:scale-95 cursor-pointer"
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Real-time Live Preview Thumbnail */}
+        <div className="md:col-span-5 flex flex-col justify-center">
+          <div className="relative w-full h-36 sm:h-44 rounded-2xl overflow-hidden bg-surface-muted border border-border flex items-center justify-center shadow-inner">
+            {coverImage ? (
+              <>
+                <img
+                  src={coverImage}
+                  alt="Cover Preview"
+                  className="w-full h-full object-cover"
+                />
+                {photoCredit && (
+                  <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[9px] font-mono text-white/90 border border-white/10 uppercase tracking-wider pointer-events-none">
+                    {photoCredit}
+                  </span>
+                )}
+              </>
+            ) : (
+              <div className="text-center p-4 space-y-1">
+                <ImageIcon size={28} className="mx-auto text-text-tertiary opacity-40" />
+                <span className="text-[10px] font-mono uppercase text-text-tertiary block">
+                  No Cover Photo Selected
+                </span>
+                <span className="text-[9px] font-mono text-text-tertiary block opacity-70">
+                  Select a preset above or paste an image URL
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       {/* Restorable Draft Banner */}
@@ -451,15 +597,14 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
             <button
               type="button"
               onClick={restoreDraft}
-              className="px-3 py-1.5 bg-amber-600 text-white rounded-lg text-xs font-mono font-bold hover:bg-amber-700 transition-colors flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-mono font-bold uppercase transition-colors"
             >
-              <RotateCcw size={14} />
-              Restore Draft
+              Restore Changes
             </button>
             <button
               type="button"
-              onClick={discardRestorableDraft}
-              className="px-3 py-1.5 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 rounded-lg text-xs font-mono hover:bg-amber-100 dark:hover:bg-amber-900 transition-colors"
+              onClick={discardDraft}
+              className="px-3 py-1.5 rounded-xl border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 text-xs font-mono transition-colors"
             >
               Discard
             </button>
@@ -467,34 +612,36 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
         </div>
       )}
 
-      {/* Header */}
+      {/* Top Action Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => router.back()}
-            className="p-2 rounded-xl border border-border bg-surface text-text-secondary hover:text-text-primary"
+            className="p-2 rounded-xl border border-border bg-surface text-text-secondary hover:text-text-primary transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-text-tertiary">
-              <span>{initialArticle ? 'EDITING STORY BRIEF' : 'CREATE STORY BRIEF'}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-text-tertiary">
+                {initialArticle ? 'EDITING BRIEF' : 'CREATING 60-WORD BRIEF'}
+              </span>
               {lastAutosaved && (
-                <span className="text-[10px] text-brand lowercase">
-                  · autosaved {lastAutosaved.toLocaleTimeString()}
+                <span className="text-[10px] font-mono text-text-tertiary flex items-center gap-1">
+                  <Clock size={10} /> Autosaved {lastAutosaved.toLocaleTimeString()}
                 </span>
               )}
             </div>
             <h1 className="text-2xl font-black font-display uppercase tracking-tight text-text-primary">
-              {initialArticle ? 'Update Article' : 'New 60-Word Brief'}
+              {initialArticle ? 'Edit Article Brief' : 'New 60-Word Executive Brief'}
             </h1>
           </div>
         </div>
 
-        {/* Mode Switcher & Publish Actions */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-1 bg-surface-muted p-1 rounded-xl border border-border">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Mode Switcher */}
+          <div className="flex items-center bg-surface-muted p-1 rounded-xl border border-border">
             <button
               type="button"
               onClick={() => setEditorMode('canvas')}
@@ -520,7 +667,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
           <button
             type="button"
             onClick={() => setPreviewOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border bg-surface text-xs font-mono font-bold uppercase text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border bg-surface text-xs font-mono font-bold uppercase text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-colors cursor-pointer"
           >
             <Eye size={14} />
             <span>Live Reader Preview</span>
@@ -613,6 +760,9 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Dedicated Cover Photo Section for Canvas Studio */}
+          {renderCoverPhotoCard()}
 
           {/* Full Visual Canvas Designer */}
           <CanvasBlockEditor
@@ -708,6 +858,9 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
               </div>
             </div>
 
+            {/* Dedicated Cover Photo Section */}
+            {renderCoverPhotoCard()}
+
             {/* Full Article Body (Markdown) */}
             <div className="p-5 rounded-2xl border border-border bg-surface shadow-card space-y-2">
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-text-secondary">
@@ -754,26 +907,6 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                   placeholder="https://theinformation.com/..."
                 />
               </div>
-            </div>
-
-            {/* Cover Image & Alt Text */}
-            <div className="p-5 rounded-2xl border border-border bg-surface shadow-card space-y-4">
-              <div className="text-xs font-mono font-bold uppercase tracking-wider text-text-secondary">
-                Media Asset & Photo
-              </div>
-              <Input
-                label="Cover Image URL"
-                type="url"
-                value={coverImage}
-                onChange={e => setCoverImage(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-              />
-              <Input
-                label="Photo Credit / Image Alt Text (Required)"
-                value={photoCredit}
-                onChange={e => setPhotoCredit(e.target.value)}
-                placeholder="REUTERS / PORT OF ROTTERDAM"
-              />
             </div>
 
             {/* SEO & Meta Fields with Character Counters */}
@@ -839,7 +972,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                       key={cat.id}
                       type="button"
                       onClick={() => setCategoryId(cat.id)}
-                      className={`p-2.5 rounded-xl border text-left text-xs font-mono font-bold transition-all flex items-center gap-2 ${
+                      className={`p-2.5 rounded-xl border text-left text-xs font-mono font-bold transition-all flex items-center gap-2 cursor-pointer ${
                         categoryId === cat.id
                           ? 'border-brand bg-brand/10 text-text-primary shadow-xs'
                           : 'border-border bg-surface-muted text-text-secondary hover:text-text-primary'
@@ -924,14 +1057,14 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                   <button
                     type="button"
                     onClick={() => setPreviewTab('card')}
-                    className={`px-2.5 py-1 rounded ${previewTab === 'card' ? 'bg-brand text-white font-bold' : 'text-text-secondary'}`}
+                    className={`px-2.5 py-1 rounded cursor-pointer ${previewTab === 'card' ? 'bg-brand text-white font-bold' : 'text-text-secondary'}`}
                   >
                     Feed Card
                   </button>
                   <button
                     type="button"
                     onClick={() => setPreviewTab('canvas')}
-                    className={`px-2.5 py-1 rounded ${previewTab === 'canvas' ? 'bg-brand text-white font-bold' : 'text-text-secondary'}`}
+                    className={`px-2.5 py-1 rounded cursor-pointer ${previewTab === 'canvas' ? 'bg-brand text-white font-bold' : 'text-text-secondary'}`}
                   >
                     Visual Canvas
                   </button>
@@ -943,7 +1076,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                   <button
                     type="button"
                     onClick={() => setPreviewDevice('mobile')}
-                    className={`p-1.5 rounded ${previewDevice === 'mobile' ? 'bg-brand text-white' : 'text-text-secondary'}`}
+                    className={`p-1.5 rounded cursor-pointer ${previewDevice === 'mobile' ? 'bg-brand text-white' : 'text-text-secondary'}`}
                     title="Mobile View"
                   >
                     <Smartphone size={16} />
@@ -951,7 +1084,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                   <button
                     type="button"
                     onClick={() => setPreviewDevice('desktop')}
-                    className={`p-1.5 rounded ${previewDevice === 'desktop' ? 'bg-brand text-white' : 'text-text-secondary'}`}
+                    className={`p-1.5 rounded cursor-pointer ${previewDevice === 'desktop' ? 'bg-brand text-white' : 'text-text-secondary'}`}
                     title="Desktop View"
                   >
                     <Monitor size={16} />
@@ -961,7 +1094,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                 <button
                   type="button"
                   onClick={() => setPreviewOpen(false)}
-                  className="p-1.5 rounded-lg border border-border text-text-secondary hover:text-text-primary"
+                  className="p-1.5 rounded-lg border border-border text-text-secondary hover:text-text-primary cursor-pointer"
                 >
                   <X size={18} />
                 </button>

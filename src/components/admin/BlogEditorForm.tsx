@@ -6,12 +6,45 @@ import { BlogItem, CategoryItem, ContentStatus } from '../../types';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, Image as ImageIcon, X } from 'lucide-react';
 
 interface BlogEditorFormProps {
   initialBlog?: BlogItem | null;
   categories: CategoryItem[];
 }
+
+const COVER_PRESETS = [
+  {
+    label: '🦄 Unicorn Scale',
+    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Enterprise Lens',
+  },
+  {
+    label: '📈 Capital Markets',
+    url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Capital Markets',
+  },
+  {
+    label: '⚡ AI & Compute',
+    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Compute Lab',
+  },
+  {
+    label: '🌐 Crypto Web3',
+    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Web3 Protocol',
+  },
+  {
+    label: '👤 Founder Leadership',
+    url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Founder Archive',
+  },
+  {
+    label: '🏢 Modern Enterprise',
+    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+    credit: 'Unsplash / Architecture',
+  },
+];
 
 export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
   initialBlog,
@@ -116,7 +149,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
       </div>
 
       <div className="space-y-6">
-        <div className="p-6 rounded-2xl border border-border bg-surface shadow-card space-y-4">
+        <div className="p-6 rounded-2xl border border-border bg-surface shadow-card space-y-5">
           <Input
             label="Essay Title"
             value={title}
@@ -165,13 +198,71 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
             />
           </div>
 
-          <Input
-            label="Cover Image URL"
-            type="url"
-            value={coverImage}
-            onChange={e => setCoverImage(e.target.value)}
-            placeholder="https://images.unsplash.com/..."
-          />
+          {/* Rich Cover Photo Card */}
+          <div className="p-4 rounded-xl border border-border bg-surface-muted/50 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <ImageIcon size={15} className="text-brand" />
+                <label className="text-xs font-mono font-bold uppercase text-text-primary">
+                  Cover Photo & Header Media
+                </label>
+              </div>
+              {coverImage && (
+                <button
+                  type="button"
+                  onClick={() => setCoverImage('')}
+                  className="text-[10px] font-mono text-red-500 hover:underline flex items-center gap-1"
+                >
+                  <X size={11} /> Clear Photo
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              <div className="md:col-span-8 space-y-2">
+                <input
+                  type="url"
+                  value={coverImage}
+                  onChange={e => setCoverImage(e.target.value)}
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full text-xs font-mono p-2.5 bg-surface border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+                />
+
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {COVER_PRESETS.map(preset => (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => {
+                        setCoverImage(preset.url);
+                        toast(`Applied ${preset.label} photo`, 'info');
+                      }}
+                      className="px-2 py-0.5 rounded-lg border border-border bg-surface hover:bg-border/60 text-[10px] font-mono text-text-secondary hover:text-text-primary transition-all active:scale-95"
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="md:col-span-4">
+                <div className="relative w-full h-28 rounded-xl overflow-hidden bg-surface border border-border flex items-center justify-center">
+                  {coverImage ? (
+                    <img
+                      src={coverImage}
+                      alt="Cover Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-center p-2 text-text-tertiary">
+                      <ImageIcon size={20} className="mx-auto opacity-40 mb-1" />
+                      <span className="text-[9px] font-mono uppercase block">No Image</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary font-mono">
