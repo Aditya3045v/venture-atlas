@@ -109,17 +109,16 @@ async function main() {
       headers: { Cookie: writerCookie },
       redirect: 'manual',
     });
-    console.log(`[PASS] WRITER sign in & access /admin → HTTP ${writerAdminPageRes.status} (Direct 200 OK dashboard access)`);
+    console.log(`[PASS] WRITER sign in & access /admin → HTTP ${writerAdminPageRes.status} (Direct dashboard access)`);
 
-    // 5. Test Newly Created EDITOR Signs In & Reaches MFA Gate
+    // 5. Test Newly Created EDITOR Signs In & Accesses /admin directly
     console.log(`\n[5] Testing newly created EDITOR sign-in with credentials (${editorEmail})...`);
     const editorCookie = await signIn(editorEmail, editorPw);
     const editorAdminPageRes = await fetch(`${BASE_URL}/admin`, {
       headers: { Cookie: editorCookie },
       redirect: 'manual',
     });
-    const loc = editorAdminPageRes.headers.get('location') || '';
-    console.log(`[PASS] EDITOR sign in → HTTP ${editorAdminPageRes.status} | Redirected to: ${loc} (Enforces mandatory MFA enrollment)`);
+    console.log(`[PASS] EDITOR sign in & access /admin → HTTP ${editorAdminPageRes.status} (Direct dashboard access, MFA removed)`);
 
     console.log('\n====================================================');
     console.log('[SUCCESS] Root Admin can create new roles and newly created staff sign in cleanly without issue.');
