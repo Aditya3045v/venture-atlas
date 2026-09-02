@@ -67,14 +67,13 @@ export const LandingView: React.FC = () => {
 
       if (res.ok && data.success) {
         setSubscribed(true);
+        try {
+          localStorage.setItem('va_reader_email', normalizedEmail);
+        } catch {}
         toast('Access granted! Entering intelligence wire...', 'success');
         setTimeout(() => {
-          if (data.isNewReader) {
-            window.location.href = '/?welcome=1';
-          } else {
-            window.location.href = '/';
-          }
-        }, 300);
+          window.location.href = '/';
+        }, 250);
       } else {
         toast(data.error || 'Failed to initialize reader access', 'error');
         setLoading(false);
