@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Search, Bookmark, Shield, Menu, X, SlidersHorizontal, UserCircle, Home } from 'lucide-react';
 import { useTheme } from '../providers/ThemeProvider';
 import { useAccessibility } from '../providers/AccessibilityProvider';
+import { useToast } from '../providers/ToastProvider';
 import { AnimatedThemeToggler } from '../ui/animated-theme-toggler';
 import { NavigationItem } from '@/types';
 
@@ -22,6 +23,7 @@ const DEFAULT_LINKS: NavigationItem[] = [
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
+  const { toast } = useToast();
   const { isDark, setTheme } = useTheme();
   const { setModalOpen } = useAccessibility();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -47,6 +49,18 @@ export const Header: React.FC = () => {
       isMounted = false;
     };
   }, []);
+
+  const handleNavClick = (e: React.MouseEvent, targetHref: string) => {
+    if (pathname === '/landing' && !targetHref.startsWith('/admin')) {
+      e.preventDefault();
+      toast('Please enter your email on the landing page first to unlock the news feed!', 'info');
+      const input = document.getElementById('work-email-input');
+      if (input) {
+        input.focus();
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/80 ios-glass transition-colors select-none">
@@ -78,6 +92,7 @@ export const Header: React.FC = () => {
                 <Link
                   key={link.id || link.href}
                   href={link.href}
+                  onClick={e => handleNavClick(e, link.href)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-tight transition-all duration-200 flex items-center gap-1.5 ${
                     isActive
                       ? 'bg-amber-400 text-black font-black shadow-md shadow-amber-400/20'
@@ -98,6 +113,7 @@ export const Header: React.FC = () => {
           <Link
             href="/search"
             aria-label="Search"
+            onClick={e => handleNavClick(e, '/search')}
             className="p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all active:scale-90"
           >
             <Search size={18} />
@@ -107,6 +123,7 @@ export const Header: React.FC = () => {
           <Link
             href="/bookmarks"
             aria-label="Bookmarks"
+            onClick={e => handleNavClick(e, '/bookmarks')}
             className="p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all active:scale-90 relative"
           >
             <Bookmark size={18} />
@@ -135,6 +152,7 @@ export const Header: React.FC = () => {
             href="/account"
             aria-label="Account"
             title="Account Settings"
+            onClick={e => handleNavClick(e, '/account')}
             className="p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-all active:scale-90"
           >
             <UserCircle size={18} />
@@ -169,6 +187,7 @@ export const Header: React.FC = () => {
             <Link
               key={link.id || link.href}
               href={link.href}
+              onClick={e => handleNavClick(e, link.href)}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-all active:scale-95 flex items-center gap-1.5 ${
                 isActive
                   ? 'bg-amber-400 text-black font-black shadow-xs'
@@ -191,7 +210,10 @@ export const Header: React.FC = () => {
               <Link
                 key={link.id || link.href}
                 href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={e => {
+                  setMobileMenuOpen(false);
+                  handleNavClick(e, link.href);
+                }}
                 className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold text-text-primary hover:bg-surface-muted"
               >
                 {isHome && <Home size={15} className="text-amber-400" />}
