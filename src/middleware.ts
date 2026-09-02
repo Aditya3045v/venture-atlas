@@ -52,27 +52,17 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    if (!path.startsWith('/admin/mfa')) {
-      const { data: aalData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
+    // Verify staff role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
 
-      const role = profile?.role;
-      if (role === 'ADMIN' || role === 'EDITOR') {
-        if (aalData?.currentLevel !== 'aal2') {
-          const redirectPath = aalData?.nextLevel === 'aal2' ? '/admin/mfa/challenge' : '/admin/mfa/enroll';
-          const redirectUrl = new URL(redirectPath, request.url);
-          redirectUrl.searchParams.set('returnTo', path);
-          return NextResponse.redirect(redirectUrl);
-        }
-      } else if (role === 'WRITER' && aalData?.nextLevel === 'aal2' && aalData?.currentLevel !== 'aal2') {
-        const challengeUrl = new URL('/admin/mfa/challenge', request.url);
-        challengeUrl.searchParams.set('returnTo', path);
-        return NextResponse.redirect(challengeUrl);
-      }
+    const role = profile?.role;
+    if (!role || !['ADMIN', 'EDITOR', 'WRITER'].includes(role)) {
+      const loginUrl = new URL('/admin/login', request.url);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
