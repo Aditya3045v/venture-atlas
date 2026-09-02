@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ArticleItem, CaseStudyItem, BlogItem } from '@/types';
 
 export const dynamic = 'force-dynamic';
@@ -19,11 +19,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const supabase = createServerSupabaseClient();
-
     // 1. Search Articles
     const articlesPromise = (type === 'all' || type === 'articles')
-      ? supabase
+      ? supabaseAdmin
           .from('articles')
           .select('*, category:categories(*), author:profiles(*)')
           .eq('status', 'PUBLISHED')
@@ -34,7 +32,7 @@ export async function GET(req: NextRequest) {
 
     // 2. Search Case Studies
     const caseStudiesPromise = (type === 'all' || type === 'case-studies')
-      ? supabase
+      ? supabaseAdmin
           .from('case_studies')
           .select('*, category:categories(*), author:profiles(*)')
           .eq('status', 'PUBLISHED')
@@ -45,7 +43,7 @@ export async function GET(req: NextRequest) {
 
     // 3. Search Blogs
     const blogsPromise = (type === 'all' || type === 'blogs')
-      ? supabase
+      ? supabaseAdmin
           .from('blog_posts')
           .select('*, category:categories(*), author:profiles(*)')
           .eq('status', 'PUBLISHED')

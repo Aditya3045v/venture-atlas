@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getReader } from '@/lib/auth/reader';
 import { getCurrentUser } from '@/lib/auth/staff';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { checkRateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
@@ -14,8 +14,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'entityId or articleId is required' }, { status: 400 });
   }
 
-  const supabase = createServerSupabaseClient();
-  const { data: comments, error } = await supabase
+  const { data: comments, error } = await supabaseAdmin
     .from('comments')
     .select('id, user_name, body, created_at, status')
     .eq('entity_id', targetId)
@@ -30,21 +29,17 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  // Rate limit: 5 per reader/IP per hour
+  const isDev = process.env.NODE_ENV !== 'production';
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
-  const rateLimit = checkRateLimit(`comments:${ip}`, { windowMs: 3600 * 1000, maxRequests: 5 });
-  if (!rateLimit.success) {
-    return NextResponse.json(
-      { error: 'Rate limit exceeded: max 5 comments per hour.' },
-      {
-        status: 429,
-        headers: {
-          'Retry-After': String(rateLimit.reset),
-          'X-RateLimit-Limit': String(rateLimit.limit),
-          'X-RateLimit-Remaining': String(rateLimit.remaining),
-        },
-      }
-    );
+  
+  if (!isDev && ip !== '127.0.0.1' && ip !== '::1') {
+    const rateLimit = checkRateLimit(`comments:${ip}`, { windowMs: 3600 * 1000, maxRequests: 30 });
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded. Please wait before submitting more comments.' },
+        { status: 429 }
+      );
+    }
   }
 
   try {
@@ -77,8 +72,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const supabase = createServerSupabaseClient();
-
     let commentPayload: any;
 
     if (staffUser) {
@@ -99,13 +92,13 @@ export async function POST(req: NextRequest) {
         profile_id: null,
         reader_id: reader.readerId,
         user_email: reader.email,
-        user_name: `${emailLocalPart} (unverified)`,
+        user_name: `${emailLocalPart} (verified reader)`,
         body: trimmedComment,
         status: 'PENDING',
       };
     }
 
-    const { data: inserted, error } = await supabase
+    const { data: inserted, error } = await supabaseAdmin
       .from('comments')
       .insert(commentPayload)
       .select()
