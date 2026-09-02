@@ -3,7 +3,7 @@ import { articleSchema } from '@/lib/validation';
 import { getCurrentUser, canEdit, canPublish } from '@/lib/auth/staff';
 import { logAuditEvent } from '@/lib/audit';
 import { slugify, countWords } from '@/lib/sanitize';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ArticleItem } from '@/types';
 
 export const dynamic = 'force-dynamic';
@@ -19,10 +19,9 @@ export async function GET(req: NextRequest) {
   const cursorId = searchParams.get('cursor_id');
 
   try {
-    const supabase = createServerSupabaseClient();
     const staffUser = await getCurrentUser();
 
-    let query = supabase
+    let query = supabaseAdmin
       .from('articles')
       .select('*, category:categories(*), author:profiles(*)')
       .order('published_at', { ascending: false })
@@ -40,7 +39,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (category && category !== 'all') {
-      const { data: catData } = await supabase
+      const { data: catData } = await supabaseAdmin
         .from('categories')
         .select('id')
         .eq('slug', category)
@@ -186,8 +185,7 @@ export async function POST(req: NextRequest) {
       canvas_data: validated.canvasData || null,
     };
 
-    const supabase = createServerSupabaseClient();
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('articles')
       .insert(insertPayload)
       .select()

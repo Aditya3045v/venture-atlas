@@ -323,6 +323,8 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     canvasData,
   ]);
 
+  const isSubmittingRef = useRef(false);
+
   // Mark dirty on any edit
   useEffect(() => {
     setIsDirty(true);
@@ -331,7 +333,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
   // Unsaved changes navigation guard
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isDirty && (title || summary)) {
+      if (!isSubmittingRef.current && isDirty && (title || summary)) {
         e.preventDefault();
         e.returnValue = '';
       }
@@ -409,6 +411,8 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       return;
     }
 
+    isSubmittingRef.current = true;
+    setIsDirty(false);
     setSubmitting(true);
 
     const tagsArray = tagsInput
@@ -461,12 +465,15 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
             : 'Story saved successfully',
           'success'
         );
-        window.location.href = '/admin/articles';
+        router.push('/admin/articles');
+        router.refresh();
       } else {
+        isSubmittingRef.current = false;
         const data = await res.json();
         toast(data.error || 'Failed to save article', 'error');
       }
     } catch {
+      isSubmittingRef.current = false;
       toast('Network error saving article', 'error');
     } finally {
       setSubmitting(false);
@@ -1041,6 +1048,41 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
           </div>
         </div>
       )}
+
+      {/* Bottom Action Footer */}
+      <div className="sticky bottom-4 z-30 p-4 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-xl flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPreviewOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border bg-surface text-xs font-mono font-bold uppercase text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+          >
+            <Eye size={14} />
+            <span>Live Preview</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => handleSubmit('DRAFT')}
+            isLoading={submitting}
+          >
+            Save Draft
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => handleSubmit('PUBLISHED')}
+            isLoading={submitting}
+          >
+            Publish Now
+          </Button>
+        </div>
+      </div>
 
       {/* Live Reader Preview Modal */}
       {previewOpen && (

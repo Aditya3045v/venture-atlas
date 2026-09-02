@@ -4,7 +4,7 @@ import { blogSchema } from '@/lib/validation';
 import { getCurrentUser, canEdit, canPublish } from '@/lib/auth/staff';
 import { logAuditEvent } from '@/lib/audit';
 import { slugify } from '@/lib/sanitize';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,8 +49,7 @@ export async function POST(req: NextRequest) {
       published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
     };
 
-    const supabase = createServerSupabaseClient();
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('blog_posts')
       .insert(blogPayload)
       .select()

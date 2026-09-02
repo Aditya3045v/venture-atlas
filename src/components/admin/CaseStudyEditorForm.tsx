@@ -182,7 +182,8 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
 
       if (res.ok) {
         toast('Case study teardown saved successfully', 'success');
-        window.location.href = '/admin/case-studies';
+        router.push('/admin/case-studies');
+        router.refresh();
       } else {
         const data = await res.json();
         toast(data.error || 'Failed to save case study', 'error');
@@ -469,6 +470,28 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
           {renderCoverPhotoCard()}
         </div>
       )}
+
+      {/* Bottom Action Footer */}
+      <div className="sticky bottom-4 z-30 p-4 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-xl flex items-center justify-end gap-3">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => handleSubmit('DRAFT')}
+          isLoading={submitting}
+        >
+          Save Draft
+        </Button>
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={() => handleSubmit('PUBLISHED')}
+          isLoading={submitting}
+        >
+          Publish Now
+        </Button>
+      </div>
     </div>
   );
 };
