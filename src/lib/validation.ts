@@ -8,6 +8,8 @@ export const articleSchema = z.object({
   sourceName: z.string().optional().nullable(),
   sourceUrl: z.string().url('Source URL must be a valid URL').optional().or(z.literal('')).nullable(),
   sourceAuthor: z.string().optional().nullable(),
+  authorName: z.string().optional().nullable(),
+  authorRole: z.string().optional().nullable(),
   coverImage: z.string().url('Cover image must be a valid URL').optional().or(z.literal('')).nullable(),
   photoCredit: z.string().optional().nullable(),
   status: z.enum(['DRAFT', 'IN_REVIEW', 'APPROVED', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED', 'UNPUBLISHED']),
@@ -17,6 +19,27 @@ export const articleSchema = z.object({
   tags: z.array(z.string()).optional().default([]),
   seoTitle: z.string().max(70, 'SEO title max 70 characters').optional().nullable(),
   seoDescription: z.string().max(160, 'SEO description max 160 characters').optional().nullable(),
+  canvasData: z.any().optional().nullable(),
+});
+
+export const caseStudySchema = z.object({
+  title: z.string().min(5, 'Title must be at least 5 characters').max(150),
+  company: z.string().min(2, 'Company name is required').max(100),
+  valuation: z.string().optional().nullable(),
+  stage: z.string().optional().nullable(),
+  keyMetric: z.string().optional().nullable(),
+  summary: z.string().min(10, 'Summary must be at least 10 characters').max(500),
+  challenge: z.string().optional().nullable(),
+  strategy: z.string().optional().nullable(),
+  outcome: z.string().optional().nullable(),
+  authorName: z.string().optional().nullable(),
+  authorRole: z.string().optional().nullable(),
+  body: z.string().min(10, 'Body content is required'),
+  categoryId: z.string().min(1, 'Category is required'),
+  coverImage: z.string().url().optional().or(z.literal('')).nullable(),
+  readTimeMinutes: z.number().int().positive().default(4),
+  status: z.enum(['DRAFT', 'IN_REVIEW', 'APPROVED', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED', 'UNPUBLISHED']),
+  canvasData: z.any().optional().nullable(),
 });
 
 export const blogSchema = z.object({
@@ -24,6 +47,8 @@ export const blogSchema = z.object({
   excerpt: z.string().min(10, 'Excerpt must be at least 10 characters').max(300),
   body: z.string().min(50, 'Body content must be at least 50 characters'),
   categoryId: z.string().min(1, 'Category is required'),
+  authorName: z.string().optional().nullable(),
+  authorRole: z.string().optional().nullable(),
   coverImage: z.string().url().optional().or(z.literal('')).nullable(),
   readTimeMinutes: z.number().int().positive().default(4),
   status: z.enum(['DRAFT', 'IN_REVIEW', 'APPROVED', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED', 'UNPUBLISHED']),

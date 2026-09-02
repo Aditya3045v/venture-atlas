@@ -1,12 +1,49 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono, Inter } from 'next/font/google';
 import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { ToastProvider } from '../components/providers/ToastProvider';
 import { AccessibilityProvider } from '../components/providers/AccessibilityProvider';
-import { AccessibilityModal } from '../components/ui/AccessibilityModal';
-import { Header } from '../components/layout/Header';
-import { MobileNav } from '../components/layout/MobileNav';
-import { Footer } from '../components/layout/Footer';
+import { AudioPlayerProvider } from '../components/providers/AudioPlayerProvider';
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-display',
+  weight: ['600', '700'],
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-body',
+  weight: ['400', '500', '600', '700', '800'],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
+  weight: ['500', '700'],
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+});
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F8F9FA' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
+};
 
 export const metadata: Metadata = {
   title: 'Venture Atlas — Startup & Business News in 60 Words',
@@ -45,26 +82,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="min-h-screen flex flex-col bg-background text-text-primary transition-colors">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${spaceGrotesk.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} ${inter.variable}`}
+    >
+      <body className="min-h-screen flex flex-col bg-background text-text-primary transition-colors font-body">
         <ThemeProvider>
           <AccessibilityProvider>
             <ToastProvider>
-              <Header />
-              <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              <AudioPlayerProvider>
                 {children}
-              </main>
-              <Footer />
-              <MobileNav />
-              <AccessibilityModal />
+              </AudioPlayerProvider>
             </ToastProvider>
           </AccessibilityProvider>
         </ThemeProvider>

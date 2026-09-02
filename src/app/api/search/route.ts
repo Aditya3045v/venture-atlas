@@ -1,88 +1,153 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/admin';
-import { prisma, ensureDatabaseSeeded } from '@/lib/db';
-import { SEED_ARTICLES } from '@/data/seedData';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { ArticleItem, CaseStudyItem, BlogItem } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const q = searchParams.get('q') || '';
+  const q = (searchParams.get('q') || '').trim();
+  const type = searchParams.get('type') || 'all'; // 'all', 'articles', 'case-studies', 'blogs'
 
-  if (!q.trim()) {
-    return NextResponse.json({ articles: [] });
-  }
-
-  // 1. Try Supabase
-  try {
-    const { data, error } = await supabaseAdmin
-      .from('articles')
-      .select('*, category:categories(*), author:users(*)')
-      .eq('status', 'PUBLISHED')
-      .or(`title.ilike.%${q}%,summary.ilike.%${q}%,body.ilike.%${q}%`)
-      .limit(30);
-
-    if (!error && data && data.length > 0) {
-      return NextResponse.json({ articles: data });
-    }
-  } catch (err) {
-    console.warn('Supabase search fallback:', err);
-  }
-
-  // 2. Try Prisma
-  try {
-    await ensureDatabaseSeeded();
-    const articles = await prisma.article.findMany({
-      where: {
-        status: 'PUBLISHED',
-        OR: [
-          { title: { contains: q } },
-          { summary: { contains: q } },
-          { body: { contains: q } },
-          { sourceName: { contains: q } },
-        ],
-      },
-      include: {
-        category: true,
-        author: true,
-      },
-      orderBy: { publishedAt: 'desc' },
-      take: 30,
+  if (!q) {
+    return NextResponse.json({
+      articles: [],
+      caseStudies: [],
+      blogs: [],
+      total: 0,
     });
-
-    return NextResponse.json({ articles });
-  } catch (error) {
-    console.warn('Prisma search fallback:', error);
   }
 
-  // 3. Fallback to SeedData
-  const lowerQ = q.toLowerCase();
-  const matched = SEED_ARTICLES.filter(
-    a =>
-      a.title.toLowerCase().includes(lowerQ) ||
-      a.summary.toLowerCase().includes(lowerQ) ||
-      a.body.toLowerCase().includes(lowerQ) ||
-      a.tags.some(t => t.toLowerCase().includes(lowerQ))
-  ).map((a, i) => ({
-    id: `seed-${i + 1}`,
-    title: a.title,
-    slug: a.slug,
-    summary: a.summary,
-    body: a.body,
-    sourceName: a.sourceName,
-    sourceUrl: a.sourceUrl,
-    sourceAuthor: a.sourceAuthor,
-    coverImage: a.coverImage,
-    photoCredit: a.photoCredit,
-    readTimeMinutes: a.readTimeMinutes,
-    wordCount: a.wordCount,
-    status: a.status,
-    isFeatured: a.isFeatured,
-    isTrending: a.isTrending,
-    publishedAt: new Date(a.publishedAt),
-    viewCount: a.viewCount,
-    category: { name: a.categorySlug.toUpperCase(), slug: a.categorySlug, color: '#3B82F6' },
-  }));
+  try {
+    const supabase = createServerSupabaseClient();
 
-  return NextResponse.json({ articles: matched });
+    // 1. Search Articles
+    const articlesPromise = (type === 'all' || type === 'articles')
+      ? supabase
+          .from('articles')
+          .select('*, category:categories(*), author:profiles(*)')
+          .eq('status', 'PUBLISHED')
+          .or(`title.ilike.%${q}%,summary.ilike.%${q}%,body.ilike.%${q}%,source_name.ilike.%${q}%`)
+          .order('published_at', { ascending: false })
+          .limit(15)
+      : Promise.resolve({ data: [] });
+
+    // 2. Search Case Studies
+    const caseStudiesPromise = (type === 'all' || type === 'case-studies')
+      ? supabase
+          .from('case_studies')
+          .select('*, category:categories(*), author:profiles(*)')
+          .eq('status', 'PUBLISHED')
+          .or(`title.ilike.%${q}%,company.ilike.%${q}%,summary.ilike.%${q}%,strategy.ilike.%${q}%,body.ilike.%${q}%`)
+          .order('published_at', { ascending: false })
+          .limit(10)
+      : Promise.resolve({ data: [] });
+
+    // 3. Search Blogs
+    const blogsPromise = (type === 'all' || type === 'blogs')
+      ? supabase
+          .from('blog_posts')
+          .select('*, category:categories(*), author:profiles(*)')
+          .eq('status', 'PUBLISHED')
+          .or(`title.ilike.%${q}%,excerpt.ilike.%${q}%,body.ilike.%${q}%`)
+          .order('published_at', { ascending: false })
+          .limit(10)
+      : Promise.resolve({ data: [] });
+
+    const [articlesRes, caseStudiesRes, blogsRes] = await Promise.all([
+      articlesPromise,
+      caseStudiesPromise,
+      blogsPromise,
+    ]);
+
+    const articles: ArticleItem[] = (articlesRes.data || []).map(item => ({
+      id: item.id,
+      type: item.type || 'NEWS',
+      title: item.title,
+      slug: item.slug,
+      summary: item.summary,
+      body: item.body,
+      sourceName: item.source_name,
+      sourceUrl: item.source_url,
+      sourceAuthor: item.source_author,
+      authorName: item.source_author || item.author?.name || 'Staff Reporter',
+      authorRole: item.author?.role || 'Senior Venture Reporter',
+      categoryId: item.category_id,
+      category: item.category,
+      authorId: item.author_id,
+      author: item.author,
+      coverImage: item.cover_image,
+      photoCredit: item.photo_credit,
+      readTimeMinutes: item.read_time_minutes || 1,
+      wordCount: item.word_count || 60,
+      status: item.status,
+      isFeatured: item.is_featured,
+      isTrending: item.is_trending,
+      publishedAt: item.published_at ? new Date(item.published_at) : null,
+      viewCount: item.view_count || 0,
+      likeCount: item.like_count ?? 0,
+      createdAt: new Date(item.created_at),
+      updatedAt: new Date(item.updated_at),
+    }));
+
+    const caseStudies: CaseStudyItem[] = (caseStudiesRes.data || []).map(item => ({
+      id: item.id,
+      title: item.title,
+      slug: item.slug,
+      company: item.company,
+      companyLogo: item.company_logo,
+      valuation: item.valuation,
+      stage: item.stage,
+      keyMetric: item.key_metric,
+      summary: item.summary,
+      challenge: item.challenge,
+      strategy: item.strategy,
+      outcome: item.outcome,
+      body: item.body,
+      coverImage: item.cover_image,
+      categoryId: item.category_id,
+      category: item.category,
+      authorId: item.author_id,
+      author: item.author,
+      readTimeMinutes: item.read_time_minutes || 8,
+      status: item.status,
+      publishedAt: item.published_at ? new Date(item.published_at) : null,
+      viewCount: item.view_count || 0,
+      createdAt: new Date(item.created_at),
+      updatedAt: new Date(item.updated_at),
+    }));
+
+    const blogs: BlogItem[] = (blogsRes.data || []).map(item => ({
+      id: item.id,
+      title: item.title,
+      slug: item.slug,
+      excerpt: item.excerpt,
+      body: item.body,
+      coverImage: item.cover_image,
+      categoryId: item.category_id,
+      category: item.category,
+      authorId: item.author_id,
+      author: item.author,
+      readTimeMinutes: item.read_time_minutes || 4,
+      status: item.status,
+      publishedAt: item.published_at ? new Date(item.published_at) : null,
+      viewCount: item.view_count || 0,
+      createdAt: new Date(item.created_at),
+      updatedAt: new Date(item.updated_at),
+    }));
+
+    const total = articles.length + caseStudies.length + blogs.length;
+
+    return NextResponse.json({
+      articles,
+      caseStudies,
+      blogs,
+      total,
+    });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error?.message || 'Search query failed' },
+      { status: 500 }
+    );
+  }
 }

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { categorySchema } from '@/lib/validation';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser, canPublish } from '@/lib/auth';
 import { logAuditEvent } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
@@ -13,41 +12,30 @@ interface RouteContext {
 
 export async function PUT(req: NextRequest, { params }: RouteContext) {
   const user = await getCurrentUser();
+  if (!user || !canPublish(user.role)) {
+    return NextResponse.json({ error: 'Unauthorized: Editor or Admin privileges required' }, { status: 403 });
+  }
 
   try {
     const json = await req.json();
     const validated = categorySchema.parse(json);
 
-    // 1. Try Supabase
-    try {
-      await supabaseAdmin
-        .from('categories')
-        .update({
-          name: validated.name,
-          slug: validated.slug,
-          description: validated.description,
-          color: validated.color,
-          order: validated.order,
-        })
-        .eq('id', params.id);
-    } catch {
-      // fallback
-    }
+    const { data: updated, error } = await supabaseAdmin
+      .from('categories')
+      .update({
+        name: validated.name,
+        slug: validated.slug,
+        description: validated.description,
+        color: validated.color,
+        display_order: validated.order || 0,
+      })
+      .eq('id', params.id)
+      .select()
+      .single();
 
-    // 2. Try Prisma
-    let updated = null;
-    try {
-      updated = await prisma.category.update({
-        where: { id: params.id },
-        data: {
-          name: validated.name,
-          slug: validated.slug,
-          description: validated.description,
-          color: validated.color,
-        },
-      });
-    } catch {
-      // fallback
+    if (error) {
+      console.error('Supabase category update error:', error);
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     await logAuditEvent({
@@ -58,8 +46,39 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       metadata: { name: validated.name },
     });
 
-    return NextResponse.json({ category: updated || { id: params.id, ...validated } });
+    return NextResponse.json({ category: updated });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Failed to update category' }, { status: 400 });
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: RouteContext) {
+  const user = await getCurrentUser();
+  if (!user || !canPublish(user.role)) {
+    return NextResponse.json({ error: 'Unauthorized: Editor or Admin privileges required' }, { status: 403 });
+  }
+
+  try {
+    const { error } = await supabaseAdmin
+      .from('categories')
+      .delete()
+      .eq('id', params.id);
+
+    if (error) {
+      console.error('Supabase category delete error:', error);
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    await logAuditEvent({
+      action: 'DELETE_CATEGORY',
+      entityType: 'CATEGORY',
+      entityId: params.id,
+      actor: user,
+      metadata: { id: params.id },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to delete category' }, { status: 500 });
   }
 }

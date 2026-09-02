@@ -6,6 +6,7 @@ import { ArticleItem, CategoryItem, BlogItem, CaseStudyItem } from '@/types';
 import { StoryCard } from './StoryCard';
 import { FeaturedStory } from './FeaturedStory';
 import { CategoryStrip } from './CategoryStrip';
+import { CanvasStoryModal } from '../canvas/CanvasStoryModal';
 import { useToast } from '../providers/ToastProvider';
 import {
   IconLockFilled,
@@ -37,17 +38,15 @@ export const GatedNewsFeed: React.FC<GatedNewsFeedProps> = ({
   const [isUnlocked, setIsUnlocked] = useState<boolean>(initialUnlocked);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [previewStory, setPreviewStory] = useState<ArticleItem | CaseStudyItem | null>(null);
 
   useEffect(() => {
-    // Check cookie or local storage
-    const unlockedCookie = document.cookie
+    // Check if va_reader cookie or localStorage unlocked flag is present
+    const readerCookie = document.cookie
       .split('; ')
-      .find(row => row.startsWith('va_unlocked_user='));
-    const sessionCookie = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('va_session_user='));
+      .find(row => row.startsWith('va_reader='));
 
-    if (unlockedCookie || sessionCookie || localStorage.getItem('va_unlocked_user')) {
+    if (readerCookie || localStorage.getItem('va_reader_active')) {
       setIsUnlocked(true);
     }
   }, []);
@@ -60,23 +59,25 @@ export const GatedNewsFeed: React.FC<GatedNewsFeedProps> = ({
     }
 
     setLoading(true);
+    const normalizedEmail = email.trim().toLowerCase();
+
     try {
-      const res = await fetch('/api/subscribers', {
+      const res = await fetch('/api/reader/enter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: normalizedEmail, source: 'GATED_FEED' }),
       });
       const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem('va_unlocked_user', email);
+      if (res.ok && data.success) {
+        localStorage.setItem('va_reader_active', 'true');
         setIsUnlocked(true);
         toast('Wire access unlocked! Enjoy the news.', 'success');
       } else {
-        toast(data.error || 'Failed to unlock', 'error');
+        toast(data.error || 'Failed to unlock feed', 'error');
       }
     } catch {
-      toast('Network error. Please try again.', 'error');
+      toast('Network error unlocking feed', 'error');
     } finally {
       setLoading(false);
     }
@@ -169,7 +170,11 @@ export const GatedNewsFeed: React.FC<GatedNewsFeedProps> = ({
           <section className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {feedArticles.map(article => (
-                <StoryCard key={article.id} article={article} />
+                <StoryCard
+                  key={article.id}
+                  article={article}
+                  onPreviewClick={setPreviewStory}
+                />
               ))}
             </div>
           </section>
@@ -326,6 +331,13 @@ export const GatedNewsFeed: React.FC<GatedNewsFeedProps> = ({
           )}
         </div>
       </div>
+
+      {/* Interactive Canvas Detailed View Modal */}
+      <CanvasStoryModal
+        isOpen={!!previewStory}
+        onClose={() => setPreviewStory(null)}
+        story={previewStory}
+      />
     </div>
   );
 };

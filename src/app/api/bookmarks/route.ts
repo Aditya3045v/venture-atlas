@@ -1,70 +1,100 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
-import { supabaseAdmin } from '@/lib/supabase/admin';
-import { getCurrentUser } from '@/lib/auth';
+import { getReader } from '@/lib/auth/reader';
+import { getCurrentUser } from '@/lib/auth/staff';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-
+export async function GET() {
   try {
-    const { articleId, saved } = await req.json();
+    const staffUser = await getCurrentUser();
+    const reader = await getReader();
+
+    if (!staffUser && !reader) {
+      return NextResponse.json({ bookmarks: [], isAnonymous: true });
+    }
+
+    const supabase = createServerSupabaseClient();
+    let query = supabase
+      .from('bookmarks')
+      .select('article_id, created_at, article:articles(*, category:categories(*))')
+      .order('created_at', { ascending: false });
+
+    if (staffUser) {
+      query = query.eq('profile_id', staffUser.id);
+    } else if (reader) {
+      query = query.eq('reader_id', reader.readerId);
+    }
+
+    const { data, error } = await query;
+    if (error) {
+      return NextResponse.json({ bookmarks: [], error: error.message });
+    }
+
+    const bookmarks = (data || []).map(b => ({
+      articleId: b.article_id,
+      createdAt: b.created_at,
+      article: b.article,
+    }));
+
+    return NextResponse.json({ bookmarks, isAnonymous: false });
+  } catch (error: any) {
+    return NextResponse.json({ bookmarks: [], error: error?.message }, { status: 500 });
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const staffUser = await getCurrentUser();
+    const reader = await getReader();
+
+    if (!staffUser && !reader) {
+      return NextResponse.json(
+        { error: 'Reader registration required to bookmark articles.' },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const { articleId, saved = true } = body;
+
     if (!articleId) {
-      return NextResponse.json({ error: 'articleId required' }, { status: 400 });
+      return NextResponse.json({ error: 'articleId is required.' }, { status: 400 });
     }
 
-    if (!user) {
-      return NextResponse.json({ success: true, saved });
-    }
+    const supabase = createServerSupabaseClient();
 
-    // 1. Try Supabase
-    try {
-      if (saved) {
-        await supabaseAdmin.from('bookmarks').upsert({
-          user_id: user.id,
+    if (saved) {
+      const { error: insertErr } = await supabase
+        .from('bookmarks')
+        .insert({
           article_id: articleId,
+          profile_id: staffUser?.id || null,
+          reader_id: reader?.readerId || null,
         });
-      } else {
-        await supabaseAdmin.from('bookmarks').delete().match({
-          user_id: user.id,
-          article_id: articleId,
-        });
+
+      if (insertErr && !insertErr.message?.includes('duplicate key') && !insertErr.message?.includes('unique')) {
+        return NextResponse.json({ error: 'Failed to save bookmark.' }, { status: 500 });
       }
-    } catch {
-      // fallback
+    } else {
+      let deleteQuery = supabase.from('bookmarks').delete().eq('article_id', articleId);
+      if (staffUser) {
+        deleteQuery = deleteQuery.eq('profile_id', staffUser.id);
+      } else if (reader) {
+        deleteQuery = deleteQuery.eq('reader_id', reader.readerId);
+      }
+      const { error: delErr } = await deleteQuery;
+      if (delErr) {
+        return NextResponse.json({ error: 'Failed to remove bookmark.' }, { status: 500 });
+      }
     }
 
-    // 2. Try Prisma
-    try {
-      if (saved) {
-        await prisma.bookmark.upsert({
-          where: {
-            userId_articleId: {
-              userId: user.id,
-              articleId,
-            },
-          },
-          update: {},
-          create: {
-            userId: user.id,
-            articleId,
-          },
-        });
-      } else {
-        await prisma.bookmark.deleteMany({
-          where: {
-            userId: user.id,
-            articleId,
-          },
-        });
-      }
-    } catch {
-      // safe fallback
-    }
-
-    return NextResponse.json({ success: true, saved });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to update bookmark' }, { status: 500 });
+    return NextResponse.json({
+      success: true,
+      articleId,
+      saved,
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || 'Bookmark update failed' }, { status: 500 });
   }
 }

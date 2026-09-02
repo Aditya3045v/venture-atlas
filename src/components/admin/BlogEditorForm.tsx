@@ -60,8 +60,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
 
       if (res.ok) {
         toast('Blog essay saved successfully', 'success');
-        router.push('/admin/blogs');
-        router.refresh();
+        window.location.href = '/admin/blogs';
       } else {
         const data = await res.json();
         toast(data.error || 'Failed to save blog', 'error');
