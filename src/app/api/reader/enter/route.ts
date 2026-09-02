@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { z } from 'zod';
-import { checkRateLimitAsync } from '@/lib/rate-limit';
 import { signReaderToken, READER_COOKIE_NAME } from '@/lib/auth/reader';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
@@ -13,20 +12,6 @@ const readerEnterSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  // Rate limiting: 100 per IP per hour in production; generous in dev
-  const isDev = process.env.NODE_ENV !== 'production';
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
-  
-  if (!isDev && ip !== '127.0.0.1' && ip !== '::1') {
-    const rateLimit = await checkRateLimitAsync(`reader_enter:${ip}`, { windowMs: 3600 * 1000, maxRequests: 100 });
-    if (!rateLimit.success) {
-      return NextResponse.json(
-        { error: 'Rate limit exceeded. Please try again later.' },
-        { status: 429 }
-      );
-    }
-  }
-
   try {
     let body;
     try {
@@ -97,17 +82,24 @@ export async function POST(req: NextRequest) {
         success: true,
         isNewReader,
         email,
+        token,
       },
       {
         status: 200,
       }
     );
 
-    // Set secure va_reader cookie (accessible across all paths)
+    // Set cookies accessible across all paths with 1-year maxAge
     response.cookies.set(READER_COOKIE_NAME, token, {
       path: '/',
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 365 * 24 * 60 * 60, // 1 year
+    });
+
+    response.cookies.set('va_reader_client', '1', {
+      path: '/',
+      httpOnly: false,
       sameSite: 'lax',
       maxAge: 365 * 24 * 60 * 60, // 1 year
     });

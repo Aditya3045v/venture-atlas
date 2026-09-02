@@ -69,11 +69,16 @@ export const LandingView: React.FC = () => {
         setSubscribed(true);
         try {
           localStorage.setItem('va_reader_email', normalizedEmail);
+          if (data.token) {
+            localStorage.setItem('va_reader_token', data.token);
+            document.cookie = `va_reader=${data.token}; path=/; max-age=31536000; SameSite=Lax`;
+          }
+          document.cookie = `va_reader_client=1; path=/; max-age=31536000; SameSite=Lax`;
         } catch {}
         toast('Access granted! Entering intelligence wire...', 'success');
         setTimeout(() => {
           window.location.href = '/';
-        }, 250);
+        }, 200);
       } else {
         toast(data.error || 'Failed to initialize reader access', 'error');
         setLoading(false);
@@ -770,12 +775,13 @@ export const LandingView: React.FC = () => {
             >
               Enter Work Email to Read Now
             </button>
-            <Link
-              href="/"
-              className="w-full sm:w-auto px-7 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border border-white/15"
+            <button
+              type="button"
+              onClick={focusInput}
+              className="w-full sm:w-auto px-7 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border border-white/15 cursor-pointer"
             >
               View Live Stream
-            </Link>
+            </button>
           </div>
         </div>
       </div>

@@ -82,7 +82,9 @@ export async function middleware(request: NextRequest) {
     path.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|mp3)$/);
 
   if (!isPublicOpenRoute) {
-    const hasReaderCookie = !!request.cookies.get('va_reader')?.value;
+    const hasReaderCookie =
+      Boolean(request.cookies.get('va_reader')?.value) ||
+      Boolean(request.cookies.get('va_reader_client')?.value);
     const isStaff = !!user;
 
     if (!hasReaderCookie && !isStaff) {
