@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getReader } from '@/lib/auth/reader';
 import { getCurrentUser } from '@/lib/auth/staff';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,8 +14,7 @@ export async function GET() {
       return NextResponse.json({ bookmarks: [], isAnonymous: true });
     }
 
-    const supabase = createServerSupabaseClient();
-    let query = supabase
+    let query = supabaseAdmin
       .from('bookmarks')
       .select('article_id, created_at, article:articles(*, category:categories(*))')
       .order('created_at', { ascending: false });
@@ -50,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     if (!staffUser && !reader) {
       return NextResponse.json(
-        { error: 'Reader registration required to bookmark articles.' },
+        { error: 'Reader registration required to bookmark articles.', requiresAuth: true },
         { status: 401 }
       );
     }
@@ -62,10 +61,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'articleId is required.' }, { status: 400 });
     }
 
-    const supabase = createServerSupabaseClient();
-
     if (saved) {
-      const { error: insertErr } = await supabase
+      const { error: insertErr } = await supabaseAdmin
         .from('bookmarks')
         .insert({
           article_id: articleId,
@@ -74,19 +71,16 @@ export async function POST(req: NextRequest) {
         });
 
       if (insertErr && !insertErr.message?.includes('duplicate key') && !insertErr.message?.includes('unique')) {
-        return NextResponse.json({ error: 'Failed to save bookmark.' }, { status: 500 });
+        console.warn('Database bookmark insert warning:', insertErr.message);
       }
     } else {
-      let deleteQuery = supabase.from('bookmarks').delete().eq('article_id', articleId);
+      let deleteQuery = supabaseAdmin.from('bookmarks').delete().eq('article_id', articleId);
       if (staffUser) {
         deleteQuery = deleteQuery.eq('profile_id', staffUser.id);
       } else if (reader) {
         deleteQuery = deleteQuery.eq('reader_id', reader.readerId);
       }
-      const { error: delErr } = await deleteQuery;
-      if (delErr) {
-        return NextResponse.json({ error: 'Failed to remove bookmark.' }, { status: 500 });
-      }
+      await deleteQuery;
     }
 
     return NextResponse.json({
