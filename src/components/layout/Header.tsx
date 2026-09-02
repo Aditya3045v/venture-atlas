@@ -65,9 +65,9 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/80 ios-glass transition-colors select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
-        {/* Left: Official Brand Logo & Title -> Clicking navigates to /landing */}
+        {/* Left: Official Brand Logo & Title */}
         <div className="flex items-center gap-6">
-          <Link href="/landing" className="flex items-center group py-1.5" title="Go to Landing Page">
+          <Link href={pathname === '/landing' ? '/landing' : '/'} className="flex items-center group py-1.5" title="Venture Atlas">
             {/* Dark Mode Logo */}
             <img
               src="/logo-dark.png"
