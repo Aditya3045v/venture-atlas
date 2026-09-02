@@ -93,7 +93,8 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
 
       if (res.ok) {
         toast('Blog essay saved successfully', 'success');
-        window.location.href = '/admin/blogs';
+        router.push('/admin/blogs');
+        router.refresh();
       } else {
         const data = await res.json();
         toast(data.error || 'Failed to save blog', 'error');
@@ -277,6 +278,28 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
             />
           </div>
         </div>
+      </div>
+
+      {/* Bottom Action Footer */}
+      <div className="sticky bottom-4 z-30 p-4 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-xl flex items-center justify-end gap-3">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => handleSubmit('DRAFT')}
+          isLoading={submitting}
+        >
+          Save Draft
+        </Button>
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={() => handleSubmit('PUBLISHED')}
+          isLoading={submitting}
+        >
+          Publish Now
+        </Button>
       </div>
     </div>
   );

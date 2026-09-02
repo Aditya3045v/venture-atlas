@@ -3,7 +3,7 @@ import { articleSchema } from '@/lib/validation';
 import { getCurrentUser, canEdit, canPublish } from '@/lib/auth/staff';
 import { logAuditEvent } from '@/lib/audit';
 import { countWords } from '@/lib/sanitize';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
@@ -14,8 +14,7 @@ interface RouteContext {
 
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
-    const supabase = createServerSupabaseClient();
-    const { data: article, error } = await supabase
+    const { data: article, error } = await supabaseAdmin
       .from('articles')
       .select('*, category:categories(*), author:profiles(*)')
       .eq('id', params.id)
@@ -38,10 +37,8 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    const supabase = createServerSupabaseClient();
-
     // Check existing article ownership
-    const { data: existing, error: findError } = await supabase
+    const { data: existing, error: findError } = await supabaseAdmin
       .from('articles')
       .select('id, author_id, status, slug')
       .eq('id', params.id)
@@ -96,7 +93,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       canvas_data: validated.canvasData || null,
     };
 
-    const { data: updated, error: updateError } = await supabase
+    const { data: updated, error: updateError } = await supabaseAdmin
       .from('articles')
       .update(updatePayload)
       .eq('id', params.id)
@@ -148,14 +145,13 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    const supabase = createServerSupabaseClient();
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseAdmin
       .from('articles')
       .select('slug')
       .eq('id', params.id)
       .single();
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('articles')
       .delete()
       .eq('id', params.id);
