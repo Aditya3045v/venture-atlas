@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Guard /admin routes
+  // 1. Guard /admin routes
   if (path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/signout') {
     if (!user) {
       const loginUrl = new URL('/admin/login', request.url);
@@ -63,6 +63,32 @@ export async function middleware(request: NextRequest) {
     if (!role || !['ADMIN', 'EDITOR', 'WRITER'].includes(role)) {
       const loginUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(loginUrl);
+    }
+    return response;
+  }
+
+  // 2. Reader Content Gate: Require email (va_reader cookie or staff login) for News & Feed
+  const isPublicOpenRoute =
+    path === '/landing' ||
+    path.startsWith('/api/') ||
+    path.startsWith('/admin') ||
+    path === '/privacy' ||
+    path === '/terms' ||
+    path === '/imprint' ||
+    path === '/cookies' ||
+    path === '/robots.txt' ||
+    path === '/sitemap.xml' ||
+    path.startsWith('/_next') ||
+    path.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|mp3)$/);
+
+  if (!isPublicOpenRoute) {
+    const hasReaderCookie = !!request.cookies.get('va_reader')?.value;
+    const isStaff = !!user;
+
+    if (!hasReaderCookie && !isStaff) {
+      // Redirect unverified visitor smoothly to landing page to enter email
+      const landingUrl = new URL('/landing', request.url);
+      return NextResponse.redirect(landingUrl);
     }
   }
 
