@@ -99,14 +99,14 @@ async function main() {
     const writerPostRes = await fetch(`${BASE_URL}/api/admin/navigation`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Cookie: writerCookie },
-      body: JSON.stringify({ label: 'Hacked Link', href: '/hacked', orderNum: 99 }),
+      body: JSON.stringify({ label: 'Blocked Security Test', href: '/security-test', orderNum: 99 }),
     });
     console.log(`[PASS] WRITER POST /api/admin/navigation → HTTP ${writerPostRes.status} (Forbidden)`);
 
     const anonPostRes = await fetch(`${BASE_URL}/api/admin/navigation`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ label: 'Hacked Link', href: '/hacked', orderNum: 99 }),
+      body: JSON.stringify({ label: 'Blocked Security Test', href: '/security-test', orderNum: 99 }),
     });
     console.log(`[PASS] Anonymous POST /api/admin/navigation → HTTP ${anonPostRes.status} (Forbidden)\n`);
 

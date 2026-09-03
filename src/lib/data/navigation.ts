@@ -54,8 +54,8 @@ async function getCachedNavigationItems(): Promise<NavigationItem[]> {
 
 export const fetchNavigationItems = unstable_cache(
   getCachedNavigationItems,
-  ['navigation_items_public'],
-  { revalidate: 3600, tags: ['navigation'] }
+  ['navigation_items_v2'],
+  { revalidate: 60, tags: ['navigation'] }
 );
 
 export async function fetchAdminNavigationItems(): Promise<NavigationItem[]> {
