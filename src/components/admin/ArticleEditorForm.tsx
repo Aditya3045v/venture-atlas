@@ -126,6 +126,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewDevice, setPreviewDevice] = useState<'mobile' | 'desktop'>('mobile');
   const [previewTab, setPreviewTab] = useState<'card' | 'canvas'>('card');
+  const [coverPreviewDevice, setCoverPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
 
   const autosaveKey = `va_autosave_article_${initialArticle?.id || 'new'}`;
 
@@ -503,6 +504,78 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
         )}
       </div>
 
+      {/* Recommended Dimensions Guide (Separate Desktop & Mobile Options) */}
+      <div className="p-3.5 rounded-xl bg-surface-muted/70 border border-border space-y-2.5">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <span className="text-[11px] font-mono font-bold uppercase text-text-primary flex items-center gap-1.5">
+            <Sparkles size={13} className="text-amber-500" />
+            Recommended Image Upload Specifications
+          </span>
+          <div className="flex items-center gap-1 bg-surface p-0.5 rounded-lg border border-border text-[10px] font-mono font-bold">
+            <button
+              type="button"
+              onClick={() => setCoverPreviewDevice('desktop')}
+              className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
+                coverPreviewDevice === 'desktop'
+                  ? 'bg-brand text-white shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              🖥️ Desktop (16:9)
+            </button>
+            <button
+              type="button"
+              onClick={() => setCoverPreviewDevice('mobile')}
+              className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
+                coverPreviewDevice === 'mobile'
+                  ? 'bg-brand text-white shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              📱 Mobile (4:5)
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
+          <div
+            onClick={() => setCoverPreviewDevice('desktop')}
+            className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+              coverPreviewDevice === 'desktop'
+                ? 'border-brand/60 bg-brand/10 text-text-primary ring-1 ring-brand/30'
+                : 'border-border/60 bg-surface/50 text-text-secondary hover:border-border'
+            }`}
+          >
+            <div className="font-bold text-text-primary flex items-center justify-between">
+              <span>🖥️ Desktop Hero & Header</span>
+              <span className="text-brand text-[10px] font-bold">16:9 Landscape</span>
+            </div>
+            <div className="text-[10px] text-text-tertiary mt-1 leading-relaxed">
+              • Target Resolution: <strong className="text-text-primary">1200 × 675 px</strong> (or 1600 × 900 px)<br />
+              • Best for: Widescreen article headers & desktop feeds
+            </div>
+          </div>
+
+          <div
+            onClick={() => setCoverPreviewDevice('mobile')}
+            className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+              coverPreviewDevice === 'mobile'
+                ? 'border-brand/60 bg-brand/10 text-text-primary ring-1 ring-brand/30'
+                : 'border-border/60 bg-surface/50 text-text-secondary hover:border-border'
+            }`}
+          >
+            <div className="font-bold text-text-primary flex items-center justify-between">
+              <span>📱 Mobile Feed & Snap Card</span>
+              <span className="text-brand text-[10px] font-bold">4:5 / 9:16 Portrait</span>
+            </div>
+            <div className="text-[10px] text-text-tertiary mt-1 leading-relaxed">
+              • Target Resolution: <strong className="text-text-primary">1080 × 1350 px</strong> (or 800 × 1000 px)<br />
+              • Best for: Smartphone feeds & vertical carousels
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
         {/* Left: Inputs & Presets */}
         <div className="md:col-span-7 space-y-3">
@@ -556,33 +629,46 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
           </div>
         </div>
 
-        {/* Right: Real-time Live Preview Thumbnail */}
+        {/* Right: Real-time Live Preview Thumbnail with Viewport Frame Simulator */}
         <div className="md:col-span-5 flex flex-col justify-center">
-          <div className="relative w-full h-36 sm:h-44 rounded-2xl overflow-hidden bg-surface-muted border border-border flex items-center justify-center shadow-inner">
-            {coverImage ? (
-              <>
-                <img
-                  src={coverImage}
-                  alt="Cover Preview"
-                  className="w-full h-full object-cover"
-                />
-                {photoCredit && (
-                  <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[9px] font-mono text-white/90 border border-white/10 uppercase tracking-wider pointer-events-none">
-                    {photoCredit}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-[10px] font-mono text-text-tertiary">
+              <span>Preview Frame:</span>
+              <span className="font-bold text-text-secondary">
+                {coverPreviewDevice === 'desktop' ? '16:9 Landscape' : '4:5 Portrait'}
+              </span>
+            </div>
+
+            <div
+              className={`relative w-full rounded-2xl overflow-hidden bg-surface-muted border border-border flex items-center justify-center shadow-inner transition-all duration-300 ${
+                coverPreviewDevice === 'desktop' ? 'h-40 sm:h-44 aspect-video' : 'h-48 sm:h-52 aspect-[4/5] max-w-[200px] mx-auto'
+              }`}
+            >
+              {coverImage ? (
+                <>
+                  <img
+                    src={coverImage}
+                    alt="Cover Preview"
+                    className="w-full h-full object-cover"
+                  />
+                  {photoCredit && (
+                    <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[9px] font-mono text-white/90 border border-white/10 uppercase tracking-wider pointer-events-none">
+                      {photoCredit}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <div className="text-center p-4 space-y-1">
+                  <ImageIcon size={28} className="mx-auto text-text-tertiary opacity-40" />
+                  <span className="text-[10px] font-mono uppercase text-text-tertiary block">
+                    No Cover Photo Selected
                   </span>
-                )}
-              </>
-            ) : (
-              <div className="text-center p-4 space-y-1">
-                <ImageIcon size={28} className="mx-auto text-text-tertiary opacity-40" />
-                <span className="text-[10px] font-mono uppercase text-text-tertiary block">
-                  No Cover Photo Selected
-                </span>
-                <span className="text-[9px] font-mono text-text-tertiary block opacity-70">
-                  Select a preset above or paste an image URL
-                </span>
-              </div>
-            )}
+                  <span className="text-[9px] font-mono text-text-tertiary block opacity-70">
+                    Select a preset above or paste an image URL
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Newspaper, LayoutGrid, Bookmark, UserCircle } from 'lucide-react';
+import { Newspaper, BarChart3, Bookmark, UserCircle } from 'lucide-react';
 import { useToast } from '../providers/ToastProvider';
 
 export const MobileNav: React.FC = () => {
@@ -12,7 +12,7 @@ export const MobileNav: React.FC = () => {
 
   const items = [
     { label: 'Feed', href: '/', icon: <Newspaper size={19} /> },
-    { label: 'Desks', href: '/categories/startups', icon: <LayoutGrid size={19} /> },
+    { label: 'Polls', href: '/polls', icon: <BarChart3 size={19} /> },
     { label: 'Saved', href: '/bookmarks', icon: <Bookmark size={19} /> },
     { label: 'Account', href: '/account', icon: <UserCircle size={19} /> },
   ];
