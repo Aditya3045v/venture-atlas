@@ -28,8 +28,7 @@ function mapNavigationItem(row: any): NavigationItem {
 
 async function getCachedNavigationItems(): Promise<NavigationItem[]> {
   try {
-    const supabase = createServerSupabaseClient();
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('navigation_items')
       .select('*')
       .eq('is_active', true)

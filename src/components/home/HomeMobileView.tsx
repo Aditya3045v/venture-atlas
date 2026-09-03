@@ -15,6 +15,8 @@ import {
   Compass,
   Home as HomeIcon,
   User as UserIcon,
+  BarChart3,
+  Vote,
   Bell,
   Radio,
   Briefcase,
@@ -389,15 +391,15 @@ export const HomeMobileView: React.FC<HomeMobileViewProps> = ({
             <span className="w-1.5 h-1.5 rounded-full bg-current mt-0.5" />
           </button>
 
-          {/* Explore / Desks Tab */}
+          {/* Polls Tab */}
           <Link
-            href="/categories/startups"
+            href="/polls"
             onClick={() => setActiveTab('explore')}
             className={`flex flex-col items-center gap-0.5 transition-colors ${
               activeTab === 'explore' ? 'text-blue-600 dark:text-amber-400' : 'text-text-tertiary hover:text-text-primary'
             }`}
           >
-            <Compass size={20} />
+            <BarChart3 size={20} />
           </Link>
 
           {/* Bookmarks Tab */}

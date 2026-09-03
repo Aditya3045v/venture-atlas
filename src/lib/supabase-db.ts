@@ -25,14 +25,11 @@ import { fetchCategories } from './data/categories';
 
 export async function fetchAdminDashboardStats() {
   try {
-    const [articles, auditLogs] = await Promise.all([
-      fetchArticles({ limit: 50, status: 'PUBLISHED' }).catch(() => [] as ArticleItem[]),
-      fetchAuditLogs(10).catch(() => [] as AuditLogItem[]),
+    const [articles, auditLogs, { data: allArticles }] = await Promise.all([
+      fetchArticles({ limit: 10, status: 'PUBLISHED' }).catch(() => [] as ArticleItem[]),
+      fetchAuditLogs(8).catch(() => [] as AuditLogItem[]),
+      supabaseAdmin.from('articles').select('status, view_count'),
     ]);
-
-    const { data: allArticles } = await supabaseAdmin
-      .from('articles')
-      .select('status, view_count');
 
     const statusCounts = (allArticles || []).reduce((acc: Record<string, number>, art) => {
       acc[art.status] = (acc[art.status] || 0) + 1;

@@ -22,6 +22,7 @@ import {
   Zap,
   Shield,
   CheckCircle2,
+  Sparkles,
 } from 'lucide-react';
 import { CanvasData, CanvasMetric, CanvasCalloutBox } from '@/types';
 import { CanvasStoryView } from '@/components/canvas/CanvasStoryView';
@@ -290,16 +291,34 @@ export const CanvasBlockEditor: React.FC<CanvasBlockEditorProps> = ({
                 </h3>
               </div>
 
+              {/* Recommended Dimensions Guide */}
+              <div className="p-3 rounded-xl bg-surface-muted/80 border border-border space-y-1.5 text-[10px] font-mono">
+                <div className="font-bold text-text-primary flex items-center gap-1">
+                  <Sparkles size={12} className="text-amber-500" />
+                  <span>Recommended Canvas Media Sizes:</span>
+                </div>
+                <div className="text-text-secondary grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+                  <div className="p-1.5 rounded-lg bg-surface border border-border/70">
+                    <span className="font-bold text-text-primary block">👤 Founder Photo (1:1 Square)</span>
+                    <span className="text-text-tertiary">400 × 400 px · High-res portrait</span>
+                  </div>
+                  <div className="p-1.5 rounded-lg bg-surface border border-border/70">
+                    <span className="font-bold text-text-primary block">🏢 Company Logo (1:1 / Transparent)</span>
+                    <span className="text-text-tertiary">256 × 256 px · PNG / SVG transparent</span>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-3">
                 <Input
-                  label="Founder / Cover Photo URL"
+                  label="Founder / Cover Photo URL (Recommended 400x400 px)"
                   value={canvas.header?.founderPhoto || ''}
                   onChange={e => updateHeader('founderPhoto', e.target.value)}
                   placeholder="https://images.unsplash.com/..."
                 />
 
                 <Input
-                  label="Company Logo URL (Transparent PNG)"
+                  label="Company Logo URL (Recommended 256x256 Transparent PNG)"
                   value={canvas.header?.companyLogo || ''}
                   onChange={e => updateHeader('companyLogo', e.target.value)}
                   placeholder="https://.../logo.png"

@@ -6,7 +6,7 @@ import { BlogItem, CategoryItem, ContentStatus } from '../../types';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
-import { ArrowLeft, Send, Image as ImageIcon, X } from 'lucide-react';
+import { ArrowLeft, Send, Image as ImageIcon, X, Sparkles } from 'lucide-react';
 
 interface BlogEditorFormProps {
   initialBlog?: BlogItem | null;
@@ -60,6 +60,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
     initialBlog?.categoryId || categories[0]?.id || ''
   );
   const [coverImage, setCoverImage] = useState(initialBlog?.coverImage || '');
+  const [coverPreviewDevice, setCoverPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [readTimeMinutes, setReadTimeMinutes] = useState(initialBlog?.readTimeMinutes || 4);
   const [status, setStatus] = useState<ContentStatus>(initialBlog?.status || 'DRAFT');
   const [submitting, setSubmitting] = useState(false);
@@ -200,8 +201,8 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
           </div>
 
           {/* Rich Cover Photo Card */}
-          <div className="p-4 rounded-xl border border-border bg-surface-muted/50 space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="p-4 sm:p-5 rounded-2xl border border-border bg-surface shadow-card space-y-4">
+            <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <div className="flex items-center gap-1.5">
                 <ImageIcon size={15} className="text-brand" />
                 <label className="text-xs font-mono font-bold uppercase text-text-primary">
@@ -212,15 +213,74 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                 <button
                   type="button"
                   onClick={() => setCoverImage('')}
-                  className="text-[10px] font-mono text-red-500 hover:underline flex items-center gap-1"
+                  className="text-[10px] font-mono text-red-500 hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <X size={11} /> Clear Photo
                 </button>
               )}
             </div>
 
+            {/* Recommended Dimensions Guide */}
+            <div className="p-3 rounded-xl bg-surface-muted/70 border border-border space-y-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span className="text-[11px] font-mono font-bold uppercase text-text-primary flex items-center gap-1.5">
+                  <Sparkles size={13} className="text-amber-500" />
+                  Recommended Image Upload Specifications
+                </span>
+                <div className="flex items-center gap-1 bg-surface p-0.5 rounded-lg border border-border text-[10px] font-mono font-bold">
+                  <button
+                    type="button"
+                    onClick={() => setCoverPreviewDevice('desktop')}
+                    className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
+                      coverPreviewDevice === 'desktop'
+                        ? 'bg-brand text-white shadow-xs'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
+                  >
+                    🖥️ Desktop (16:9)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCoverPreviewDevice('mobile')}
+                    className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
+                      coverPreviewDevice === 'mobile'
+                        ? 'bg-brand text-white shadow-xs'
+                        : 'text-text-secondary hover:text-text-primary'
+                    }`}
+                  >
+                    📱 Mobile (4:5)
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] font-mono">
+                <div
+                  onClick={() => setCoverPreviewDevice('desktop')}
+                  className={`p-2 rounded-lg border transition-all cursor-pointer ${
+                    coverPreviewDevice === 'desktop'
+                      ? 'border-brand/60 bg-brand/10 text-text-primary ring-1 ring-brand/30'
+                      : 'border-border/60 bg-surface/50 text-text-secondary'
+                  }`}
+                >
+                  <span className="font-bold block text-text-primary">🖥️ Desktop Hero: 1200 × 675 px (16:9)</span>
+                  <span className="text-text-tertiary">Landscape banner for widescreen desktop reading</span>
+                </div>
+                <div
+                  onClick={() => setCoverPreviewDevice('mobile')}
+                  className={`p-2 rounded-lg border transition-all cursor-pointer ${
+                    coverPreviewDevice === 'mobile'
+                      ? 'border-brand/60 bg-brand/10 text-text-primary ring-1 ring-brand/30'
+                      : 'border-border/60 bg-surface/50 text-text-secondary'
+                  }`}
+                >
+                  <span className="font-bold block text-text-primary">📱 Mobile Feed: 1080 × 1350 px (4:5)</span>
+                  <span className="text-text-tertiary">Portrait card for smartphone feeds & carousels</span>
+                </div>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              <div className="md:col-span-8 space-y-2">
+              <div className="md:col-span-7 space-y-2">
                 <input
                   type="url"
                   value={coverImage}
@@ -238,7 +298,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                         setCoverImage(preset.url);
                         toast(`Applied ${preset.label} photo`, 'info');
                       }}
-                      className="px-2 py-0.5 rounded-lg border border-border bg-surface hover:bg-border/60 text-[10px] font-mono text-text-secondary hover:text-text-primary transition-all active:scale-95"
+                      className="px-2 py-0.5 rounded-lg border border-border bg-surface hover:bg-border/60 text-[10px] font-mono text-text-secondary hover:text-text-primary transition-all active:scale-95 cursor-pointer"
                     >
                       {preset.label}
                     </button>
@@ -246,8 +306,12 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                 </div>
               </div>
 
-              <div className="md:col-span-4">
-                <div className="relative w-full h-28 rounded-xl overflow-hidden bg-surface border border-border flex items-center justify-center">
+              <div className="md:col-span-5 flex flex-col justify-center">
+                <div
+                  className={`relative w-full rounded-xl overflow-hidden bg-surface border border-border flex items-center justify-center transition-all duration-300 ${
+                    coverPreviewDevice === 'desktop' ? 'h-32 sm:h-36 aspect-video' : 'h-40 sm:h-44 aspect-[4/5] max-w-[160px] mx-auto'
+                  }`}
+                >
                   {coverImage ? (
                     <img
                       src={coverImage}

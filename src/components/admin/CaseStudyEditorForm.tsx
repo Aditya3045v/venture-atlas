@@ -7,7 +7,7 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
 import { CanvasBlockEditor } from './CanvasBlockEditor';
-import { ArrowLeft, Send, Palette, FileText, Image as ImageIcon, X } from 'lucide-react';
+import { ArrowLeft, Send, Palette, FileText, Image as ImageIcon, X, Sparkles } from 'lucide-react';
 
 interface CaseStudyEditorFormProps {
   initialCaseStudy?: CaseStudyItem | null;
@@ -59,35 +59,38 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
     initialCaseStudy?.title || 'CRED — Jab "Exclusive" Hi Business Model Ban Gaya'
   );
   const [company, setCompany] = useState(initialCaseStudy?.company || 'CRED');
-  const [valuation, setValuation] = useState(initialCaseStudy?.valuation || '~ $6.4 Billion (Approx)');
-  const [stage, setStage] = useState(initialCaseStudy?.stage || 'Scale / Unicorn');
-  const [keyMetric, setKeyMetric] = useState(initialCaseStudy?.keyMetric || '$800+ Million');
+  const [valuation, setValuation] = useState(initialCaseStudy?.valuation || '$6.4B');
+  const [stage, setStage] = useState(initialCaseStudy?.stage || 'Series F');
+  const [keyMetric, setKeyMetric] = useState(
+    initialCaseStudy?.keyMetric || '$800M+ Raised'
+  );
   const [summary, setSummary] = useState(
     initialCaseStudy?.summary ||
-      'Kunal Shah ne 2018 mein CRED launch kiya. Ye app sirf un logon ke liye hai jinka credit score achha hota hai. Users credit card bill pay karte hain, rewards/coins milte hain, jo brands discounts mein use hote hain.'
+      'CRED ne India ke top credit card holders ko ek platform par lakar high-trust consumer network banaya.'
   );
   const [challenge, setChallenge] = useState(
     initialCaseStudy?.challenge ||
-      'Har business sabke liye nahi hota. Kabhi-kabhi exclusivity hi sabse badi strength ban jaati hai. Growth aur monetization dono balance hona zaroori hai.'
+      'High-trust user base build karna aur unhe daily active rakhna.'
   );
   const [strategy, setStrategy] = useState(
     initialCaseStudy?.strategy ||
-      'Seed Round (2018) → Series A → Series B → Series C → Series D → Series E → Series F+\nLead Investors: Sequoia Capital, Tiger Global, SoftBank, Coatue, Falcon Edge, Steadview Capital, GIC, RTP Global & others'
+      'CRED Coins, reward drops, IPL campaigns aur exclusivity factor.'
   );
   const [outcome, setOutcome] = useState(
     initialCaseStudy?.outcome ||
-      'CRED ne sirf ek app nahi, ek movement create kiya hai — Status, Trust aur Exclusivity.'
+      '6.4B valuation, millions of premium users, lending & merchant monetization.'
   );
-  const [body, setBody] = useState(initialCaseStudy?.body || summary);
   const [authorName, setAuthorName] = useState(initialCaseStudy?.authorName || 'Aditya Poddar');
   const [authorRole, setAuthorRole] = useState(initialCaseStudy?.authorRole || 'Senior Venture Analyst');
+  const [body, setBody] = useState(initialCaseStudy?.body || '');
   const [categoryId, setCategoryId] = useState(
     initialCaseStudy?.categoryId || categories[0]?.id || ''
   );
   const [coverImage, setCoverImage] = useState(
     initialCaseStudy?.coverImage ||
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'
+      'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80'
   );
+  const [coverPreviewDevice, setCoverPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [readTimeMinutes, setReadTimeMinutes] = useState(initialCaseStudy?.readTimeMinutes || 4);
   const [status, setStatus] = useState<ContentStatus>(initialCaseStudy?.status || 'PUBLISHED');
   const [submitting, setSubmitting] = useState(false);
@@ -215,8 +218,67 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
         )}
       </div>
 
+      {/* Recommended Dimensions Guide */}
+      <div className="p-3 rounded-xl bg-surface-muted/70 border border-border space-y-2">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <span className="text-[11px] font-mono font-bold uppercase text-text-primary flex items-center gap-1.5">
+            <Sparkles size={13} className="text-amber-500" />
+            Recommended Image Upload Specifications
+          </span>
+          <div className="flex items-center gap-1 bg-surface p-0.5 rounded-lg border border-border text-[10px] font-mono font-bold">
+            <button
+              type="button"
+              onClick={() => setCoverPreviewDevice('desktop')}
+              className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
+                coverPreviewDevice === 'desktop'
+                  ? 'bg-brand text-white shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              🖥️ Desktop (16:9)
+            </button>
+            <button
+              type="button"
+              onClick={() => setCoverPreviewDevice('mobile')}
+              className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
+                coverPreviewDevice === 'mobile'
+                  ? 'bg-brand text-white shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              📱 Mobile (4:5)
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] font-mono">
+          <div
+            onClick={() => setCoverPreviewDevice('desktop')}
+            className={`p-2 rounded-lg border transition-all cursor-pointer ${
+              coverPreviewDevice === 'desktop'
+                ? 'border-brand/60 bg-brand/10 text-text-primary ring-1 ring-brand/30'
+                : 'border-border/60 bg-surface/50 text-text-secondary'
+            }`}
+          >
+            <span className="font-bold block text-text-primary">🖥️ Desktop Hero: 1200 × 675 px (16:9)</span>
+            <span className="text-text-tertiary">Landscape teardown banner for desktop monitors</span>
+          </div>
+          <div
+            onClick={() => setCoverPreviewDevice('mobile')}
+            className={`p-2 rounded-lg border transition-all cursor-pointer ${
+              coverPreviewDevice === 'mobile'
+                ? 'border-brand/60 bg-brand/10 text-text-primary ring-1 ring-brand/30'
+                : 'border-border/60 bg-surface/50 text-text-secondary'
+            }`}
+          >
+            <span className="font-bold block text-text-primary">📱 Mobile Feed: 1080 × 1350 px (4:5)</span>
+            <span className="text-text-tertiary">Portrait card for mobile feeds & carousels</span>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-        <div className="md:col-span-8 space-y-2">
+        <div className="md:col-span-7 space-y-2">
           <input
             type="url"
             value={coverImage}
@@ -242,8 +304,12 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
           </div>
         </div>
 
-        <div className="md:col-span-4">
-          <div className="relative w-full h-28 rounded-xl overflow-hidden bg-surface border border-border flex items-center justify-center">
+        <div className="md:col-span-5 flex flex-col justify-center">
+          <div
+            className={`relative w-full rounded-xl overflow-hidden bg-surface border border-border flex items-center justify-center transition-all duration-300 ${
+              coverPreviewDevice === 'desktop' ? 'h-32 sm:h-36 aspect-video' : 'h-40 sm:h-44 aspect-[4/5] max-w-[160px] mx-auto'
+            }`}
+          >
             {coverImage ? (
               <img
                 src={coverImage}
