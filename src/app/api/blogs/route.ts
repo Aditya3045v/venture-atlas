@@ -67,8 +67,26 @@ export async function POST(req: NextRequest) {
       metadata: { title: validated.title, slug },
     });
 
+    if (validated.status === 'PUBLISHED') {
+      try {
+        const { revalidateTag, revalidatePath } = require('next/cache');
+        const { submitIndexNow } = require('@/lib/indexnow');
+        revalidateTag('blogs');
+        revalidateTag(`blog:${slug}`);
+        revalidatePath(`/blogs/${slug}`);
+        revalidatePath('/blogs');
+        revalidatePath('/');
+        await submitIndexNow(`/blogs/${slug}`);
+      } catch (e) {
+        console.warn('Blog post-publish revalidation error:', e);
+      }
+    }
+
     return NextResponse.json({ blog: data }, { status: 201 });
   } catch (error: any) {
+    if (error.errors) {
+      return NextResponse.json({ error: error.errors[0]?.message || 'Validation error' }, { status: 400 });
+    }
     return NextResponse.json({ error: error.message || 'Failed to create blog' }, { status: 400 });
   }
 }

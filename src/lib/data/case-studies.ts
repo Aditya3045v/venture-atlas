@@ -132,3 +132,30 @@ export async function fetchCaseStudyById(id: string): Promise<CaseStudyItem | nu
   }
 }
 
+export async function fetchCaseStudyByCompany(companyName: string): Promise<CaseStudyItem | null> {
+  if (!companyName) return null;
+  return unstable_cache(
+    async (comp: string) => {
+      try {
+        const { data, error } = await supabaseAdmin
+          .from('case_studies')
+          .select('*, category:categories(*), author:profiles(*)')
+          .ilike('company', comp.trim())
+          .eq('status', 'PUBLISHED')
+          .limit(1)
+          .maybeSingle();
+
+        if (error || !data) return null;
+        return mapCaseStudy(data);
+      } catch {
+        return null;
+      }
+    },
+    ['case-study-by-company', companyName.toLowerCase()],
+    {
+      tags: ['case-studies'],
+      revalidate: 3600,
+    }
+  )(companyName);
+}
+

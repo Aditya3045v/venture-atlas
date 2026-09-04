@@ -2,10 +2,14 @@ import React from 'react';
 import Link from 'next/link';
 import { FileText, ArrowLeft } from 'lucide-react';
 
-export const metadata = {
-  title: 'Terms of Service — Venture Atlas',
+import { constructMetadata } from '@/lib/seo';
+
+export const metadata = constructMetadata({
+  title: 'Terms of Service',
   description: 'Terms and conditions governing the use of Venture Atlas editorial briefings and playbooks.',
-};
+  canonicalPath: '/terms',
+  section: 'Legal',
+});
 
 export default function TermsOfServicePage() {
   return (

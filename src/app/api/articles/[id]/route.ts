@@ -125,6 +125,11 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       }
       revalidatePath('/');
       revalidatePath('/articles');
+
+      const { submitIndexNow } = require('@/lib/indexnow');
+      if (updated?.slug) {
+        await submitIndexNow(`/articles/${updated.slug}`);
+      }
     } catch {
       // ignore
     }
@@ -168,12 +173,14 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
       metadata: { id: params.id },
     });
 
-    // Invalidate caches
+    // Invalidate caches & notify IndexNow of deletion
     try {
       revalidateTag('articles');
       if (existing?.slug) {
         revalidateTag(`article:${existing.slug}`);
         revalidatePath(`/articles/${existing.slug}`);
+        const { submitIndexNow } = require('@/lib/indexnow');
+        await submitIndexNow(`/articles/${existing.slug}`);
       }
       revalidatePath('/');
       revalidatePath('/articles');

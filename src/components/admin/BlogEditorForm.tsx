@@ -60,6 +60,9 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
     initialBlog?.categoryId || categories[0]?.id || ''
   );
   const [coverImage, setCoverImage] = useState(initialBlog?.coverImage || '');
+  const [photoCredit, setPhotoCredit] = useState(initialBlog?.photoCredit || '');
+  const [seoTitle, setSeoTitle] = useState(initialBlog?.seoTitle || '');
+  const [seoDescription, setSeoDescription] = useState(initialBlog?.seoDescription || '');
   const [coverPreviewDevice, setCoverPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [readTimeMinutes, setReadTimeMinutes] = useState(initialBlog?.readTimeMinutes || 4);
   const [status, setStatus] = useState<ContentStatus>(initialBlog?.status || 'DRAFT');
@@ -71,6 +74,21 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
       return;
     }
 
+    if (targetStatus === 'PUBLISHED') {
+      if (!seoTitle.trim()) {
+        toast('Publishing blocked: SEO Meta Title is required before publishing.', 'error');
+        return;
+      }
+      if (!seoDescription.trim()) {
+        toast('Publishing blocked: SEO Meta Description is required before publishing.', 'error');
+        return;
+      }
+      if (coverImage.trim() && !photoCredit.trim()) {
+        toast('Publishing blocked: Cover image alt text / attribution is required before publishing.', 'error');
+        return;
+      }
+    }
+
     setSubmitting(true);
     const payload = {
       title,
@@ -78,8 +96,11 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
       body,
       categoryId,
       coverImage: coverImage.trim() || null,
+      photoCredit: photoCredit.trim() || null,
       readTimeMinutes: Number(readTimeMinutes),
       status: targetStatus,
+      seoTitle: seoTitle.trim() || null,
+      seoDescription: seoDescription.trim() || null,
     };
 
     try {
@@ -304,6 +325,18 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                     </button>
                   ))}
                 </div>
+                <div className="pt-2">
+                  <label className="block text-[10px] font-mono font-bold uppercase text-text-secondary mb-1">
+                    Image Alt Text / Photo Credit (Required for Publishing)
+                  </label>
+                  <input
+                    type="text"
+                    value={photoCredit}
+                    onChange={e => setPhotoCredit(e.target.value)}
+                    placeholder="e.g. Photo by Corporate Lens / Unsplash"
+                    className="w-full text-xs font-mono p-2.5 bg-surface border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+                  />
+                </div>
               </div>
 
               <div className="md:col-span-5 flex flex-col justify-center">
@@ -315,7 +348,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                   {coverImage ? (
                     <img
                       src={coverImage}
-                      alt="Cover Preview"
+                      alt={photoCredit || 'Cover Preview'}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -325,6 +358,58 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SEO Metadata Card */}
+          <div className="p-5 rounded-2xl border border-border bg-surface space-y-4">
+            <div className="flex items-center justify-between border-b border-border/60 pb-2">
+              <span className="text-xs font-mono font-bold uppercase text-text-primary">
+                Search Engine & AI Discoverability Metadata
+              </span>
+              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                Required for Publish
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-xs font-mono font-semibold text-text-secondary">
+                    SEO Meta Title
+                  </label>
+                  <span className={`text-[10px] font-mono ${seoTitle.length > 60 ? 'text-amber-500 font-bold' : 'text-text-tertiary'}`}>
+                    {seoTitle.length}/60 chars
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={seoTitle}
+                  onChange={e => setSeoTitle(e.target.value)}
+                  placeholder="e.g. Modern Founder Blueprint — Venture Atlas"
+                  maxLength={70}
+                  className="w-full text-xs font-mono p-2.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-xs font-mono font-semibold text-text-secondary">
+                    SEO Meta Description
+                  </label>
+                  <span className={`text-[10px] font-mono ${seoDescription.length > 155 ? 'text-amber-500 font-bold' : 'text-text-tertiary'}`}>
+                    {seoDescription.length}/155 chars
+                  </span>
+                </div>
+                <textarea
+                  rows={2}
+                  value={seoDescription}
+                  onChange={e => setSeoDescription(e.target.value)}
+                  placeholder="Executive summary shown in Google Search results and social previews..."
+                  maxLength={160}
+                  className="w-full text-xs font-mono p-2.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+                />
               </div>
             </div>
           </div>

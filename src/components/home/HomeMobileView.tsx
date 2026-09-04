@@ -129,7 +129,7 @@ export const HomeMobileView: React.FC<HomeMobileViewProps> = ({
             Featured
           </h2>
           <Link
-            href="/categories/funding"
+            href="/categories/unicorn"
             className="text-xs font-mono font-bold text-text-tertiary hover:text-text-primary transition-colors"
           >
             View all

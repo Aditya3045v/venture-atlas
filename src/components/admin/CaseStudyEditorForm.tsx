@@ -90,6 +90,9 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
     initialCaseStudy?.coverImage ||
       'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80'
   );
+  const [photoCredit, setPhotoCredit] = useState(initialCaseStudy?.photoCredit || '');
+  const [seoTitle, setSeoTitle] = useState(initialCaseStudy?.seoTitle || '');
+  const [seoDescription, setSeoDescription] = useState(initialCaseStudy?.seoDescription || '');
   const [coverPreviewDevice, setCoverPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [readTimeMinutes, setReadTimeMinutes] = useState(initialCaseStudy?.readTimeMinutes || 4);
   const [status, setStatus] = useState<ContentStatus>(initialCaseStudy?.status || 'PUBLISHED');
@@ -123,8 +126,8 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       calloutBoxes: [
         {
           id: 'b1',
-          title: 'Funding Journey',
-          content: strategy || 'Seed Round (2018) → Series A → Series B → Series C → Series D → Series E → Series F+\nLead Investors: Sequoia Capital, Tiger Global, SoftBank, Coatue, Falcon Edge, Steadview Capital, GIC, RTP Global & others',
+          title: 'Core Secret',
+          content: strategy || 'High-trust, creditworthy individuals ka network monetize karna — unhe exclusive rewards aur premium financial products offer karke.',
           icon: 'trending',
           variant: 'green',
         },
@@ -152,6 +155,13 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       return;
     }
 
+    if (targetStatus === 'PUBLISHED') {
+      if (coverImage.trim() && !photoCredit.trim()) {
+        toast('Publishing blocked: Cover image alt text / attribution is required before publishing.', 'error');
+        return;
+      }
+    }
+
     setSubmitting(true);
     const payload = {
       title,
@@ -168,8 +178,11 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       body: body.trim() || summary,
       categoryId,
       coverImage: coverImage.trim() || null,
+      photoCredit: photoCredit.trim() || null,
       readTimeMinutes: Number(readTimeMinutes),
       status: targetStatus,
+      seoTitle: seoTitle.trim() || null,
+      seoDescription: seoDescription.trim() || null,
       canvasData,
     };
 
@@ -302,6 +315,19 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
               </button>
             ))}
           </div>
+
+          <div className="pt-2">
+            <label className="block text-[10px] font-mono font-bold uppercase text-text-secondary mb-1">
+              Image Alt Text / Photo Credit (Required for Publishing)
+            </label>
+            <input
+              type="text"
+              value={photoCredit}
+              onChange={e => setPhotoCredit(e.target.value)}
+              placeholder="e.g. Photo by Corporate Lens / Unsplash"
+              className="w-full text-xs font-mono p-2.5 bg-surface border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+            />
+          </div>
         </div>
 
         <div className="md:col-span-5 flex flex-col justify-center">
@@ -313,7 +339,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
             {coverImage ? (
               <img
                 src={coverImage}
-                alt="Cover Preview"
+                alt={photoCredit || 'Cover Preview'}
                 className="w-full h-full object-cover"
               />
             ) : (

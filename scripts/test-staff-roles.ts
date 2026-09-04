@@ -56,9 +56,9 @@ function fail(name: string, detail: string) {
 
 // Dynamic ephemeral test credentials
 const testNonce = Date.now();
-const WRITER_EMAIL = `temp.writer.${testNonce}@test.ventureatlas.io`;
-const EDITOR_EMAIL = `temp.editor.${testNonce}@test.ventureatlas.io`;
-const ADMIN_EMAIL  = `temp.admin.${testNonce}@test.ventureatlas.io`;
+const WRITER_EMAIL = `temp.writer.${testNonce}@test.ventureatlas.in`;
+const EDITOR_EMAIL = `temp.editor.${testNonce}@test.ventureatlas.in`;
+const ADMIN_EMAIL  = `temp.admin.${testNonce}@test.ventureatlas.in`;
 
 const WRITER_PW = `WriterTempPass!${testNonce}`;
 const EDITOR_PW = `EditorTempPass!${testNonce}`;
@@ -68,8 +68,18 @@ let WRITER_ID = '';
 let EDITOR_ID = '';
 let ADMIN_ID  = '';
 
-async function cleanupTempStaff() {
-  const idsToDelete = [WRITER_ID, EDITOR_ID, ADMIN_ID].filter(Boolean);
+const ephemeralArticleIds: string[] = [];
+const ephemeralCommentIds: string[] = [];
+const ephemeralUserIds: string[] = [];
+
+async function cleanupEphemeralFixtures() {
+  for (const id of ephemeralArticleIds) {
+    try { await serviceDb.from('articles').delete().eq('id', id); } catch {}
+  }
+  for (const id of ephemeralCommentIds) {
+    try { await serviceDb.from('comments').delete().eq('id', id); } catch {}
+  }
+  const idsToDelete = [WRITER_ID, EDITOR_ID, ADMIN_ID, ...ephemeralUserIds].filter(Boolean);
   for (const id of idsToDelete) {
     try {
       await serviceDb.from('profiles').delete().eq('id', id);
@@ -179,6 +189,15 @@ async function run() {
   console.log('   STAFF ROLE ENFORCEMENT — REAL HTTP TEST SUITE   ');
   console.log('====================================================\n');
 
+  // Capture before-snapshot
+  const { data: initialArticles } = await serviceDb.from('articles').select('id, slug, title, status, summary, word_count, read_time_minutes, author_id, updated_at').order('id');
+  const { data: initialBlogs } = await serviceDb.from('blog_posts').select('id, slug, title, status, author_id, updated_at').order('id');
+  const { data: initialCases } = await serviceDb.from('case_studies').select('id, slug, title, status, author_id, updated_at').order('id');
+
+  let adminDraft: any = null;
+  let adminPublished: any = null;
+  let adminDraftToPublish: any = null;
+
   try {
     console.log('Creating ephemeral test staff accounts in Supabase Auth...');
     WRITER_ID = await createTempStaffUser(WRITER_EMAIL, WRITER_PW, 'WRITER', 'Temp Writer');
@@ -216,16 +235,45 @@ async function run() {
       console.log('Signed in as ADMIN\n');
     } catch (e: any) { console.error(`FATAL: Cannot sign in as ADMIN: ${e.message}`); process.exit(1); }
 
-    // Create an Admin-authored DRAFT article for cross-author tests (W5, E1)
-    await serviceDb.from('articles').insert({
-      title: 'Admin Draft for Cross Author Test ' + testNonce,
-      slug: 'admin-draft-' + testNonce,
+    // 1. Admin-authored draft for W5, E1, E2
+    const res1 = await serviceDb.from('articles').insert({
+      title: 'Ephemeral Admin Draft ' + testNonce,
+      slug: 'ephemeral-admin-draft-' + testNonce,
       summary: 'Summary for admin draft testing sixty words count here to validate permissions.',
       body: 'Body content for admin draft testing.',
       status: 'DRAFT',
       author_id: ADMIN_ID,
       category_id: categoryId,
-    });
+    }).select().single();
+    adminDraft = res1.data;
+    if (adminDraft) ephemeralArticleIds.push(adminDraft.id);
+
+    // 2. Admin-authored published article for W6, E3, CM
+    const res2 = await serviceDb.from('articles').insert({
+      title: 'Ephemeral Admin Published ' + testNonce,
+      slug: 'ephemeral-admin-published-' + testNonce,
+      summary: 'Summary for admin published article testing sixty words count here to validate permissions.',
+      body: 'Body content for admin published article testing.',
+      status: 'PUBLISHED',
+      published_at: new Date().toISOString(),
+      author_id: ADMIN_ID,
+      category_id: categoryId,
+    }).select().single();
+    adminPublished = res2.data;
+    if (adminPublished) ephemeralArticleIds.push(adminPublished.id);
+
+    // 3. Admin-authored draft for A3 publishing test
+    const res3 = await serviceDb.from('articles').insert({
+      title: 'Ephemeral Admin Draft For A3 ' + testNonce,
+      slug: 'ephemeral-admin-draft-a3-' + testNonce,
+      summary: 'Summary for admin draft for publishing test sixty words count here to validate permissions.',
+      body: 'Body content for admin draft publishing test.',
+      status: 'DRAFT',
+      author_id: ADMIN_ID,
+      category_id: categoryId,
+    }).select().single();
+    adminDraftToPublish = res3.data;
+    if (adminDraftToPublish) ephemeralArticleIds.push(adminDraftToPublish.id);
 
   // ================================================================
   // SECTION W: WRITER assertions
@@ -244,6 +292,7 @@ async function run() {
     });
     if (status === 201 && json.article?.id) {
       writerDraftId = json.article.id;
+      ephemeralArticleIds.push(writerDraftId!);
       const row = await getDbRow('articles', writerDraftId!);
       if (row?.status === 'DRAFT' && row?.author_id === WRITER_ID) {
         pass('W1: WRITER POST /api/articles (DRAFT) → 201, DB row is DRAFT, author_id = WRITER');
@@ -312,49 +361,43 @@ async function run() {
   }
 
   // W5: WRITER CANNOT edit another author's draft
-  {
-    const otherDraft = await getFirstDraftArticle(ADMIN_ID);
-    if (otherDraft) {
-      const { status } = await apiCall('PUT', `/api/articles/${otherDraft.id}`, writerCookie, {
-        title: 'Hijacked Article ' + Date.now(),
-        summary: 'Writer attempting to edit another author article which must be strictly blocked by role enforcement in the venture atlas content management platform.',
-        body: 'Hijacked body content with more than twenty characters for validation.',
-        categoryId,
-        status: 'DRAFT',
-      });
-      if (status === 403) {
-        const row = await getDbRow('articles', otherDraft.id);
-        if (row?.author_id === ADMIN_ID) {
-          pass('W5: WRITER PUT another author\'s draft → 403, DB row author_id unchanged');
-        } else {
-          fail('W5: WRITER PUT another author\'s draft', `author_id changed to: ${row?.author_id}`);
-        }
+  if (adminDraft) {
+    const { status } = await apiCall('PUT', `/api/articles/${adminDraft.id}`, writerCookie, {
+      title: 'Hijacked Article ' + testNonce,
+      summary: 'Writer attempting to edit another author article which must be strictly blocked by role enforcement in the venture atlas content management platform.',
+      body: 'Hijacked body content with more than twenty characters for validation.',
+      categoryId,
+      status: 'DRAFT',
+    });
+    if (status === 403) {
+      const row = await getDbRow('articles', adminDraft.id);
+      if (row?.author_id === ADMIN_ID) {
+        pass('W5: WRITER PUT another author\'s draft → 403, DB row author_id unchanged');
       } else {
-        fail('W5: WRITER PUT another author\'s draft', `Got ${status}`);
+        fail('W5: WRITER PUT another author\'s draft', `author_id changed to: ${row?.author_id}`);
       }
     } else {
-      fail('W5: WRITER PUT another author\'s draft', 'No other-author draft found in DB');
+      fail('W5: WRITER PUT another author\'s draft', `Got ${status}`);
     }
+  } else {
+    fail('W5: WRITER PUT another author\'s draft', 'No ephemeral admin draft found');
   }
 
   // W6: WRITER CANNOT DELETE any article
-  {
-    const anyPublished = await getFirstPublishedArticle();
-    if (anyPublished) {
-      const { status } = await apiCall('DELETE', `/api/articles/${anyPublished.id}`, writerCookie);
-      if (status === 403) {
-        const row = await getDbRow('articles', anyPublished.id);
-        if (row) {
-          pass('W6: WRITER DELETE article → 403, DB row still exists');
-        } else {
-          fail('W6: WRITER DELETE article', 'Row was DELETED despite 403');
-        }
+  if (adminPublished) {
+    const { status } = await apiCall('DELETE', `/api/articles/${adminPublished.id}`, writerCookie);
+    if (status === 403) {
+      const row = await getDbRow('articles', adminPublished.id);
+      if (row) {
+        pass('W6: WRITER DELETE article → 403, DB row still exists');
       } else {
-        fail('W6: WRITER DELETE article', `Got ${status}`);
+        fail('W6: WRITER DELETE article', 'Row was DELETED despite 403');
       }
     } else {
-      fail('W6: WRITER DELETE article', 'No published article found');
+      fail('W6: WRITER DELETE article', `Got ${status}`);
     }
+  } else {
+    fail('W6: WRITER DELETE article', 'No ephemeral published article found');
   }
 
   // W7: WRITER CANNOT reach /api/admin/users
@@ -403,24 +446,21 @@ async function run() {
 
   // E1: EDITOR can publish a DRAFT article
   let editorPublishedId: string | null = null;
-  {
-    const draft = await getFirstDraftArticle(ADMIN_ID);
-    if (draft) {
-      const { status, json } = await apiCall('PATCH', `/api/articles/${draft.id}/status`, editorCookie, { status: 'PUBLISHED' });
-      if (status === 200) {
-        const row = await getDbRow('articles', draft.id);
-        if (row?.status === 'PUBLISHED') {
-          editorPublishedId = draft.id;
-          pass('E1: EDITOR PATCH /status PUBLISHED → 200, DB row = PUBLISHED');
-        } else {
-          fail('E1: EDITOR PATCH /status PUBLISHED', `DB status: ${row?.status}`);
-        }
+  if (adminDraft) {
+    const { status, json } = await apiCall('PATCH', `/api/articles/${adminDraft.id}/status`, editorCookie, { status: 'PUBLISHED' });
+    if (status === 200) {
+      const row = await getDbRow('articles', adminDraft.id);
+      if (row?.status === 'PUBLISHED') {
+        editorPublishedId = adminDraft.id;
+        pass('E1: EDITOR PATCH /status PUBLISHED → 200, DB row = PUBLISHED');
       } else {
-        fail('E1: EDITOR PATCH /status PUBLISHED', `status=${status}, body=${JSON.stringify(json)}`);
+        fail('E1: EDITOR PATCH /status PUBLISHED', `DB status: ${row?.status}`);
       }
     } else {
-      fail('E1: EDITOR PATCH /status PUBLISHED', 'No admin-authored DRAFT found');
+      fail('E1: EDITOR PATCH /status PUBLISHED', `status=${status}, body=${JSON.stringify(json)}`);
     }
+  } else {
+    fail('E1: EDITOR PATCH /status PUBLISHED', 'No ephemeral admin draft found');
   }
 
   // E2: EDITOR can unpublish (set back to DRAFT)
@@ -440,25 +480,24 @@ async function run() {
     fail('E2: EDITOR unpublish', 'skipped — E1 failed');
   }
 
-  // E3: EDITOR can edit any article
-  {
-    const any = await getFirstPublishedArticle();
-    if (any) {
-      const { status } = await apiCall('PUT', `/api/articles/${any.id}`, editorCookie, {
-        title: any.slug + ' (editor-edited) ' + Date.now(),
-        summary: 'This is an editor edited sixty-word summary testing that editors can modify any article regardless of author within the venture atlas content management system.',
-        body: 'Editor edited body content with more than twenty characters for validation.',
-        categoryId,
-        status: 'PUBLISHED',
-      });
-      if (status === 200) {
-        pass('E3: EDITOR PUT any article → 200');
-      } else {
-        fail('E3: EDITOR PUT any article', `Got ${status}`);
-      }
+  // E3: EDITOR can edit any article (uses ephemeral published article)
+  if (adminPublished) {
+    const { status } = await apiCall('PUT', `/api/articles/${adminPublished.id}`, editorCookie, {
+      title: 'Ephemeral Admin Published (editor-edited) ' + testNonce,
+      summary: 'This is an editor edited sixty-word summary testing that editors can modify any article regardless of author within the venture atlas content management system.',
+      body: 'Editor edited body content with more than twenty characters for validation.',
+      categoryId,
+      status: 'PUBLISHED',
+      seoTitle: 'Ephemeral Test SEO Title ' + testNonce,
+      seoDescription: 'Ephemeral Test SEO Description for role verification.',
+    });
+    if (status === 200) {
+      pass('E3: EDITOR PUT any article → 200');
     } else {
-      fail('E3: EDITOR PUT any article', 'No published article found');
+      fail('E3: EDITOR PUT any article', `Got ${status}`);
     }
+  } else {
+    fail('E3: EDITOR PUT any article', 'No ephemeral published article found');
   }
 
   // E4: EDITOR CANNOT reach /api/admin/users
@@ -523,13 +562,14 @@ async function run() {
   let newUserId: string | null = null;
   {
     const { status, json } = await apiCall('POST', '/api/admin/users', adminCookie, {
-      email: `temp.staff.${Date.now()}@ventureatlas.io`,
+      email: `temp.staff.${testNonce}@ventureatlas.in`,
       name: 'Temp Staff',
       role: 'WRITER',
       password: 'TempStaff-Secure-2026!',
     });
     if (status === 201 && json.user?.id) {
       newUserId = json.user.id;
+      ephemeralUserIds.push(newUserId!);
       const row = await getDbRow('profiles', newUserId!);
       if (row?.role === 'WRITER') {
         pass('A2: ADMIN POST /api/admin/users → 201, DB profile created with WRITER role');
@@ -541,24 +581,21 @@ async function run() {
     }
   }
 
-  // A3: ADMIN can publish an article
-  {
-    const draft = await getFirstDraftArticle();
-    if (draft) {
-      const { status } = await apiCall('PATCH', `/api/articles/${draft.id}/status`, adminCookie, { status: 'PUBLISHED' });
-      if (status === 200) {
-        const row = await getDbRow('articles', draft.id);
-        if (row?.status === 'PUBLISHED') {
-          pass('A3: ADMIN PATCH /status PUBLISHED → 200, DB = PUBLISHED');
-        } else {
-          fail('A3: ADMIN PATCH /status PUBLISHED', `DB: ${row?.status}`);
-        }
+  // A3: ADMIN can publish an article (operates on ephemeral draft)
+  if (adminDraftToPublish) {
+    const { status } = await apiCall('PATCH', `/api/articles/${adminDraftToPublish.id}/status`, adminCookie, { status: 'PUBLISHED' });
+    if (status === 200) {
+      const row = await getDbRow('articles', adminDraftToPublish.id);
+      if (row?.status === 'PUBLISHED') {
+        pass('A3: ADMIN PATCH /status PUBLISHED → 200, DB = PUBLISHED');
       } else {
-        fail('A3: ADMIN PATCH /status PUBLISHED', `Got ${status}`);
+        fail('A3: ADMIN PATCH /status PUBLISHED', `DB: ${row?.status}`);
       }
     } else {
-      fail('A3: ADMIN PATCH /status PUBLISHED', 'No DRAFT articles left');
+      fail('A3: ADMIN PATCH /status PUBLISHED', `Got ${status}`);
     }
+  } else {
+    fail('A3: ADMIN PATCH /status PUBLISHED', 'No ephemeral draft to publish');
   }
 
   // A4: ADMIN CANNOT update own profiles.role (application + trigger guard)
@@ -575,7 +612,7 @@ async function run() {
         fail('A4: ADMIN self role change', `DB role changed to: ${row?.role}`);
       }
     } else {
-      fail('A4: ADMIN cannot change own role via API', `Got ${status}`);
+      fail('A4: ADMIN self role change', `Got ${status}`);
     }
   }
 
@@ -601,30 +638,18 @@ async function run() {
   // ================================================================
   console.log('\n--- COMMENT MODERATION RBAC ---');
   let testCommentId: string | null = null;
-  let testArticleId: string | null = null;
+  const testArticleId = adminPublished?.id;
 
   try {
-    const { data: pubArts, error: pubArtError } = await serviceDb
-      .from('articles')
-      .select('id')
-      .eq('status', 'PUBLISHED')
-      .limit(1);
-
-    if (pubArtError || !pubArts || pubArts.length === 0) {
-      fail('CM: Comment moderation suite', `Could not find published article: ${pubArtError?.message}`);
-    }
-
-    testArticleId = pubArts?.[0]?.id;
-
     if (testArticleId) {
-      // Create initial PENDING comment
+      // Create initial PENDING comment on ephemeral published article
       const { data: insertedComment } = await serviceDb
         .from('comments')
         .insert({
           entity_id: testArticleId,
           entity_type: 'ARTICLE',
           user_name: 'Test Reader',
-          user_email: 'test.reader@domain.com',
+          user_email: 'test.reader@ventureatlas.in',
           body: 'This is a test comment pending approval.',
           status: 'PENDING',
         })
@@ -632,6 +657,7 @@ async function run() {
         .single();
 
       testCommentId = insertedComment?.id;
+      if (testCommentId) ephemeralCommentIds.push(testCommentId);
 
       if (testCommentId) {
         // CM1: WRITER cannot moderate comments (403)
@@ -690,9 +716,6 @@ async function run() {
         } else {
           fail('CM4: Public comments visibility', 'APPROVED comment missing from public API');
         }
-
-        // Clean up test comment
-        await serviceDb.from('comments').delete().eq('id', testCommentId);
       }
     }
   } catch (err: any) {
@@ -854,9 +877,31 @@ async function run() {
   console.log('====================================================\n');
 
   } finally {
-    console.log('Tearing down ephemeral test staff accounts from Supabase Auth...');
-    await cleanupTempStaff();
-    console.log('Ephemeral test staff teardown complete.\n');
+    console.log('--- STRICT TEARDOWN & STATE INTEGRITY VERIFICATION ---');
+    await cleanupEphemeralFixtures();
+    console.log('All ephemeral articles, comments, and temp auth users deleted.\n');
+
+    // Verify database state against snapshot
+    const { data: currentArticles } = await serviceDb.from('articles').select('id, slug, title, status, summary, word_count, read_time_minutes, author_id, updated_at').order('id');
+    const { data: currentBlogs } = await serviceDb.from('blog_posts').select('id, slug, title, status, author_id, updated_at').order('id');
+    const { data: currentCases } = await serviceDb.from('case_studies').select('id, slug, title, status, author_id, updated_at').order('id');
+
+    const artDiff = JSON.stringify(initialArticles) !== JSON.stringify(currentArticles);
+    const blogDiff = JSON.stringify(initialBlogs) !== JSON.stringify(currentBlogs);
+    const caseDiff = JSON.stringify(initialCases) !== JSON.stringify(currentCases);
+
+    if (artDiff || blogDiff || caseDiff) {
+      console.error('ERROR: Database content differed from snapshot!');
+      if (artDiff) {
+        console.error('Articles Diff: initial count =', initialArticles?.length, 'current count =', currentArticles?.length);
+        console.error('Initial:', JSON.stringify(initialArticles));
+        console.error('Current:', JSON.stringify(currentArticles));
+      }
+      if (blogDiff) console.error('Blog Diff:', initialBlogs, currentBlogs);
+      if (caseDiff) console.error('Case Diff:', initialCases, currentCases);
+    } else {
+      console.log('✓ VERIFIED: Database state is 100% byte-identical before and after test run.\n');
+    }
   }
 
   if (failed > 0) process.exit(1);

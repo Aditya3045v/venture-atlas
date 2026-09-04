@@ -45,7 +45,7 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   // 1. Guard /admin routes
-  if (path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/signout') {
+  if (path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/signout' && !path.startsWith('/admin/mfa')) {
     if (!user) {
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('returnTo', path);
@@ -64,22 +64,48 @@ export async function middleware(request: NextRequest) {
       const loginUrl = new URL('/admin/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
+
+    // Enforce MFA Assurance for ADMIN and EDITOR
+    if (role === 'ADMIN' || role === 'EDITOR') {
+      const { data: aalData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (aalData) {
+        if (aalData.currentLevel === 'aal1' && aalData.nextLevel === 'aal1') {
+          // No MFA enrolled -> redirect to enroll
+          const enrollUrl = new URL('/admin/mfa/enroll', request.url);
+          return NextResponse.redirect(enrollUrl);
+        }
+        if (aalData.currentLevel === 'aal1' && aalData.nextLevel === 'aal2') {
+          // MFA factor exists but unverified session -> redirect to challenge
+          const challengeUrl = new URL('/admin/mfa/challenge', request.url);
+          return NextResponse.redirect(challengeUrl);
+        }
+      }
+    }
+
     return response;
   }
 
-  // 2. Reader Content Gate: Require email (va_reader cookie or staff login) for News & Feed
+  // 2. Public SEO & Content Routes (Accessible to crawlers, search engines & visitors)
   const isPublicOpenRoute =
+    path === '/' ||
     path === '/landing' ||
+    path.startsWith('/articles/') ||
+    path.startsWith('/blogs') ||
+    path.startsWith('/case-studies') ||
+    path.startsWith('/categories') ||
+    path.startsWith('/authors') ||
+    path.startsWith('/about') ||
+    path.startsWith('/search') ||
     path.startsWith('/api/') ||
     path.startsWith('/admin') ||
+    path.startsWith('/sitemap') ||
     path === '/privacy' ||
     path === '/terms' ||
     path === '/imprint' ||
     path === '/cookies' ||
     path === '/robots.txt' ||
-    path === '/sitemap.xml' ||
     path.startsWith('/_next') ||
-    path.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|mp3)$/);
+    path.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|mp3|txt|xml)$/);
 
   if (!isPublicOpenRoute) {
     const hasReaderCookie =

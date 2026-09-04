@@ -366,7 +366,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     categoryId: selectedCategory.id,
     author: {
       id: 'author-id',
-      email: 'editorial@ventureatlas.io',
+      email: 'editorial@ventureatlas.in',
       name: authorName || 'Staff Reporter',
       role: 'WRITER',
       avatar: null,
@@ -410,6 +410,21 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     if (isOverWordBudget) {
       toast(`Summary exceeds 60 words (${wordCount}/60). Please condense.`, 'error');
       return;
+    }
+
+    if (targetStatus === 'PUBLISHED') {
+      if (!seoTitle.trim()) {
+        toast('Publishing blocked: SEO Meta Title is required before publishing.', 'error');
+        return;
+      }
+      if (!seoDescription.trim()) {
+        toast('Publishing blocked: SEO Meta Description is required before publishing.', 'error');
+        return;
+      }
+      if (coverImage.trim() && !photoCredit.trim()) {
+        toast('Publishing blocked: Cover image alt text / attribution is required before publishing.', 'error');
+        return;
+      }
     }
 
     isSubmittingRef.current = true;

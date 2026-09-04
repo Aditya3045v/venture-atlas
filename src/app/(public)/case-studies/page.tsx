@@ -4,6 +4,16 @@ import { fetchCaseStudies } from '@/lib/supabase-db';
 import { Briefcase, ArrowRight, TrendingUp } from 'lucide-react';
 import { IconBriefcase } from '@tabler/icons-react';
 
+import { constructMetadata, generateItemListJsonLd } from '@/lib/seo';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+
+export const metadata = constructMetadata({
+  title: 'Startup Case Studies & Blueprints',
+  description: 'Rigorous breakdowns of breakout software architecture, zero-CAC distribution flywheels, unit economics, and scaling triumphs.',
+  canonicalPath: '/case-studies',
+  section: 'Case Studies',
+});
+
 export const revalidate = 0;
 
 export default async function CaseStudiesPage() {
@@ -12,10 +22,22 @@ export default async function CaseStudiesPage() {
   const featured = caseStudies[0];
   const remaining = caseStudies.slice(1);
 
+  const itemListJsonLd = generateItemListJsonLd(
+    'Startup Case Studies & Deep-Dive Blueprints',
+    caseStudies.map(cs => ({ name: `${cs.company}: ${cs.title}`, url: `/case-studies/${cs.slug}` }))
+  );
+
   return (
-    <div className="space-y-10 max-w-6xl mx-auto select-none">
-      {/* Header */}
-      <div className="p-8 sm:p-10 rounded-3xl ios-card space-y-3">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
+      <div className="space-y-8 max-w-6xl mx-auto select-none">
+        <Breadcrumbs items={[{ name: 'Case Studies', url: '/case-studies' }]} />
+
+        {/* Header */}
+        <div className="p-8 sm:p-10 rounded-3xl ios-card space-y-3">
         <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-text-tertiary">
           <Briefcase size={15} className="text-text-primary" />
           <span>OPERATOR & FOUNDER INTELLIGENCE</span>
@@ -154,6 +176,7 @@ export default async function CaseStudiesPage() {
           ))}
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

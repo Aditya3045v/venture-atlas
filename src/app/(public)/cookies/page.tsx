@@ -2,10 +2,14 @@ import React from 'react';
 import Link from 'next/link';
 import { Cookie, ArrowLeft } from 'lucide-react';
 
-export const metadata = {
-  title: 'Cookie Policy — Venture Atlas',
-  description: 'Learn about the essential cookies and local storage tokens used on Venture Atlas.',
-};
+import { constructMetadata } from '@/lib/seo';
+
+export const metadata = constructMetadata({
+  title: 'Cookie Policy',
+  description: 'Understand how Venture Atlas uses essential and functional cookies for theme and reader preferences.',
+  canonicalPath: '/cookies',
+  section: 'Legal',
+});
 
 export default function CookiePolicyPage() {
   return (

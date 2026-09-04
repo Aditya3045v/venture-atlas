@@ -5,6 +5,7 @@ import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { ToastProvider } from '../components/providers/ToastProvider';
 import { AccessibilityProvider } from '../components/providers/AccessibilityProvider';
 import { AudioPlayerProvider } from '../components/providers/AudioPlayerProvider';
+import { SITE_URL } from '../lib/site-url';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -45,6 +46,16 @@ export const viewport: Viewport = {
   ],
 };
 
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION || process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+const bingVerification = process.env.BING_SITE_VERIFICATION || process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
+
+const verificationConfig = (googleVerification || bingVerification)
+  ? {
+      ...(googleVerification ? { google: googleVerification } : {}),
+      ...(bingVerification ? { other: { 'msvalidate.01': [bingVerification] } } : {}),
+    }
+  : undefined;
+
 export const metadata: Metadata = {
   title: 'Venture Atlas — Startup & Business News in 60 Words',
   description:
@@ -59,12 +70,12 @@ export const metadata: Metadata = {
     'Tech Markets',
   ],
   authors: [{ name: 'Venture Atlas Editorial Board' }],
-  metadataBase: new URL('https://ventureatlas.io'),
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: 'Venture Atlas — Startup & Business News in 60 Words',
     description:
       'Venture Atlas delivers rapid, high-impact news across venture capital, startups, and tech-business.',
-    url: 'https://ventureatlas.io',
+    url: SITE_URL,
     siteName: 'Venture Atlas',
     locale: 'en_US',
     type: 'website',
@@ -74,6 +85,7 @@ export const metadata: Metadata = {
     title: 'Venture Atlas',
     description: 'Fast-scanning business and venture capital news.',
   },
+  ...(verificationConfig ? { verification: verificationConfig } : {}),
 };
 
 export default function RootLayout({
