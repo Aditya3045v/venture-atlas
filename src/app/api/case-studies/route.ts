@@ -73,8 +73,26 @@ export async function POST(req: NextRequest) {
       metadata: { company: json.company, title: json.title, slug },
     });
 
+    if (csPayload.status === 'PUBLISHED') {
+      try {
+        const { revalidateTag, revalidatePath } = require('next/cache');
+        const { submitIndexNow } = require('@/lib/indexnow');
+        revalidateTag('case-studies');
+        revalidateTag(`case-study:${slug}`);
+        revalidatePath(`/case-studies/${slug}`);
+        revalidatePath('/case-studies');
+        revalidatePath('/');
+        await submitIndexNow(`/case-studies/${slug}`);
+      } catch (e) {
+        console.warn('Case study post-publish revalidation error:', e);
+      }
+    }
+
     return NextResponse.json({ caseStudy: data }, { status: 201 });
   } catch (error: any) {
+    if (error.errors) {
+      return NextResponse.json({ error: error.errors[0]?.message || 'Validation error' }, { status: 400 });
+    }
     return NextResponse.json({ error: error.message || 'Failed to create case study' }, { status: 400 });
   }
 }

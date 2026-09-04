@@ -109,6 +109,8 @@ export interface ArticleItem {
   isLiked?: boolean;
   seoTitle?: string | null;
   seoDescription?: string | null;
+  company?: string | null;
+  companyLogo?: string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
   tags?: { tag: TagItem }[];
@@ -135,6 +137,7 @@ export interface BlogItem {
   viewCount?: number;
   likeCount?: number;
   isLiked?: boolean;
+  photoCredit?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
   createdAt: Date | string;
@@ -157,6 +160,7 @@ export interface CaseStudyItem {
   outcome?: string | null;
   body: string;
   coverImage?: string | null;
+  photoCredit?: string | null;
   categoryId: string;
   category?: CategoryItem;
   authorId?: string | null;
@@ -169,9 +173,10 @@ export interface CaseStudyItem {
   viewCount: number;
   likeCount?: number;
   isLiked?: boolean;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
-  isSaved?: boolean;
   canvasData?: CanvasData | null;
 }
 

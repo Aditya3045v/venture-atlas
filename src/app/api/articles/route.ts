@@ -148,15 +148,16 @@ export async function POST(req: NextRequest) {
 
   try {
     const json = await req.json();
-    const validated = articleSchema.parse(json);
 
     // Permission enforcement: WRITER cannot publish directly
-    if (user.role === 'WRITER' && validated.status === 'PUBLISHED') {
+    if (user.role === 'WRITER' && (json.status === 'PUBLISHED' || json.status === 'APPROVED')) {
       return NextResponse.json(
         { error: 'PERMISSION_DENIED: Writers cannot publish directly; submit as DRAFT or IN_REVIEW for editorial approval.' },
         { status: 403 }
       );
     }
+
+    const validated = articleSchema.parse(json);
 
     const slug = slugify(validated.title);
     const words = countWords(validated.summary);
@@ -203,8 +204,25 @@ export async function POST(req: NextRequest) {
       metadata: { title: validated.title, status: validated.status, slug },
     });
 
+    if (validated.status === 'PUBLISHED') {
+      try {
+        const { revalidateTag, revalidatePath } = require('next/cache');
+        const { submitIndexNow } = require('@/lib/indexnow');
+        revalidateTag('articles');
+        revalidateTag(`article:${slug}`);
+        revalidatePath(`/articles/${slug}`);
+        revalidatePath('/');
+        await submitIndexNow(`/articles/${slug}`);
+      } catch (e) {
+        console.warn('Post-publish revalidation / IndexNow non-blocking error:', e);
+      }
+    }
+
     return NextResponse.json({ article: data }, { status: 201 });
   } catch (error: any) {
+    if (error.errors) {
+      return NextResponse.json({ error: error.errors[0]?.message || 'Validation error' }, { status: 400 });
+    }
     return NextResponse.json(
       { error: error?.message || 'Invalid article payload' },
       { status: 400 }

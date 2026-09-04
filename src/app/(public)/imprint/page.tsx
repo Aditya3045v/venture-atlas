@@ -2,10 +2,14 @@ import React from 'react';
 import Link from 'next/link';
 import { Building2, ArrowLeft, Mail } from 'lucide-react';
 
-export const metadata = {
-  title: 'Imprint & Contact — Venture Atlas',
-  description: 'Editorial imprint, publishing entity, and contact information for Venture Atlas.',
-};
+import { constructMetadata } from '@/lib/seo';
+
+export const metadata = constructMetadata({
+  title: 'Imprint & Corporate Notice',
+  description: 'Legal publishing information, entity disclosures, and contact points for Venture Atlas.',
+  canonicalPath: '/imprint',
+  section: 'Legal',
+});
 
 export default function ImprintPage() {
   return (
@@ -50,10 +54,10 @@ export default function ImprintPage() {
               <strong className="text-text-primary">Editor-in-Chief & Founder:</strong> Aditya Poddar
             </div>
             <div>
-              <strong className="text-text-primary">Editorial Inquiries:</strong> editorial@ventureatlas.io
+              <strong className="text-text-primary">Editorial Inquiries:</strong> editorial@ventureatlas.in
             </div>
             <div>
-              <strong className="text-text-primary">Press & Media:</strong> press@ventureatlas.io
+              <strong className="text-text-primary">Press & Media:</strong> press@ventureatlas.in
             </div>
           </div>
         </div>
@@ -63,7 +67,7 @@ export default function ImprintPage() {
             Corrections & Editorial Standards
           </h2>
           <p>
-            Venture Atlas enforces strict fact-checking standards across all 60-word briefs, term sheet analyses, and teardowns. To submit a correction or report a factual inaccuracy, email <strong>corrections@ventureatlas.io</strong> with the story title and primary source reference.
+            Venture Atlas enforces strict fact-checking standards across all 60-word briefs, term sheet analyses, and teardowns. To submit a correction or report a factual inaccuracy, email <strong>corrections@ventureatlas.in</strong> with the story title and primary source reference.
           </p>
         </section>
       </div>

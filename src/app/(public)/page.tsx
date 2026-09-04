@@ -11,6 +11,12 @@ import {
   IconArrowNarrowRight,
 } from '@tabler/icons-react';
 
+import {
+  generateOrganizationJsonLd,
+  generateWebSiteJsonLd,
+  generateItemListJsonLd,
+} from '@/lib/seo';
+
 export const revalidate = 60; // 60-second ISR for live news stream
 
 export default async function CoreHomePage() {
@@ -24,8 +30,28 @@ export default async function CoreHomePage() {
   const featuredArticle = articles.find(a => a.isFeatured) || articles[0];
   const feedArticles = articles.filter(a => a.id !== featuredArticle?.id);
 
+  const orgJsonLd = generateOrganizationJsonLd();
+  const webSiteJsonLd = generateWebSiteJsonLd();
+  const itemListJsonLd = generateItemListJsonLd('Latest Venture Intelligence Wire', [
+    ...(featuredArticle ? [{ name: featuredArticle.title, url: `/articles/${featuredArticle.slug}` }] : []),
+    ...feedArticles.map(a => ({ name: a.title, url: `/articles/${a.slug}` })),
+  ]);
+
   return (
     <div className="select-none">
+      {/* Server-rendered Organization, WebSite, and ItemList Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
       {/* 1. Mobile & Tablet Dedicated View */}
       <div className="block lg:hidden">
         <HomeMobileView
@@ -150,6 +176,32 @@ export default async function CoreHomePage() {
             </div>
           </section>
         )}
+
+        {/* In-Body Editorial & Search Pathway */}
+        <section className="p-8 rounded-3xl border border-border/80 bg-surface/60 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-1.5 max-w-xl text-center md:text-left">
+            <h4 className="text-base font-bold font-display uppercase tracking-tight text-text-primary">
+              Independent Venture Intelligence
+            </h4>
+            <p className="text-xs font-body text-text-secondary leading-relaxed">
+              Every brief is constrained to 60 words and verified against regulatory filings and primary term sheets. Learn more about our <Link href="/about" className="text-brand font-bold hover:underline">Editorial Charter</Link> or discover subscriber-exclusive features on the <Link href="/landing" className="text-brand font-bold hover:underline">Executive Portal</Link>.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0 text-xs font-mono font-bold">
+            <Link
+              href="/search"
+              className="px-4 py-2.5 rounded-xl bg-surface-muted hover:bg-border text-text-primary border border-border transition-colors shadow-xs"
+            >
+              Search Database
+            </Link>
+            <Link
+              href="/about"
+              className="px-4 py-2.5 rounded-xl bg-brand text-white hover:bg-brand/90 transition-colors shadow-xs"
+            >
+              About Charter
+            </Link>
+          </div>
+        </section>
       </div>
     </div>
   );

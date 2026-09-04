@@ -94,7 +94,7 @@ function AdminLoginForm() {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="editor@ventureatlas.io"
+                  placeholder="editor@ventureatlas.in"
                   required
                   autoFocus
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-muted border border-border text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-amber-400 transition-colors"

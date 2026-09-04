@@ -176,7 +176,7 @@ export async function fetchAdminStats() {
     const recentAudits: AuditLogItem[] = (auditRes.data || []).map(log => ({
       id: log.id,
       actorId: log.actor_id || undefined,
-      actorEmail: log.actor_email || 'admin@ventureatlas.io',
+      actorEmail: log.actor_email || 'admin@ventureatlas.in',
       actorRole: log.actor_role || 'ADMIN',
       action: log.action,
       entityType: log.entity_type,
@@ -230,7 +230,7 @@ export async function fetchAuditLogs(limit = 50): Promise<AuditLogItem[]> {
     return (data || []).map(log => ({
       id: log.id,
       actorId: log.actor_id || undefined,
-      actorEmail: log.actor_email || 'system@ventureatlas.io',
+      actorEmail: log.actor_email || 'system@ventureatlas.in',
       actorRole: log.actor_role || 'ADMIN',
       action: log.action,
       entityType: log.entity_type,

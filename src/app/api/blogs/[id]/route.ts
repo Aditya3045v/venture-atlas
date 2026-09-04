@@ -49,8 +49,27 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       metadata: { title: validated.title },
     });
 
+    // Invalidate caches
+    try {
+      const { revalidateTag, revalidatePath } = require('next/cache');
+      const { submitIndexNow } = require('@/lib/indexnow');
+      revalidateTag('blogs');
+      if (updated?.slug) {
+        revalidateTag(`blog:${updated.slug}`);
+        revalidatePath(`/blogs/${updated.slug}`);
+        await submitIndexNow(`/blogs/${updated.slug}`);
+      }
+      revalidatePath('/blogs');
+      revalidatePath('/');
+    } catch {
+      // ignore
+    }
+
     return NextResponse.json({ blog: updated });
   } catch (error: any) {
+    if (error.errors) {
+      return NextResponse.json({ error: error.errors[0]?.message || 'Validation error' }, { status: 400 });
+    }
     return NextResponse.json({ error: error.message || 'Failed to update blog' }, { status: 400 });
   }
 }
@@ -62,6 +81,12 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
+    const { data: existing } = await supabaseAdmin
+      .from('blog_posts')
+      .select('slug')
+      .eq('id', params.id)
+      .single();
+
     const { error } = await supabaseAdmin
       .from('blog_posts')
       .delete()
@@ -79,6 +104,22 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
       actor: user,
       metadata: { id: params.id },
     });
+
+    // Invalidate caches & notify IndexNow
+    try {
+      const { revalidateTag, revalidatePath } = require('next/cache');
+      const { submitIndexNow } = require('@/lib/indexnow');
+      revalidateTag('blogs');
+      if (existing?.slug) {
+        revalidateTag(`blog:${existing.slug}`);
+        revalidatePath(`/blogs/${existing.slug}`);
+        await submitIndexNow(`/blogs/${existing.slug}`);
+      }
+      revalidatePath('/blogs');
+      revalidatePath('/');
+    } catch {
+      // ignore
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

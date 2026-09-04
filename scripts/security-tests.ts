@@ -367,6 +367,59 @@ async function run() {
   }
 
   // ================================================================
+  // SECTION K: Sitemap Positive Integrity (Zero Test Pollution / Zero Drafts)
+  // ================================================================
+  console.log('\n--- K: Sitemap Positive Integrity ---');
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+    const res = await fetch(`${BASE_URL}/sitemap-articles.xml`);
+    const xml = await res.text();
+
+    const locMatches = Array.from(xml.matchAll(/<loc>(.*?)<\/loc>/g)).map(m => m[1]);
+    const { data: dbArticles } = await sb.from('articles').select('id, slug, status, published_at');
+    const articleMap = new Map((dbArticles || []).map(a => [a.slug, a]));
+
+    const testPatterns = ['test', 'draft-', 'admin-draft', 'editor-edited', 'clipconnect', 'ephemeral'];
+    let pollutionCount = 0;
+    const now = new Date();
+
+    for (const url of locMatches) {
+      const slug = url.split('/articles/')[1];
+      if (!slug) continue;
+
+      const dbRow = articleMap.get(slug);
+      if (!dbRow) {
+        fail('K1: Sitemap URL not found in DB', url);
+        pollutionCount++;
+        continue;
+      }
+
+      if (dbRow.status !== 'PUBLISHED') {
+        fail('K1: Sitemap contains non-PUBLISHED article', `${slug} status is ${dbRow.status}`);
+        pollutionCount++;
+      }
+
+      if (!dbRow.published_at || new Date(dbRow.published_at) > now) {
+        fail('K1: Sitemap contains future-scheduled article', `${slug} published_at is ${dbRow.published_at}`);
+        pollutionCount++;
+      }
+
+      const isTestSlug = testPatterns.some(pat => slug.toLowerCase().includes(pat));
+      if (isTestSlug) {
+        fail('K1: Sitemap contains test slug artifact', slug);
+        pollutionCount++;
+      }
+    }
+
+    if (pollutionCount === 0 && locMatches.length > 0) {
+      pass(`K1: Positive sitemap integrity verified — all ${locMatches.length} URLs are valid, published <= now(), and free of test patterns`);
+    }
+  } catch (e: any) {
+    fail('K1: Sitemap positive validation', e.message);
+  }
+
+  // ================================================================
   // Summary
   // ================================================================
   console.log('\n====================================================');

@@ -51,6 +51,8 @@ function mapArticle(item: any): ArticleItem {
     likeCount: item.like_count ?? 0,
     seoTitle: item.seo_title,
     seoDescription: item.seo_description,
+    company: item.company || null,
+    companyLogo: item.company_logo || null,
     canvasData: item.canvas_data || undefined,
     createdAt: new Date(item.created_at),
     updatedAt: new Date(item.updated_at),

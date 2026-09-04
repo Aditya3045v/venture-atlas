@@ -19,7 +19,32 @@ export const articleSchema = z.object({
   tags: z.array(z.string()).optional().default([]),
   seoTitle: z.string().max(70, 'SEO title max 70 characters').optional().nullable(),
   seoDescription: z.string().max(160, 'SEO description max 160 characters').optional().nullable(),
+  company: z.string().optional().nullable(),
   canvasData: z.any().optional().nullable(),
+}).superRefine((data, ctx) => {
+  if (data.status === 'PUBLISHED') {
+    if (!data.seoTitle || data.seoTitle.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['seoTitle'],
+        message: 'SEO Title is strictly required before publishing',
+      });
+    }
+    if (!data.seoDescription || data.seoDescription.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['seoDescription'],
+        message: 'SEO Description is strictly required before publishing',
+      });
+    }
+    if (data.coverImage && data.coverImage.trim().length > 0 && (!data.photoCredit || data.photoCredit.trim().length === 0)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['photoCredit'],
+        message: 'Cover image alt text / attribution is strictly required before publishing',
+      });
+    }
+  }
 });
 
 export const caseStudySchema = z.object({
@@ -37,9 +62,22 @@ export const caseStudySchema = z.object({
   body: z.string().min(10, 'Body content is required'),
   categoryId: z.string().min(1, 'Category is required'),
   coverImage: z.string().url().optional().or(z.literal('')).nullable(),
+  photoCredit: z.string().optional().nullable(),
   readTimeMinutes: z.number().int().positive().default(4),
   status: z.enum(['DRAFT', 'IN_REVIEW', 'APPROVED', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED', 'UNPUBLISHED']),
   canvasData: z.any().optional().nullable(),
+  seoTitle: z.string().max(70).optional().nullable(),
+  seoDescription: z.string().max(160).optional().nullable(),
+}).superRefine((data, ctx) => {
+  if (data.status === 'PUBLISHED') {
+    if (data.coverImage && data.coverImage.trim().length > 0 && (!data.photoCredit || data.photoCredit.trim().length === 0)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['photoCredit'],
+        message: 'Cover image alt text is strictly required before publishing',
+      });
+    }
+  }
 });
 
 export const blogSchema = z.object({
@@ -50,10 +88,35 @@ export const blogSchema = z.object({
   authorName: z.string().optional().nullable(),
   authorRole: z.string().optional().nullable(),
   coverImage: z.string().url().optional().or(z.literal('')).nullable(),
+  photoCredit: z.string().optional().nullable(),
   readTimeMinutes: z.number().int().positive().default(4),
   status: z.enum(['DRAFT', 'IN_REVIEW', 'APPROVED', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED', 'UNPUBLISHED']),
   seoTitle: z.string().max(70).optional().nullable(),
   seoDescription: z.string().max(160).optional().nullable(),
+}).superRefine((data, ctx) => {
+  if (data.status === 'PUBLISHED') {
+    if (!data.seoTitle || data.seoTitle.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['seoTitle'],
+        message: 'SEO Title is strictly required before publishing',
+      });
+    }
+    if (!data.seoDescription || data.seoDescription.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['seoDescription'],
+        message: 'SEO Description is strictly required before publishing',
+      });
+    }
+    if (data.coverImage && data.coverImage.trim().length > 0 && (!data.photoCredit || data.photoCredit.trim().length === 0)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['photoCredit'],
+        message: 'Cover image alt text is strictly required before publishing',
+      });
+    }
+  }
 });
 
 export const categorySchema = z.object({

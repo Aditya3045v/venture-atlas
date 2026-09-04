@@ -2,10 +2,14 @@ import React from 'react';
 import Link from 'next/link';
 import { Shield, Lock, Eye, Trash2, ArrowLeft } from 'lucide-react';
 
-export const metadata = {
-  title: 'Privacy Policy — Venture Atlas',
+import { constructMetadata } from '@/lib/seo';
+
+export const metadata = constructMetadata({
+  title: 'Privacy Policy',
   description: 'Learn how Venture Atlas collects, retains, and protects reader data, and how to request data deletion.',
-};
+  canonicalPath: '/privacy',
+  section: 'Legal',
+});
 
 export default function PrivacyPolicyPage() {
   return (
@@ -105,7 +109,7 @@ export default function PrivacyPolicyPage() {
             For privacy inquiries, GDPR data requests, or formal communications, contact our Data Protection Officer at:
           </p>
           <div className="p-4 rounded-xl border border-border font-mono text-xs text-text-primary bg-surface">
-            privacy@ventureatlas.io · Venture Atlas Media Inc., 548 Market St, San Francisco, CA 94104
+            privacy@ventureatlas.in · Venture Atlas Media Inc., 548 Market St, San Francisco, CA 94104
           </div>
         </section>
       </div>

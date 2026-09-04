@@ -270,7 +270,7 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({ initialUsers
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="e.g. aditya@ventureatlas.io"
+                  placeholder="e.g. aditya@ventureatlas.in"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-surface-muted border border-border text-xs font-mono text-text-primary focus:outline-none focus:border-amber-400"
                 />
               </div>

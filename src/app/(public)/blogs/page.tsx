@@ -3,15 +3,37 @@ import Link from 'next/link';
 import { fetchBlogs } from '@/lib/supabase-db';
 import { BookOpen, Clock } from 'lucide-react';
 
+import { constructMetadata, generateItemListJsonLd } from '@/lib/seo';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+
+export const metadata = constructMetadata({
+  title: 'Editorial Essays & Market Perspectives',
+  description: 'Comprehensive teardowns on venture capital mechanics, modern founder blueprints, sovereign cloud infrastructure, and market liquidity.',
+  canonicalPath: '/blogs',
+  section: 'Essays',
+});
+
 export const revalidate = 0;
 
 export default async function BlogsPage() {
   const blogs = await fetchBlogs(50);
 
+  const itemListJsonLd = generateItemListJsonLd(
+    'Editorial Essays & Perspectives',
+    blogs.map(b => ({ name: b.title, url: `/blogs/${b.slug}` }))
+  );
+
   return (
-    <div className="space-y-10 max-w-5xl mx-auto select-none">
-      {/* Header */}
-      <div className="p-8 sm:p-10 rounded-3xl ios-card space-y-3">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
+      <div className="space-y-8 max-w-5xl mx-auto select-none">
+        <Breadcrumbs items={[{ name: 'Blogs & Essays', url: '/blogs' }]} />
+
+        {/* Header */}
+        <div className="p-8 sm:p-10 rounded-3xl ios-card space-y-3">
         <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-text-tertiary">
           <BookOpen size={15} className="text-amber-400" />
           <span>EDITORIAL ESSAYS & ANALYSIS</span>
@@ -76,5 +98,6 @@ export default async function BlogsPage() {
         })}
       </div>
     </div>
-  );
+  </>
+);
 }

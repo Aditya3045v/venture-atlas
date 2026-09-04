@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   Calendar,
   Building2,
@@ -23,6 +24,7 @@ import {
   Check,
   Heart,
   ExternalLink,
+  ArrowUpRight,
 } from 'lucide-react';
 import { CanvasData, CanvasMetric, CanvasCalloutBox, ArticleItem, CaseStudyItem } from '@/types';
 import { useToast } from '@/components/providers/ToastProvider';
@@ -163,6 +165,9 @@ export const CanvasStoryView: React.FC<CanvasStoryViewProps> = ({
   const storyCompany = (story as any)?.company || (story as any)?.title?.split(' ')[0] || 'VENTURE ATLAS';
   const authorDisplay = (story as any)?.authorName || story?.author?.name || (story as any)?.sourceAuthor || 'Aditya Poddar';
   const authorRoleDisplay = (story as any)?.authorRole || story?.author?.role || 'Staff Reporter';
+  const sourceNameDisplay = (story as any)?.sourceName || '';
+  const sourceUrlDisplay = (story as any)?.sourceUrl || '';
+  const sourceAuthorDisplay = (story as any)?.sourceAuthor || authorDisplay;
 
   const defaultSynthesizedData: CanvasData = {
     header: {
@@ -544,6 +549,47 @@ export const CanvasStoryView: React.FC<CanvasStoryViewProps> = ({
             </div>
           </div>
         )}
+
+        {/* Primary Source & Verified Attribution Card */}
+        <div className="pt-5 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+          <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+            <div className="space-y-1">
+              <div className="text-[9px] font-bold uppercase text-neutral-400 dark:text-neutral-500 tracking-wider">
+                EDITORIAL SOURCING & ATTRIBUTION
+              </div>
+              <div className="text-neutral-800 dark:text-neutral-200 flex flex-wrap items-center gap-2">
+                <span>Reported by <strong className="text-neutral-900 dark:text-white">{sourceAuthorDisplay}</strong></span>
+                {sourceNameDisplay && (
+                  <>
+                    <span className="text-neutral-400">•</span>
+                    <span>Primary Wire: <strong className="text-neutral-900 dark:text-white">{sourceNameDisplay}</strong></span>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0">
+              {sourceUrlDisplay && (
+                <a
+                  href={sourceUrlDisplay}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  <span>Verify Primary Source</span>
+                  <ArrowUpRight size={13} />
+                </a>
+              )}
+              <Link
+                href={`/authors/${(authorDisplay || 'aditya-poddar').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-neutral-600 dark:text-neutral-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline"
+              >
+                <span>Journalist Bio</span>
+                <ArrowUpRight size={13} />
+              </Link>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>

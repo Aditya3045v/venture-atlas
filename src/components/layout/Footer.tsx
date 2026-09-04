@@ -49,6 +49,7 @@ export const Footer: React.FC = () => {
           <ul className="space-y-2 text-xs font-medium text-text-secondary">
             <li><Link href="/case-studies" className="hover:text-text-primary transition-colors font-bold text-text-primary">Startup Case Studies</Link></li>
             <li><Link href="/blogs" className="hover:text-text-primary transition-colors">Long-form Blogs & Essays</Link></li>
+            <li><Link href="/search" className="hover:text-text-primary transition-colors">Search Intelligence</Link></li>
             <li><Link href="/bookmarks" className="hover:text-text-primary transition-colors">Saved Library</Link></li>
             <li><Link href="/account" className="hover:text-text-primary transition-colors">Reading Preferences</Link></li>
             <li><Link href="/admin" className="hover:text-text-primary transition-colors">Editorial Portal (CMS)</Link></li>
@@ -60,6 +61,7 @@ export const Footer: React.FC = () => {
             Compliance & Standards
           </h4>
           <ul className="space-y-2 text-xs font-medium text-text-secondary mb-4">
+            <li><Link href="/about" className="hover:text-text-primary transition-colors font-bold text-text-primary">Editorial Standards & About</Link></li>
             <li><Link href="/privacy" className="hover:text-text-primary transition-colors">Privacy Policy & GDPR</Link></li>
             <li><Link href="/terms" className="hover:text-text-primary transition-colors">Terms of Service</Link></li>
             <li><Link href="/cookies" className="hover:text-text-primary transition-colors">Cookie Preferences</Link></li>

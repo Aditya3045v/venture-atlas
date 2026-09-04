@@ -55,8 +55,27 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       metadata: { company: json.company, title: json.title },
     });
 
+    // Invalidate caches
+    try {
+      const { revalidateTag, revalidatePath } = require('next/cache');
+      const { submitIndexNow } = require('@/lib/indexnow');
+      revalidateTag('case-studies');
+      if (updated?.slug) {
+        revalidateTag(`case-study:${updated.slug}`);
+        revalidatePath(`/case-studies/${updated.slug}`);
+        await submitIndexNow(`/case-studies/${updated.slug}`);
+      }
+      revalidatePath('/case-studies');
+      revalidatePath('/');
+    } catch {
+      // ignore
+    }
+
     return NextResponse.json({ caseStudy: updated });
   } catch (error: any) {
+    if (error.errors) {
+      return NextResponse.json({ error: error.errors[0]?.message || 'Validation error' }, { status: 400 });
+    }
     return NextResponse.json({ error: error.message || 'Failed to update case study' }, { status: 400 });
   }
 }
@@ -68,6 +87,12 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
+    const { data: existing } = await supabaseAdmin
+      .from('case_studies')
+      .select('slug')
+      .eq('id', params.id)
+      .single();
+
     const { error } = await supabaseAdmin
       .from('case_studies')
       .delete()
@@ -85,6 +110,22 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
       actor: user,
       metadata: { id: params.id },
     });
+
+    // Invalidate caches & notify IndexNow
+    try {
+      const { revalidateTag, revalidatePath } = require('next/cache');
+      const { submitIndexNow } = require('@/lib/indexnow');
+      revalidateTag('case-studies');
+      if (existing?.slug) {
+        revalidateTag(`case-study:${existing.slug}`);
+        revalidatePath(`/case-studies/${existing.slug}`);
+        await submitIndexNow(`/case-studies/${existing.slug}`);
+      }
+      revalidatePath('/case-studies');
+      revalidatePath('/');
+    } catch {
+      // ignore
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
