@@ -65,22 +65,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Enforce MFA Assurance for ADMIN and EDITOR
-    if (role === 'ADMIN' || role === 'EDITOR') {
-      const { data: aalData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (aalData) {
-        if (aalData.currentLevel === 'aal1' && aalData.nextLevel === 'aal1') {
-          // No MFA enrolled -> redirect to enroll
-          const enrollUrl = new URL('/admin/mfa/enroll', request.url);
-          return NextResponse.redirect(enrollUrl);
-        }
-        if (aalData.currentLevel === 'aal1' && aalData.nextLevel === 'aal2') {
-          // MFA factor exists but unverified session -> redirect to challenge
-          const challengeUrl = new URL('/admin/mfa/challenge', request.url);
-          return NextResponse.redirect(challengeUrl);
-        }
-      }
-    }
+    // MFA enforcement removed - direct access to admin panel
 
     return response;
   }
