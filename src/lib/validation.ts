@@ -72,7 +72,6 @@ export const categorySchema = z.object({
 export const loginSchema = z.object({
   email: z.string().email('Please enter a valid email'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  mfaCode: z.string().length(6, 'MFA Code must be 6 digits').optional(),
 });
 
 export const statusChangeSchema = z.object({

@@ -65,7 +65,7 @@ export async function getCurrentUser(): Promise<StaffUser | null> {
       avatar: profile.avatar || null,
       plan: profile.plan || 'ENTERPRISE',
       bio: profile.bio || null,
-      mfaEnabled: Boolean(user.factors && user.factors.length > 0),
+      mfaEnabled: false,
     };
   } catch {
     return null;

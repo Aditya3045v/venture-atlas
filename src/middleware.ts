@@ -37,8 +37,13 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  // 1. Guard /admin routes
-  if (path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/signout' && !path.startsWith('/admin/mfa')) {
+  // 1. If any request hits legacy MFA routes, redirect immediately to /admin
+  if (path.startsWith('/admin/mfa')) {
+    return NextResponse.redirect(new URL('/admin', request.url));
+  }
+
+  // Guard /admin routes
+  if (path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/signout') {
     if (!user) {
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('returnTo', path);
@@ -58,7 +63,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // MFA enforcement removed - direct access to admin panel
+    // Direct, frictionless access to admin dashboard
     return response;
   }
 

@@ -1,9 +1,10 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
+async function performSignOut(request: Request) {
   try {
     const supabase = createServerSupabaseClient();
     await supabase.auth.signOut();
@@ -12,17 +13,34 @@ export async function GET(request: Request) {
   }
 
   const loginUrl = new URL('/admin/login', request.url);
-  return NextResponse.redirect(loginUrl);
-}
+  const response = NextResponse.redirect(loginUrl);
 
-export async function POST(request: Request) {
+  // Explicitly purge all Supabase and Venture Atlas auth cookies from client
   try {
-    const supabase = createServerSupabaseClient();
-    await supabase.auth.signOut();
+    const cookieStore = cookies();
+    const allCookies = cookieStore.getAll();
+    allCookies.forEach((c) => {
+      if (c.name.startsWith('sb-') || c.name.startsWith('va_')) {
+        response.cookies.set({
+          name: c.name,
+          value: '',
+          path: '/',
+          maxAge: 0,
+        });
+      }
+    });
   } catch {
     // Ignore
   }
 
-  const loginUrl = new URL('/admin/login', request.url);
-  return NextResponse.redirect(loginUrl);
+  return response;
 }
+
+export async function GET(request: Request) {
+  return performSignOut(request);
+}
+
+export async function POST(request: Request) {
+  return performSignOut(request);
+}
+
