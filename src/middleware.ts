@@ -31,6 +31,8 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  // Use getSession first (refreshes token if needed), then getUser for security validation
+  await supabase.auth.getSession();
   const { data: { user } } = await supabase.auth.getUser();
 
   // 1. If any request hits legacy MFA routes, redirect immediately to /admin
@@ -51,7 +53,13 @@ export async function middleware(request: NextRequest) {
     const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as string | undefined;
     const isRootAdmin = user.email === 'admin@ventureatlas.in';
 
+    // Fast path: role is confirmed from metadata — inject headers and allow through
     if (isRootAdmin || (metaRole && ['ADMIN', 'EDITOR', 'WRITER'].includes(metaRole))) {
+      const resolvedRole = isRootAdmin ? (metaRole || 'ADMIN') : metaRole!;
+      response.headers.set('x-admin-id', user.id);
+      response.headers.set('x-admin-email', user.email ?? '');
+      response.headers.set('x-admin-role', resolvedRole);
+      response.headers.set('x-admin-name', user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Root Admin' : 'Staff Member'));
       return response;
     }
 
@@ -59,7 +67,7 @@ export async function middleware(request: NextRequest) {
     try {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, name')
         .eq('id', user.id)
         .single();
 
@@ -68,6 +76,12 @@ export async function middleware(request: NextRequest) {
         const loginUrl = new URL('/admin/login', request.url);
         return NextResponse.redirect(loginUrl);
       }
+
+      // Inject headers so the layout can skip DB auth
+      response.headers.set('x-admin-id', user.id);
+      response.headers.set('x-admin-email', user.email ?? '');
+      response.headers.set('x-admin-role', role);
+      response.headers.set('x-admin-name', profile?.name || user.user_metadata?.name || 'Staff Member');
     } catch {
       // In case of transient database error, keep session active
     }

@@ -18,8 +18,10 @@ import {
   Newspaper,
   ExternalLink,
 } from 'lucide-react';
-import { getCurrentUser, canEdit } from '@/lib/auth/staff';
+import { getCurrentUser, canEdit, type StaffUser } from '@/lib/auth/staff';
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+import type { UserRole } from '@/types';
 
 export const revalidate = 0;
 
@@ -28,7 +30,31 @@ export default async function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getCurrentUser();
+  // Prefer headers injected by middleware (avoids repeated DB/auth round-trips on page switches)
+  const headerStore = headers();
+  const adminId = headerStore.get('x-admin-id');
+  const adminEmail = headerStore.get('x-admin-email');
+  const adminRole = headerStore.get('x-admin-role') as UserRole | null;
+  const adminName = headerStore.get('x-admin-name');
+
+  let user: StaffUser | null = null;
+
+  if (adminId && adminRole && canEdit(adminRole)) {
+    // Fast path: middleware already validated this session — no DB call needed
+    user = {
+      id: adminId,
+      email: adminEmail ?? '',
+      name: adminName ?? 'Staff Member',
+      role: adminRole,
+      avatar: null,
+      plan: 'ENTERPRISE',
+      bio: null,
+      mfaEnabled: false,
+    };
+  } else {
+    // Fallback: middleware headers not present (shouldn't happen normally)
+    user = await getCurrentUser();
+  }
 
   if (!user || !canEdit(user.role)) {
     redirect('/admin/login');
