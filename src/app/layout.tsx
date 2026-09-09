@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono, Inter } from 'next/font/google';
+import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono, Inter, Fraunces, IBM_Plex_Mono } from 'next/font/google';
 import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { ToastProvider } from '../components/providers/ToastProvider';
 import { AccessibilityProvider } from '../components/providers/AccessibilityProvider';
@@ -32,6 +32,20 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+});
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-fraunces',
+  axes: ['opsz'],
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-plex-mono',
   weight: ['400', '500', '600', '700'],
 });
 
@@ -97,7 +111,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} ${inter.variable}`}
+      className={`${spaceGrotesk.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} ${inter.variable} ${fraunces.variable} ${ibmPlexMono.variable}`}
     >
       <body className="min-h-screen flex flex-col bg-background text-text-primary transition-colors font-body">
         <ThemeProvider>

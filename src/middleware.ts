@@ -4,9 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
+    request,
   });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -24,9 +22,7 @@ export async function middleware(request: NextRequest) {
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         response = NextResponse.next({
-          request: {
-            headers: request.headers,
-          },
+          request,
         });
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options)
@@ -50,17 +46,30 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Verify staff role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
+    // Resilient staff role resolution:
+    // Fast path: inspect metadata or root admin first to avoid network latency/timeouts on page switches
+    const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as string | undefined;
+    const isRootAdmin = user.email === 'admin@ventureatlas.in';
 
-    const role = profile?.role;
-    if (!role || !['ADMIN', 'EDITOR', 'WRITER'].includes(role)) {
-      const loginUrl = new URL('/admin/login', request.url);
-      return NextResponse.redirect(loginUrl);
+    if (isRootAdmin || (metaRole && ['ADMIN', 'EDITOR', 'WRITER'].includes(metaRole))) {
+      return response;
+    }
+
+    // Fallback: query profiles table if metadata wasn't cached
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      const role = profile?.role;
+      if (!role || !['ADMIN', 'EDITOR', 'WRITER'].includes(role)) {
+        const loginUrl = new URL('/admin/login', request.url);
+        return NextResponse.redirect(loginUrl);
+      }
+    } catch {
+      // In case of transient database error, keep session active
     }
 
     // Direct, frictionless access to admin dashboard

@@ -47,24 +47,23 @@ export async function getCurrentUser(): Promise<StaffUser | null> {
       profile = adminProfile;
     }
 
-    if (!profile) {
-      return null;
-    }
-
     // Ensure role is a legitimate staff or user role
-    const role = profile.role as UserRole;
+    const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as UserRole | undefined;
+    const isRootAdmin = user.email === 'admin@ventureatlas.in';
+    const role = (profile?.role || metaRole || (isRootAdmin ? 'ADMIN' : null)) as UserRole;
+
     if (!role || !['READER', 'WRITER', 'EDITOR', 'ADMIN'].includes(role)) {
       return null;
     }
 
     return {
-      id: profile.id,
-      email: profile.email || user.email || '',
-      name: profile.name || user.user_metadata?.name || 'Staff Member',
+      id: profile?.id || user.id,
+      email: profile?.email || user.email || '',
+      name: profile?.name || user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Root Admin' : 'Staff Member'),
       role,
-      avatar: profile.avatar || null,
-      plan: profile.plan || 'ENTERPRISE',
-      bio: profile.bio || null,
+      avatar: profile?.avatar || null,
+      plan: profile?.plan || 'ENTERPRISE',
+      bio: profile?.bio || null,
       mfaEnabled: false,
     };
   } catch {

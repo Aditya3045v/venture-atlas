@@ -1,56 +1,303 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
+import createGlobe from 'cobe';
 import { useToast } from '../providers/ToastProvider';
-import { useTheme } from '../providers/ThemeProvider';
-import { GradientBackground } from '@/components/ui/favorites';
-
-const PhoneMockupBasic = dynamic(() => import('@/components/ui/phone-mockups-1'), { ssr: false });
-const ClientFeedback = dynamic(() => import('@/components/ui/testimonial'), { ssr: false });
 import {
-  IconArrowNarrowRight,
-  IconCircleCheckFilled,
-  IconBolt,
-  IconFlame,
-  IconVolume,
-  IconShieldCheck,
-  IconTrendingUp,
-  IconSparkles,
-  IconCheck,
-  IconClock,
-  IconPlayerPlay,
-  IconPlayerPause,
-  IconBuildingSkyscraper,
-  IconUserCheck,
-} from '@tabler/icons-react';
+  Volume2,
+  VolumeX,
+  Radio,
+  ArrowRight,
+  TrendingUp,
+  TrendingDown,
+  ShieldCheck,
+  Compass,
+  Layers,
+  Terminal,
+  ExternalLink,
+  ChevronRight,
+  Activity,
+  Zap,
+} from 'lucide-react';
 
+// ==========================================
+// 1. DATA FIXTURES (REALISTIC DISPATCHES)
+// ==========================================
+interface DispatchBrief {
+  id: string;
+  desk: string;
+  deskCode: string;
+  badgeColor: string;
+  headline: string;
+  slug: string;
+  source: string;
+  timestamp: string;
+  wordCount: number;
+  readTime: string;
+  body: string;
+  metrics: {
+    label: string;
+    value: string;
+    sub?: string;
+  }[];
+}
+
+const FEATURED_BRIEFS: DispatchBrief[] = [
+  {
+    id: 'disp-01',
+    desk: 'UNICORNS & GROWTH',
+    deskCode: 'DESK.01',
+    badgeColor: 'text-[#D9A441] border-[#D9A441]/30 bg-[#D9A441]/10',
+    headline: 'Cargofolio Closes $22M Series B for Tier-2 Warehouse Robotics',
+    slug: 'cargofolio-closes-22m-series-b',
+    source: 'Atlas Wire // Bengaluru',
+    timestamp: '14:02 IST',
+    wordCount: 52,
+    readTime: '0.9 MIN',
+    body: 'Bengaluru logistics-AI startup Cargofolio closes a $22M Series B led by Elevation, doubling its valuation to $180M as e-commerce sellers push for same-day delivery outside metro hubs. The round funds a warehouse-robotics push into tier-2 cities, deploying automated sorting arms across 40 fulfillment centers.',
+    metrics: [
+      { label: 'VALUATION', value: '$180M', sub: '2.0x Step-up' },
+      { label: 'ROUND SIZE', value: '$22M', sub: 'Series B' },
+      { label: 'LEAD INVESTOR', value: 'Elevation', sub: 'Growth Fund' },
+      { label: 'DEPLOYMENT', value: '40 Hubs', sub: 'Tier-2 Expan.' },
+    ],
+  },
+  {
+    id: 'disp-02',
+    desk: 'VENTURE FINANCE',
+    deskCode: 'DESK.02',
+    badgeColor: 'text-[#2FA8A0] border-[#2FA8A0]/30 bg-[#2FA8A0]/10',
+    headline: 'Veloce Network Secures $45M Series C for Cross-Border Treasury',
+    slug: 'veloce-secures-45m-series-c',
+    source: 'Atlas Wire // London',
+    timestamp: '08:30 GMT',
+    wordCount: 54,
+    readTime: '1.0 MIN',
+    body: 'London cross-border treasury network Veloce secures $45M Series C from Index Ventures at an $820M post-money cap. The platform automates multi-currency liquidity corridors for mid-market software exporters, bypassing correspondent banking rails with real-time gross settlement across 42 currency corridors with sub-4bp transaction friction.',
+    metrics: [
+      { label: 'POST-MONEY', value: '$820M', sub: 'Series C Cap' },
+      { label: 'ROUND SIZE', value: '$45M', sub: 'Primary Equity' },
+      { label: 'CORRIDORS', value: '42 FX', sub: 'Gross Settled' },
+      { label: 'SPREAD', value: '< 4 bps', sub: 'vs 120bps Bank' },
+    ],
+  },
+  {
+    id: 'disp-03',
+    desk: 'FAILURES & WRITEDOWNS',
+    deskCode: 'DESK.03',
+    badgeColor: 'text-[#C24B3F] border-[#C24B3F]/30 bg-[#C24B3F]/10',
+    headline: 'Protean Dynamics Enters Administration Following $70M Burn',
+    slug: 'protean-dynamics-enters-administration',
+    source: 'Atlas Wire // Boston',
+    timestamp: '10:15 EST',
+    wordCount: 55,
+    readTime: '1.1 MIN',
+    body: 'Synthetic biology pioneer Protean Dynamics enters voluntary administration after a $70M burn cycle failed to yield commercial-grade enzyme yields. Board disputes over commercialization timelines stalled a critical bridge round, leaving 140 staff redundant and foundational bioreactor patents bound for an intellectual property liquidation auction.',
+    metrics: [
+      { label: 'CAP DEPLOYED', value: '$70M', sub: 'Total Loss' },
+      { label: 'DISPOSITION', value: 'Auction', sub: 'Ch. 7 Equiv.' },
+      { label: 'HEADCOUNT', value: '140 cut', sub: '100% Workforce' },
+      { label: 'PEAK VALUE', value: '$340M', sub: '2023 Series B' },
+    ],
+  },
+];
+
+const TICKER_ITEMS = [
+  { desk: 'UNICORN', text: 'Cargofolio closes $22M Series B at $180M valuation (Elevation)', change: '+100%' },
+  { desk: 'FINANCE', text: 'Veloce secures $45M Series C from Index Ventures across 42 FX corridors', change: '+38%' },
+  { desk: 'FAILURE', text: 'Protean Dynamics enters administration after $70M burn cycle stall', change: '-100%', down: true },
+  { desk: 'CRYPTO', text: 'Monad parallel EVM mainnet testbed hits 9,840 verified TPS at 1s finality', change: '+24%' },
+  { desk: 'SEED', text: 'Kavach Labs raises $4.2M seed for sovereign inference clusters in Pune', change: 'NEW' },
+  { desk: 'FINANCE', text: 'Sequoia India-SEA distributions hit $1.4B over past 18 months via secondaries', change: '+14%' },
+];
+
+const GLOBAL_HUBS = [
+  { city: 'BENGALURU', region: 'India / SEA', coords: [12.9716, 77.5946], volume24h: '$4.8B', activeDeals: 14, focus: 'Deeptech & Vertical AI' },
+  { city: 'SAN FRANCISCO', region: 'North America', coords: [37.7749, -122.4194], volume24h: '$14.2B', activeDeals: 42, focus: 'Foundation Models & Infra' },
+  { city: 'LONDON', region: 'Europe', coords: [51.5074, -0.1278], volume24h: '$6.1B', activeDeals: 19, focus: 'Cross-Border Fintech & Climate' },
+  { city: 'SINGAPORE', region: 'APAC Rails', coords: [1.3521, 103.8198], volume24h: '$3.2B', activeDeals: 11, focus: 'Trade Rails & Web3' },
+  { city: 'NEW YORK', region: 'North America', coords: [40.7128, -74.0060], volume24h: '$9.4B', activeDeals: 28, focus: 'B2B SaaS & Liquidity' },
+];
+
+const DESK_CHANNELS = [
+  {
+    num: '01',
+    name: 'Unicorns & Mega-Rounds',
+    focus: 'Valuation markups, sovereign wealth deployments, secondary liquidity discounts.',
+    sampleStat: '$180M Avg. Cap',
+    recentTitle: 'Cargofolio doubles post-money to $180M on tier-2 robotics surge',
+    badge: 'UNICORN DESK',
+  },
+  {
+    num: '02',
+    name: 'Failures & Teardowns',
+    focus: 'Burn rate spikes, liquidation auctions, cap table wipeouts, forensic post-mortems.',
+    sampleStat: '$70M Capital Lost',
+    recentTitle: 'Protean Dynamics: How $70M in bioreactor burn failed at the bridge',
+    badge: 'FAILURE DESK',
+  },
+  {
+    num: '03',
+    name: 'Venture Finance & Funds',
+    focus: 'Dry powder drawdowns, LP distributions, carry structures, GP hurdle benchmarks.',
+    sampleStat: '42 FX Rails',
+    recentTitle: 'Veloce secures $45M Series C to bypass correspondent bank latency',
+    badge: 'FINANCE DESK',
+  },
+  {
+    num: '04',
+    name: 'Decentralized Rails',
+    focus: 'Parallel execution virtual machines, protocol fee capture, validator economics.',
+    sampleStat: '9.8k Real TPS',
+    recentTitle: 'Monad testbed reaches sub-second block finality under 10k TPS load',
+    badge: 'CRYPTO DESK',
+  },
+  {
+    num: '05',
+    name: 'Seed Radar & Spinouts',
+    focus: 'Pre-announcement founder velocity, AI lab spinouts, technical angel syndicates.',
+    sampleStat: '$4.2M Seed Avg',
+    recentTitle: 'Kavach Labs emerges from stealth with sovereign inference silicon',
+    badge: 'SEED DESK',
+  },
+];
+
+// ==========================================
+// 2. WEBGL TELEMETRY GLOBE COMPONENT
+// ==========================================
+function TelemetryGlobe({
+  activeCoords,
+  onSelectHub,
+}: {
+  activeCoords: [number, number];
+  onSelectHub: (coords: [number, number]) => void;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const pointerInteracting = useRef<number | null>(null);
+  const pointerInteractionMovement = useRef(0);
+  const [r, setR] = useState(0);
+
+  useEffect(() => {
+    let phi = 0;
+    let width = 0;
+    let globeInstance: any = null;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const onResize = () => {
+      if (canvasRef.current) {
+        width = canvasRef.current.offsetWidth;
+      }
+    };
+
+    window.addEventListener('resize', onResize);
+    onResize();
+
+    if (canvasRef.current) {
+      globeInstance = createGlobe(canvasRef.current, {
+        devicePixelRatio: 2,
+        width: width * 2,
+        height: width * 2,
+        phi: 0,
+        theta: 0.28,
+        dark: 1,
+        diffuse: 0.35,
+        mapSamples: 16000,
+        mapBrightness: 1.15,
+        baseColor: [11 / 255, 14 / 255, 20 / 255], // #0B0E14 Ink
+        markerColor: [217 / 255, 164 / 255, 65 / 255], // #D9A441 Brass
+        glowColor: [47 / 255, 168 / 255, 160 / 255], // #2FA8A0 Signal Teal
+        markers: GLOBAL_HUBS.map(h => ({
+          location: h.coords as [number, number],
+          size: h.coords[0] === activeCoords[0] ? 0.12 : 0.07,
+        })),
+        onRender: (state: Record<string, any>) => {
+          if (!pointerInteracting.current && !prefersReducedMotion) {
+            phi += 0.0028;
+          }
+          state.phi = phi + r;
+          state.width = width * 2;
+          state.height = width * 2;
+        },
+      } as any);
+
+      setTimeout(() => {
+        if (canvasRef.current) {
+          canvasRef.current.style.opacity = '1';
+        }
+      }, 150);
+    }
+
+    return () => {
+      if (globeInstance) globeInstance.destroy();
+      window.removeEventListener('resize', onResize);
+    };
+  }, [activeCoords, r]);
+
+  return (
+    <div className="relative aspect-square w-full max-w-[420px] mx-auto select-none">
+      <canvas
+        ref={canvasRef}
+        className="w-full h-full opacity-0 transition-opacity duration-700 cursor-grab active:cursor-grabbing"
+        onPointerDown={(e) => {
+          pointerInteracting.current = e.clientX - pointerInteractionMovement.current;
+        }}
+        onPointerUp={() => {
+          pointerInteracting.current = null;
+        }}
+        onPointerOut={() => {
+          pointerInteracting.current = null;
+        }}
+        onMouseMove={(e) => {
+          if (pointerInteracting.current !== null) {
+            const delta = e.clientX - pointerInteracting.current;
+            pointerInteractionMovement.current = delta;
+            setR(delta / 180);
+          }
+        }}
+      />
+      {/* Radar HUD overlay frame */}
+      <div className="absolute inset-0 border border-[#2A2F3A] pointer-events-none rounded-none">
+        <div className="absolute top-2 left-2 font-mono text-[9px] text-[#2FA8A0] tracking-widest uppercase">
+          RADAR.ACTIVE // 24.19N
+        </div>
+        <div className="absolute bottom-2 right-2 font-mono text-[9px] text-[#555C6E] tracking-widest uppercase">
+          LATENCY: 18MS // COBE-WEBGL
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// 3. MAIN LANDING PAGE VIEW COMPONENT
+// ==========================================
 export const LandingView: React.FC = () => {
   const router = useRouter();
   const { toast } = useToast();
-  const { setTheme } = useTheme();
+
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
-
-  // Interactive Live Demo Reader State
-  const [activeDemoTab, setActiveDemoTab] = useState<'hardware' | 'crypto' | 'teardown'>('hardware');
+  const [activeBriefIdx, setActiveBriefIdx] = useState(0);
+  const [selectedHubCoords, setSelectedHubCoords] = useState<[number, number]>([12.9716, 77.5946]);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
+  const activeBrief = FEATURED_BRIEFS[activeBriefIdx];
+
+  // Auto-rotate briefs every 7s unless user paused by interaction
   useEffect(() => {
-    // Ensure light mode by default on the landing page
-    const saved = localStorage.getItem('va_dark_theme');
-    if (!saved || saved === 'false') {
-      setTheme(false);
-    }
-  }, [setTheme]);
+    const timer = setInterval(() => {
+      setActiveBriefIdx((prev) => (prev + 1) % FEATURED_BRIEFS.length);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes('@')) {
-      toast('Please enter a valid work email address', 'error');
+      toast('Please enter a valid work or corporate email address', 'error');
       return;
     }
 
@@ -66,7 +313,6 @@ export const LandingView: React.FC = () => {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setSubscribed(true);
         try {
           localStorage.setItem('va_reader_email', normalizedEmail);
           if (data.token) {
@@ -75,16 +321,17 @@ export const LandingView: React.FC = () => {
           }
           document.cookie = `va_reader_client=1; path=/; max-age=31536000; SameSite=Lax`;
         } catch {}
-        toast('Access granted! Entering intelligence wire...', 'success');
+
+        toast('Access granted: Entering Venture Atlas Wire...', 'success');
         setTimeout(() => {
           window.location.href = '/';
         }, 200);
       } else {
-        toast(data.error || 'Failed to initialize reader access', 'error');
+        toast(data.error || 'Failed to initialize reader clearance', 'error');
         setLoading(false);
       }
     } catch {
-      toast('Network error. Please try again.', 'error');
+      toast('Network communication error. Please retry.', 'error');
       setLoading(false);
     }
   };
@@ -97,694 +344,564 @@ export const LandingView: React.FC = () => {
     }
   };
 
-  // Demo briefs data for interactive showcase
-  const demoBriefs = {
-    hardware: {
-      badge: 'AI HARDWARE · 52 WORDS',
-      title: 'Verity Silicon Closes $340M Series C for Analog AI Compute',
-      content:
-        'Verity Silicon closed a $340 million round led by Sequoia and Temasek at a $4.1B valuation. The funding will accelerate mass fabrication of low-power analog in-memory compute chips that eliminate GPU memory transfer bottlenecks, enabling real-time edge LLMs on sub-15W battery devices.',
-      source: 'The Information',
-      valuation: '$4.1B Post-Money',
-      time: '45m ago',
-    },
-    crypto: {
-      badge: 'CRYPTO & WEB3 · 54 WORDS',
-      title: 'Monad Raises $225M Led by Paradigm for 10,000 TPS Parallel EVM',
-      content:
-        'Monad completed a $225 million financing round led by Paradigm with participation from Electric Capital and Greenoaks. The team engineered a pipelined, parallelized Ethereum Virtual Machine architecture achieving 10,000 transactions per second with 1-second finality while preserving 100% bytecode compatibility with standard Ethereum smart contracts.',
-      source: 'Fortune Crypto',
-      valuation: '$3.0B Valuation',
-      time: '2h ago',
-    },
-    teardown: {
-      badge: 'CASE STUDY · 58 WORDS',
-      title: 'CRED — Exclusivity as a Scalable Distribution Moat',
-      content:
-        'Kunal Shah engineered CRED into a $6.4B fintech by restricting access exclusively to consumers with credit scores above 750. By capturing the top 1% creditworthy base, CRED monetizes high-margin peer-to-peer lending and institutional credit lines with zero customer default risk.',
-      source: 'Venture Atlas Teardowns',
-      valuation: '$6.4B Valuation',
-      time: 'Today',
-    },
-  };
-
-  const currentBrief = demoBriefs[activeDemoTab];
-
-  const toggleDemoAudio = () => {
-    if (!('speechSynthesis' in window)) {
-      toast('Audio synthesis not supported on this browser', 'info');
-      return;
-    }
-
-    if (isPlayingAudio) {
-      window.speechSynthesis.cancel();
-      setIsPlayingAudio(false);
-    } else {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(`${currentBrief.title}. ${currentBrief.content}`);
-      utterance.rate = 1.05;
-      utterance.onend = () => setIsPlayingAudio(false);
-      utterance.onerror = () => setIsPlayingAudio(false);
-      setIsPlayingAudio(true);
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  // Curated Founder Cards for the Founder Showcase Gallery
-  const featuredFounders = [
-    {
-      name: 'Kunal Shah',
-      role: 'Founder & CEO, CRED',
-      company: 'CRED',
-      valuation: '$6.4 Billion',
-      category: 'Fintech & Lending',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-      headline: 'Jab "Exclusive" Hi Business Model Ban Gaya',
-      summary:
-        'Kunal Shah launched CRED in 2018 with a counter-intuitive premise: target solely the top 1% creditworthy users in India with credit scores above 750. Rewarding prompt credit card payments created a captive audience for high-margin lending products.',
-      tag: 'Unicorn',
-    },
-    {
-      name: 'Patrick Collison',
-      role: 'Co-founder & CEO, Stripe',
-      company: 'Stripe',
-      valuation: '$65 Billion',
-      category: 'Financial Infrastructure',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
-      headline: 'The Architecture of a $1 Trillion Payment Rail',
-      summary:
-        'In 2010, accepting credit cards required weeks of paper underwriting. Patrick engineered 8 lines of code into a sovereign financial rail handling 1% of global GDP with five-nines uptime and zero database locks.',
-      tag: 'Global Scale',
-    },
-    {
-      name: 'Karri Saarinen',
-      role: 'Co-founder & CEO, Linear',
-      company: 'Linear',
-      valuation: '$400 Million',
-      category: 'Developer Tooling',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
-      headline: 'Building a $400M Cult Software Brand with 0 Sales Reps',
-      summary:
-        'Defeating Jira through 60fps local-first SQLite clients and extreme product craft. Linear scaled past $35M ARR with fewer than 25 employees by refusing outbound SDR cold emails and focusing exclusively on sub-50ms speed.',
-      tag: 'Capital Efficient',
-    },
-    {
-      name: 'Eric Glyman',
-      role: 'Co-founder & CEO, Ramp',
-      company: 'Ramp',
-      valuation: '$7.6 Billion',
-      category: 'Corporate Finance',
-      image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80',
-      headline: 'How Velocity of Execution Beat Legacy Cards in 36 Months',
-      summary:
-        'Aligning incentives with CFOs by promising that Ramp will actively decrease corporate spend through automated software detection and AI receipt matching, monetizing on interchange while saving clients millions.',
-      tag: 'Hypergrowth',
-    },
-    {
-      name: 'Melanie Perkins',
-      role: 'Co-founder & CEO, Canva',
-      company: 'Canva',
-      valuation: '$26 Billion',
-      category: 'Design & Workspace',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-      headline: 'From 100+ VC Rejections to a $26B Visual Democratizer',
-      summary:
-        'Melanie Perkins started from a school yearbook design tool in Perth, surviving over 100 investor rejections before scaling Canva to 185M+ monthly active users and $2.3B in annual revenue.',
-      tag: 'Global Ecosystem',
-    },
-    {
-      name: 'Amjad Masad',
-      role: 'Founder & CEO, Replit',
-      company: 'Replit',
-      valuation: '$3.0 Billion',
-      category: 'AI Software Creation',
-      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80',
-      headline: 'The Browser-Based IDE Powering 25M Next-Gen Developers',
-      summary:
-        'Moving entire developer environments into browser WebAssembly containers. Replit has turned 25M creators into full-stack software engineers using autonomous AI coding agents.',
-      tag: 'AI Rails',
-    },
-  ];
-
   return (
-    <div className="w-full text-text-primary flex flex-col justify-between overflow-x-hidden select-none -mt-3 sm:-mt-5 space-y-8 sm:space-y-12">
-      
-      {/* BREAKING NEWS MARQUEE WIRE TICKER */}
-      <div className="w-full bg-[#09090b] text-white border-y border-white/10 py-2 px-4 overflow-hidden shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-400 text-black font-mono font-black text-[10px] uppercase tracking-wider shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping" />
-            <span>WIRE TICKER</span>
+    <div className="min-h-screen bg-[#0B0E14] text-[#E6E8EC] font-body selection:bg-[#D9A441] selection:text-[#0B0E14] relative">
+
+      {/* ==========================================
+          DEVICE 1: LIVE PHYSICAL TICKER TAPE (TOP)
+          ========================================== */}
+      <aside aria-label="Live Market Dispatches Ticker" className="w-full bg-[#07090D] border-b border-[#2A2F3A] overflow-hidden py-1.5 px-3 z-40 select-none">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 shrink-0 font-mono text-[10px] uppercase tracking-wider text-[#2FA8A0]">
+            <span className="w-2 h-2 rounded-full bg-[#2FA8A0] animate-pulse" />
+            <span className="font-bold">LIVE WIRE</span>
+            <span className="text-[#2A2F3A]">|</span>
+            <span className="text-[#8C93A3]">14:02 IST</span>
           </div>
 
-          <div className="overflow-x-auto no-scrollbar flex items-center gap-5 text-xs font-mono whitespace-nowrap text-neutral-300">
-            <span className="flex items-center gap-1.5">
-              <strong className="text-white">MONAD</strong>
-              <span className="text-emerald-400">+$225M (Paradigm)</span>
-            </span>
-            <span className="text-neutral-600">·</span>
-            <span className="flex items-center gap-1.5">
-              <strong className="text-white">VERITY SILICON</strong>
-              <span className="text-emerald-400">+$340M (Sequoia)</span>
-            </span>
-            <span className="text-neutral-600">·</span>
-            <span className="flex items-center gap-1.5">
-              <strong className="text-white">CRED</strong>
-              <span className="text-amber-400">$6.4B Valuation Moat</span>
-            </span>
-            <span className="text-neutral-600">·</span>
-            <span className="flex items-center gap-1.5">
-              <strong className="text-white">FIGURE AI</strong>
-              <span className="text-emerald-400">+$675M (Bezos/Nvidia)</span>
-            </span>
-            <span className="text-neutral-600">·</span>
-            <span className="flex items-center gap-1.5">
-              <strong className="text-white">STRIPE</strong>
-              <span className="text-sky-400">$1T Annual TPV</span>
-            </span>
-            <span className="text-neutral-600">·</span>
-            <span className="flex items-center gap-1.5">
-              <strong className="text-white">RAMP</strong>
-              <span className="text-emerald-400">$300M+ ARR Record</span>
-            </span>
+          <div className="overflow-hidden whitespace-nowrap flex-1 mx-4 mask-fade">
+            <div className="animate-ticker font-mono text-[11px] text-[#8C93A3] flex items-center gap-8">
+              {TICKER_ITEMS.concat(TICKER_ITEMS).map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2 shrink-0">
+                  <span className="text-[#555C6E] font-bold">[{item.desk}]</span>
+                  <span className="text-[#E6E8EC]">{item.text}</span>
+                  <span className={`font-bold ${item.down ? 'text-[#C24B3F]' : 'text-[#D9A441]'}`}>
+                    {item.change}
+                  </span>
+                  <span className="text-[#2A2F3A] mx-2">•</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-2 shrink-0 font-mono text-[10px] text-[#555C6E]">
+            <span>60-WDS STRICT</span>
+            <span className="text-[#2A2F3A]">|</span>
+            <Link href="/admin/login" className="hover:text-[#D9A441] transition-colors">
+              STAFF GATE
+            </Link>
           </div>
         </div>
-      </div>
+      </aside>
 
-      {/* 1. HERO SECTION WITH VIBRANT RADIANT GLOW */}
-      <div className="relative w-full overflow-hidden rounded-3xl pt-4 sm:pt-6 pb-6 sm:pb-8">
-        <div className="absolute inset-0 z-0 pointer-events-none opacity-90 dark:opacity-35 [mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_90%)]">
-          <GradientBackground className="w-full h-full" />
-        </div>
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 flex flex-col items-center text-center space-y-4 sm:space-y-6">
-          
-          {/* Live Top Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/90 dark:bg-black/70 border border-neutral-300 dark:border-neutral-700 shadow-sm backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping shrink-0" />
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-200">
-              EXECUTIVE INTELLIGENCE WIRE · 60-WORD BRIEFS
-            </span>
+      {/* ==========================================
+          MASTHEAD HEADER NAVIGATION
+          ========================================== */}
+      <header className="border-b border-[#2A2F3A] bg-[#0B0E14]/90 backdrop-blur-md sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/landing" className="flex items-center gap-2">
+              <span className="font-fraunces text-2xl font-bold tracking-tight text-[#E6E8EC]">
+                Venture Atlas
+              </span>
+              <span className="px-1.5 py-0.5 rounded border border-[#2A2F3A] bg-[#07090D] font-mono text-[9px] font-bold text-[#D9A441] uppercase tracking-widest">
+                WIRE
+              </span>
+            </Link>
           </div>
 
-          {/* H1 Headline & Subtitle */}
-          <div className="space-y-2.5 max-w-4xl mx-auto">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display tracking-tight text-neutral-950 dark:text-white leading-[0.95] uppercase drop-shadow-xs">
-              Read what’s <br className="hidden sm:inline" />
-              <span className="text-[#0066FF] dark:text-amber-400">breaking.</span>
+          <div className="flex items-center gap-4 sm:gap-6 font-mono text-xs">
+            <div className="hidden md:flex items-center gap-4 text-[#8C93A3]">
+              <span>DESKS: <strong>5</strong></span>
+              <span className="text-[#2A2F3A]">/</span>
+              <span>READ CEILING: <strong>60 WDS</strong></span>
+              <span className="text-[#2A2F3A]">/</span>
+              <span className="text-[#2FA8A0] flex items-center gap-1">
+                <Radio size={12} className="animate-pulse" />
+                STREAMING
+              </span>
+            </div>
+
+            <button
+              onClick={focusInput}
+              className="px-4 py-2 rounded bg-[#D9A441] hover:bg-[#c99534] text-[#0B0E14] font-mono font-bold text-xs uppercase tracking-wider transition-all active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#D9A441] focus:ring-offset-2 focus:ring-offset-[#0B0E14]"
+            >
+              Enter the feed
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ==========================================
+          HERO SECTION: ASYMMETRIC, LEFT-ALIGNED
+          ========================================== */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+
+          {/* LEFT 7 COLS: EDITORIAL POSITIONING & INLINE GATE */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded border border-[#2A2F3A] bg-[#07090D] font-mono text-[11px] text-[#D9A441] uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-[#2FA8A0] animate-pulse" />
+              <span>TERMINAL DISPATCH // REAL-TIME FOUNDER INTELLIGENCE</span>
+            </div>
+
+            {/* Display Headline in Fraunces Variable Font */}
+            <h1 className="font-fraunces text-4xl sm:text-5xl lg:text-[3.5rem] font-normal text-[#E6E8EC] leading-[1.06] tracking-tight">
+              Institutional venture intelligence at 60-word scanning speed.
             </h1>
 
-            <p className="text-sm sm:text-base md:text-lg text-neutral-800 dark:text-neutral-200 font-body max-w-2xl mx-auto leading-relaxed font-medium">
-              Catch up on seed rounds, AI compute clusters, and market moats in 60 words. No fluff, no PR filler.
-            </p>
-          </div>
-
-          {/* Email Capture Input */}
-          <div className="w-full max-w-md mx-auto">
-            {subscribed ? (
-              <div className="p-3.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-800 dark:text-emerald-300 text-xs font-mono font-bold flex items-center justify-center gap-2 animate-fadeIn backdrop-blur-md shadow-sm">
-                <IconCircleCheckFilled size={18} className="text-emerald-600" />
-                <span>Access granted! Opening news feed...</span>
-              </div>
-            ) : (
-              <form
-                onSubmit={handleSubscribe}
-                className="flex items-center p-1.5 rounded-full bg-white/95 dark:bg-[#141416]/95 border border-neutral-300/90 dark:border-white/20 shadow-xl focus-within:border-[#0066FF] dark:focus-within:border-amber-400 transition-all backdrop-blur-xl"
-              >
-                <input
-                  id="work-email-input"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="Enter your work email..."
-                  required
-                  className="flex-1 bg-transparent px-4 py-2 text-xs sm:text-sm font-body text-neutral-900 dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:outline-none font-medium"
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-5 sm:px-6 py-2 rounded-full bg-[#0066FF] hover:bg-[#0052CC] text-white text-xs font-bold font-mono tracking-wider transition-all duration-200 active:scale-95 shadow-md shrink-0 flex items-center gap-1.5 cursor-pointer"
-                >
-                  {loading ? 'Unlocking...' : 'Read the news'}
-                  <IconArrowNarrowRight size={15} />
-                </button>
-              </form>
-            )}
-
-            <p className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 mt-2 text-center">
-              I agree to receive the Venture Atlas brief. Unsubscribe anytime. View our{' '}
-              <Link href="/privacy" className="text-amber-500 hover:underline">
-                Privacy Policy
-              </Link>
-              .
+            {/* Tight Positioning Copy */}
+            <p className="text-base sm:text-lg text-[#8C93A3] font-body max-w-2xl leading-relaxed">
+              Bloomberg data rigor meets Inshorts velocity. Seed rounds, sovereign wealth deployments, burn rate spikes, and post-mortems distilled into verifiable 60-word dispatches for founders, VCs, and operators.
             </p>
 
-            <div className="flex items-center justify-center gap-3 text-[11px] font-mono text-neutral-600 dark:text-neutral-400 mt-2 font-medium">
-              <span className="flex items-center gap-1">
-                <IconCheck size={13} className="text-emerald-500" /> Instant Access
-              </span>
-              <span>·</span>
-              <span className="flex items-center gap-1">
-                <IconCheck size={13} className="text-emerald-500" /> 100% Free
-              </span>
-              <span>·</span>
-              <span className="flex items-center gap-1">
-                <IconCheck size={13} className="text-emerald-500" /> 24,000+ Readers
-              </span>
-            </div>
-          </div>
-
-          {/* Centerpiece iPhone Showcase */}
-          <div className="relative w-full max-w-6xl mx-auto pt-2 sm:pt-4 pb-0 flex items-center justify-center">
-            {/* Flanking Avatar 1 */}
-            <div className="hidden xl:block absolute left-0 top-1/2 -translate-y-1/2 z-10">
-              <div className="group relative w-32 h-32 rounded-full overflow-hidden border-2 border-white/80 dark:border-white/20 shadow-xl transition-all duration-500 hover:scale-105 backdrop-blur-sm ring-2 ring-black/5 dark:ring-white/10">
-                <img
-                  src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=400&q=80"
-                  alt="Founder Pitching"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-center pb-2.5">
-                  <span className="text-[9px] font-mono font-bold text-amber-300 uppercase">
-                    Founder Pitches
-                  </span>
-                </div>
+            {/* Physical Proof Metric Highlights */}
+            <div className="grid grid-cols-3 gap-3 py-2 max-w-xl font-mono border-y border-[#2A2F3A]">
+              <div className="py-2">
+                <div className="text-xs text-[#555C6E] uppercase tracking-wider">Length Constraint</div>
+                <div className="text-base sm:text-lg font-bold text-[#E6E8EC] mt-0.5">Strictly 60 Words</div>
+              </div>
+              <div className="py-2 border-l border-[#2A2F3A] pl-3">
+                <div className="text-xs text-[#555C6E] uppercase tracking-wider">Scan Velocity</div>
+                <div className="text-base sm:text-lg font-bold text-[#D9A441] mt-0.5">1.2 Min Desk Pass</div>
+              </div>
+              <div className="py-2 border-l border-[#2A2F3A] pl-3">
+                <div className="text-xs text-[#555C6E] uppercase tracking-wider">Editorial Integrity</div>
+                <div className="text-base sm:text-lg font-bold text-[#2FA8A0] mt-0.5">0 Sponsored Filler</div>
               </div>
             </div>
 
-            {/* Flanking Avatar 2 */}
-            <div className="hidden lg:block absolute left-40 xl:left-44 top-1/2 -translate-y-1/2 z-10">
-              <div className="group relative w-36 h-36 rounded-full overflow-hidden border-2 border-white/80 dark:border-white/20 shadow-xl transition-all duration-500 hover:scale-105 backdrop-blur-sm ring-2 ring-black/5 dark:ring-white/10">
-                <img
-                  src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=400&q=80"
-                  alt="Tech Operator"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-center pb-2.5">
-                  <span className="text-[9px] font-mono font-bold text-amber-300 uppercase">
-                    Tech Operators
-                  </span>
-                </div>
+            {/* Inline Work Email Access Gate */}
+            <div className="pt-2 space-y-3">
+              <div className="font-mono text-[11px] text-[#555C6E] uppercase tracking-wider">
+                ACCESS CLEARANCE // ENTER CORPORATE EMAIL TO UNLOCK LIVE WIRE
               </div>
-            </div>
 
-            {/* Central Interactive Phone Mockup */}
-            <div className="relative z-20 mx-auto px-4 sm:px-6">
-              <PhoneMockupBasic />
-            </div>
-
-            {/* Flanking Avatar 3 */}
-            <div className="hidden lg:block absolute right-40 xl:right-44 top-1/2 -translate-y-1/2 z-10">
-              <div className="group relative w-36 h-36 rounded-full overflow-hidden border-2 border-white/80 dark:border-white/20 shadow-xl transition-all duration-500 hover:scale-105 backdrop-blur-sm ring-2 ring-black/5 dark:ring-white/10">
-                <img
-                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80"
-                  alt="AI Silicon Lab"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-center pb-2.5">
-                  <span className="text-[9px] font-mono font-bold text-amber-300 uppercase">
-                    AI & Deeptech
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Flanking Avatar 4 */}
-            <div className="hidden xl:block absolute right-0 top-1/2 -translate-y-1/2 z-10">
-              <div className="group relative w-32 h-32 rounded-full overflow-hidden border-2 border-white/80 dark:border-white/20 shadow-xl transition-all duration-500 hover:scale-105 backdrop-blur-sm ring-2 ring-black/5 dark:ring-white/10">
-                <img
-                  src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=400&q=80"
-                  alt="Venture Capital"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end justify-center pb-2.5">
-                  <span className="text-[9px] font-mono font-bold text-amber-300 uppercase">
-                    Venture Capital
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* 2. EDITORIAL SPOTLIGHT: MEET THE BREAKOUT FOUNDERS */}
-      <div className="w-full max-w-6xl mx-auto px-4 space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-neutral-200 dark:border-neutral-800 pb-3">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-amber-600 dark:text-amber-400">
-              <IconUserCheck size={15} />
-              <span>Founder Spotlight & Moat Teardowns</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-display uppercase tracking-tight text-neutral-950 dark:text-white">
-              The Operators Shaping Tech
-            </h2>
-            <p className="text-xs sm:text-sm font-body text-neutral-600 dark:text-neutral-400 max-w-xl">
-              Every week, our editorial team breaks down the non-consensus insights, seed funding journeys, and moats of breakout founders.
-            </p>
-          </div>
-
-          <button
-            onClick={focusInput}
-            className="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase text-[#0066FF] dark:text-amber-400 hover:underline cursor-pointer"
-          >
-            <span>Unlock all 50+ teardowns →</span>
-          </button>
-        </div>
-
-        {/* 3-Column Founder Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-          {featuredFounders.map((f, idx) => (
-            <div
-              key={idx}
-              className="group rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-[#121316] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
-            >
-              {/* Founder Header Bar */}
-              <div className="p-5 space-y-3">
-                <div className="flex items-center gap-3.5">
-                  {/* Founder Photo Avatar */}
-                  <div className="relative w-14 h-14 rounded-xl overflow-hidden border-2 border-neutral-200 dark:border-neutral-700 shrink-0 shadow-sm">
-                    <img
-                      src={f.image}
-                      alt={f.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              <form onSubmit={handleSubscribe} className="space-y-2">
+                <div className="flex flex-col sm:flex-row gap-2.5 max-w-xl">
+                  <div className="relative flex-1">
+                    <input
+                      id="work-email-input"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="partner@sequoia.com or founder@startup.io"
+                      required
+                      aria-label="Work Email Address"
+                      className="w-full px-4 py-3.5 rounded bg-[#07090D] border border-[#2A2F3A] text-sm font-mono text-[#E6E8EC] placeholder:text-[#555C6E] focus:outline-none focus:border-[#D9A441] focus:ring-1 focus:ring-[#D9A441] transition-colors"
                     />
                   </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-6 py-3.5 rounded bg-[#D9A441] hover:bg-[#c99534] active:scale-[0.99] text-[#0B0E14] font-mono font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#D9A441] focus:ring-offset-2 focus:ring-offset-[#0B0E14]"
+                  >
+                    {loading ? 'Verifying Gate...' : 'Enter the feed'}
+                  </button>
+                </div>
+              </form>
 
-                  <div className="space-y-0.5 min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-1">
-                      <h3 className="text-sm sm:text-base font-black font-display text-neutral-950 dark:text-white truncate">
-                        {f.name}
-                      </h3>
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 shrink-0">
-                        {f.tag}
-                      </span>
-                    </div>
-                    <div className="text-[11px] font-mono text-neutral-500 truncate">
-                      {f.role}
-                    </div>
-                    <div className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                      {f.valuation}
-                    </div>
-                  </div>
+              <div className="flex items-center gap-2 text-[11px] font-mono text-[#555C6E]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2FA8A0]" />
+                <span>Instant dispatch authorization. No marketing nurture drips. Unlocks full editorial feed.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT 5 COLS: LIVE 60-WORD BRIEF CARD (THE PRODUCT DEMO) */}
+          <div className="lg:col-span-5">
+            <div className="border border-[#2A2F3A] bg-[#07090D] p-5 sm:p-6 rounded-none relative shadow-2xl">
+
+              {/* Perforated Top Wire Tab Bar */}
+              <div className="flex items-center justify-between border-b border-[#2A2F3A] pb-3 mb-4">
+                <div className="flex items-center gap-1.5">
+                  {FEATURED_BRIEFS.map((b, idx) => (
+                    <button
+                      key={b.id}
+                      onClick={() => setActiveBriefIdx(idx)}
+                      className={`px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider transition-all ${
+                        activeBriefIdx === idx
+                          ? 'bg-[#E6E8EC] text-[#0B0E14]'
+                          : 'bg-[#0B0E14] text-[#8C93A3] hover:text-[#E6E8EC] border border-[#2A2F3A]'
+                      }`}
+                    >
+                      {b.deskCode}
+                    </button>
+                  ))}
                 </div>
 
-                {/* Deal Headline */}
-                <h4 className="text-xs sm:text-sm font-black font-display text-neutral-900 dark:text-neutral-100 leading-snug">
-                  {f.headline}
-                </h4>
+                <div className="font-mono text-[10px] text-[#2FA8A0] uppercase tracking-wider flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2FA8A0] animate-pulse" />
+                  <span>DEMO DISPATCH</span>
+                </div>
+              </div>
 
-                {/* 60-Word Teardown Summary */}
-                <p className="text-xs font-body text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                  {f.summary}
+              {/* Metadata strip */}
+              <div className="flex items-center justify-between text-[10px] font-mono text-[#555C6E] pb-3 border-b border-dashed border-[#2A2F3A]">
+                <span>{activeBrief.source}</span>
+                <span>{activeBrief.timestamp}</span>
+                <span className="text-[#D9A441]">{activeBrief.wordCount} WORDS</span>
+                <span>{activeBrief.readTime}</span>
+              </div>
+
+              {/* Headline */}
+              <div className="pt-4 space-y-3">
+                <div className={`inline-block px-2 py-0.5 text-[10px] font-mono font-bold border uppercase tracking-wider ${activeBrief.badgeColor}`}>
+                  {activeBrief.desk}
+                </div>
+
+                <h3 className="font-fraunces text-xl sm:text-2xl text-[#E6E8EC] leading-snug font-normal">
+                  {activeBrief.headline}
+                </h3>
+
+                {/* Body: Strict 60 words */}
+                <p className="text-sm font-body text-[#A6ADB8] leading-relaxed pt-1">
+                  {activeBrief.body}
                 </p>
               </div>
 
-              {/* Bottom Card Footer */}
-              <div className="px-5 py-2.5 bg-neutral-50 dark:bg-neutral-900/60 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-[11px] font-mono">
-                <span className="text-neutral-500">{f.category}</span>
-                <button
-                  onClick={focusInput}
-                  className="text-neutral-900 dark:text-amber-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
-                >
-                  <span>Read 60w Teardown</span>
-                  <IconArrowNarrowRight size={12} />
-                </button>
+              {/* Structured Financial Metric Callout Box */}
+              <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-[#0B0E14] border border-[#2A2F3A] font-mono">
+                {activeBrief.metrics.map((m, idx) => (
+                  <div key={idx} className="space-y-0.5">
+                    <div className="text-[9px] text-[#555C6E] uppercase tracking-widest">{m.label}</div>
+                    <div className="text-xs sm:text-sm font-bold text-[#E6E8EC]">{m.value}</div>
+                    {m.sub && <div className="text-[9px] text-[#8C93A3] truncate">{m.sub}</div>}
+                  </div>
+                ))}
               </div>
+
+              {/* Audio Dispatch Simulated Toggle */}
+              <div className="mt-4 pt-3 border-t border-[#2A2F3A] flex items-center justify-between text-[11px] font-mono">
+                <button
+                  type="button"
+                  onClick={() => setIsPlayingAudio(!isPlayingAudio)}
+                  className="flex items-center gap-2 text-[#8C93A3] hover:text-[#D9A441] transition-colors"
+                >
+                  {isPlayingAudio ? (
+                    <VolumeX size={14} className="text-[#D9A441]" />
+                  ) : (
+                    <Volume2 size={14} className="text-[#8C93A3]" />
+                  )}
+                  <span>{isPlayingAudio ? 'STOPPING AUDIO BRIEF' : 'LISTEN BRIEF (28 SEC AUDIO)'}</span>
+                </button>
+
+                <div className="flex items-center gap-1 text-[#2FA8A0]">
+                  <span className="w-1 h-3 bg-[#2FA8A0] animate-pulse" />
+                  <span className="w-1 h-4 bg-[#2FA8A0] animate-pulse delay-75" />
+                  <span className="w-1 h-2 bg-[#2FA8A0] animate-pulse delay-150" />
+                </div>
+              </div>
+
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 3. INTERACTIVE LIVE 60-WORD READER DEMO */}
-      <div className="w-full max-w-5xl mx-auto px-4 space-y-4">
-        <div className="text-center space-y-1">
-          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-[#0066FF] dark:text-amber-400">
-            <IconBolt size={15} />
-            <span>Interactive Live Reader Demo</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-tight text-neutral-950 dark:text-white">
-            Experience 60-Word Executive Reporting
-          </h2>
-          <p className="text-xs sm:text-sm font-body text-neutral-600 dark:text-neutral-400 max-w-lg mx-auto">
-            Toggle between live intelligence desks below to see how our editors format market-moving events.
-          </p>
+
+        </div>
+      </main>
+
+      {/* ==========================================
+          PROOF STRIP: TERMINAL STAT LINE
+          ========================================== */}
+      <section aria-label="Key Platform Constraints" className="border-y border-[#2A2F3A] bg-[#07090D] py-6 px-4 sm:px-6 my-4 select-none">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="border-l-2 border-[#D9A441] pl-3.5 space-y-0.5 font-mono">
+            <div className="text-2xl sm:text-3xl font-bold text-[#E6E8EC]">60 WORDS</div>
+            <div className="text-[11px] text-[#555C6E] uppercase tracking-wider">Strict dispatch ceiling</div>
+          </div>
+          <div className="border-l-2 border-[#2FA8A0] pl-3.5 space-y-0.5 font-mono">
+            <div className="text-2xl sm:text-3xl font-bold text-[#E6E8EC]">1.2 MIN</div>
+            <div className="text-[11px] text-[#555C6E] uppercase tracking-wider">Average desk clearance</div>
+          </div>
+          <div className="border-l-2 border-[#D9A441] pl-3.5 space-y-0.5 font-mono">
+            <div className="text-2xl sm:text-3xl font-bold text-[#E6E8EC]">5 DESKS</div>
+            <div className="text-[11px] text-[#555C6E] uppercase tracking-wider">Unicorns, Failures, Finance, Crypto, Seed</div>
+          </div>
+          <div className="border-l-2 border-[#C24B3F] pl-3.5 space-y-0.5 font-mono">
+            <div className="text-2xl sm:text-3xl font-bold text-[#E6E8EC]">0 FLUFF</div>
+            <div className="text-[11px] text-[#555C6E] uppercase tracking-wider">No sponsored PR or filler</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================
+          GLOBE SECTION: FUNDING ACTIVITY TELEMETRY
+          ========================================== */}
+      <section aria-label="Global Capital Flow Telemetry" className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+        <div className="border border-[#2A2F3A] bg-[#07090D] p-6 sm:p-10">
+
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-[#2A2F3A] pb-5 mb-8 gap-4">
+            <div>
+              <div className="font-mono text-[11px] text-[#2FA8A0] uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#2FA8A0] animate-pulse" />
+                <span>GLOBAL CAPITAL FLOW RADAR // 24-HOUR TELEMETRY</span>
+              </div>
+              <h2 className="font-fraunces text-2xl sm:text-3xl text-[#E6E8EC] font-normal mt-1">
+                Real-time venture deployment across tier-1 hubs
+              </h2>
+            </div>
+
+            <div className="font-mono text-xs text-[#8C93A3] flex items-center gap-3">
+              <span>ACTIVE HUBS: <strong className="text-[#D9A441]">5 HUBS</strong></span>
+              <span className="text-[#2A2F3A]">|</span>
+              <span>24H VOLUME: <strong className="text-[#E6E8EC]">$37.7B</strong></span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+            {/* Left: Global Hubs Telemetry Feed (5 cols) */}
+            <div className="lg:col-span-5 space-y-2 font-mono">
+              <div className="text-[10px] text-[#555C6E] uppercase tracking-widest pb-1 border-b border-[#2A2F3A]">
+                SELECT VENTURE HUB TO INSPECT CORRIDOR
+              </div>
+
+              {GLOBAL_HUBS.map((hub) => {
+                const isSelected = hub.coords[0] === selectedHubCoords[0];
+                return (
+                  <button
+                    key={hub.city}
+                    onClick={() => setSelectedHubCoords(hub.coords as [number, number])}
+                    className={`w-full text-left p-3 border transition-all flex items-center justify-between ${
+                      isSelected
+                        ? 'border-[#D9A441] bg-[#0B0E14] text-[#E6E8EC]'
+                        : 'border-[#2A2F3A] bg-[#07090D] text-[#8C93A3] hover:border-[#555C6E] hover:text-[#E6E8EC]'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-[#D9A441]' : 'bg-[#555C6E]'}`} />
+                        <span className="font-bold text-xs text-[#E6E8EC]">{hub.city}</span>
+                        <span className="text-[10px] text-[#555C6E]">({hub.region})</span>
+                      </div>
+                      <div className="text-[10px] text-[#8C93A3] mt-1 pl-3.5">
+                        Focus: {hub.focus}
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <div className="text-xs font-bold text-[#D9A441]">{hub.volume24h}</div>
+                      <div className="text-[9px] text-[#555C6E]">{hub.activeDeals} Deals Active</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Right: WebGL Spinning Globe (7 cols) */}
+            <div className="lg:col-span-7 flex justify-center items-center relative">
+              <TelemetryGlobe
+                activeCoords={selectedHubCoords}
+                onSelectHub={(c) => setSelectedHubCoords(c)}
+              />
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================
+          DESK PREVIEWS: DENSE WIRE-STYLE DISPATCH GRID
+          ========================================== */}
+      <section aria-label="Editorial Desks and Channels" className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="border-b border-[#2A2F3A] pb-4 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="font-mono text-[11px] text-[#D9A441] uppercase tracking-wider">
+              COVERAGE ARCHITECTURE // FIVE SPECIALIZED WIRES
+            </div>
+            <h2 className="font-fraunces text-2xl sm:text-3xl text-[#E6E8EC] font-normal mt-1">
+              Engineered for founders & venture capital partners
+            </h2>
+          </div>
+          <div className="font-mono text-xs text-[#555C6E]">
+            ALL CHANNELS UPDATED EVERY 30 MINUTES
+          </div>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center justify-center gap-2 p-1 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 max-w-md mx-auto">
-          <button
-            onClick={() => {
-              setActiveDemoTab('hardware');
-              setIsPlayingAudio(false);
-            }}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all ${
-              activeDemoTab === 'hardware'
-                ? 'bg-white dark:bg-neutral-800 text-neutral-950 dark:text-white shadow-sm'
-                : 'text-neutral-500 hover:text-neutral-900'
-            }`}
-          >
-            AI Hardware
-          </button>
-          <button
-            onClick={() => {
-              setActiveDemoTab('crypto');
-              setIsPlayingAudio(false);
-            }}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all ${
-              activeDemoTab === 'crypto'
-                ? 'bg-white dark:bg-neutral-800 text-neutral-950 dark:text-white shadow-sm'
-                : 'text-neutral-500 hover:text-neutral-900'
-            }`}
-          >
-            Crypto & Web3
-          </button>
-          <button
-            onClick={() => {
-              setActiveDemoTab('teardown');
-              setIsPlayingAudio(false);
-            }}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all ${
-              activeDemoTab === 'teardown'
-                ? 'bg-white dark:bg-neutral-800 text-neutral-950 dark:text-white shadow-sm'
-                : 'text-neutral-500 hover:text-neutral-900'
-            }`}
-          >
-            Moat Teardown
-          </button>
-        </div>
+        {/* Dense Wire Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {DESK_CHANNELS.map((desk) => (
+            <div
+              key={desk.num}
+              className="border border-[#2A2F3A] bg-[#07090D] p-5 flex flex-col justify-between space-y-4 relative group hover:border-[#555C6E] transition-colors"
+            >
+              {/* Perforated Top Edge Header */}
+              <div className="border-b border-dashed border-[#2A2F3A] pb-3 flex items-center justify-between font-mono text-[10px]">
+                <span className="text-[#D9A441] font-bold">{desk.badge}</span>
+                <span className="text-[#555C6E]">WIRE {desk.num}</span>
+              </div>
 
-        {/* Live Interactive Card */}
-        <div className="p-5 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121316] shadow-xl space-y-3 max-w-2xl mx-auto transition-all">
-          <div className="flex items-center justify-between">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-blue-50 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-              {currentBrief.badge}
-            </span>
+              <div className="space-y-2">
+                <h3 className="font-fraunces text-lg text-[#E6E8EC] font-normal group-hover:text-[#D9A441] transition-colors">
+                  {desk.name}
+                </h3>
+                <p className="text-xs text-[#8C93A3] font-body leading-relaxed">
+                  {desk.focus}
+                </p>
+              </div>
 
-            <div className="flex items-center gap-2">
+              {/* Sample Dispatch Snippet */}
+              <div className="p-3 bg-[#0B0E14] border border-[#2A2F3A] space-y-1.5 font-mono">
+                <div className="text-[9px] text-[#555C6E] uppercase tracking-wider flex justify-between">
+                  <span>RECENT DISPATCH</span>
+                  <span className="text-[#2FA8A0]">{desk.sampleStat}</span>
+                </div>
+                <div className="text-xs text-[#E6E8EC] line-clamp-2">
+                  "{desk.recentTitle}"
+                </div>
+              </div>
+
               <button
-                onClick={toggleDemoAudio}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-400 text-black hover:bg-amber-300 transition-colors shadow-xs"
+                type="button"
+                onClick={focusInput}
+                className="w-full py-2 border border-[#2A2F3A] hover:bg-[#E6E8EC] hover:text-[#0B0E14] font-mono text-[11px] uppercase tracking-wider text-[#8C93A3] transition-colors text-center"
               >
-                {isPlayingAudio ? <IconPlayerPause size={13} /> : <IconPlayerPlay size={13} />}
-                <span>{isPlayingAudio ? 'Pause Audio' : 'Listen with AI (1.05x)'}</span>
+                Inspect Wire Feed
               </button>
             </div>
-          </div>
+          ))}
 
-          <h3 className="text-lg sm:text-xl font-black font-display text-neutral-950 dark:text-white leading-tight">
-            {currentBrief.title}
-          </h3>
-
-          <p className="text-xs sm:text-sm font-body text-neutral-700 dark:text-neutral-300 leading-relaxed font-normal">
-            {currentBrief.content}
-          </p>
-
-          <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-[11px] font-mono text-neutral-500">
-            <span>Verified Citation: <strong className="text-neutral-900 dark:text-white">{currentBrief.source}</strong></span>
-            <span>{currentBrief.time}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. COVERAGE DESKS GRID (ALL VERTICALS) */}
-      <div className="w-full max-w-6xl mx-auto px-4 space-y-4">
-        <div className="text-center space-y-1">
-          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase text-blue-600 dark:text-blue-400">
-            <IconBuildingSkyscraper size={15} />
-            <span>Full-Spectrum Coverage</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-tight text-neutral-950 dark:text-white">
-            6 Specialized News Desks
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121316] shadow-sm space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6]" />
-              <span className="text-[10px] font-mono font-bold uppercase text-neutral-500">Live Wire</span>
-            </div>
-            <h3 className="text-base font-black font-display uppercase text-neutral-950 dark:text-white">
-              Startups & Founders
-            </h3>
-            <p className="text-xs font-body text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Early-stage launches, pivot breakdowns, zero-CAC growth loops, and founder origin stories.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121316] shadow-sm space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
-              <span className="text-[10px] font-mono font-bold uppercase text-neutral-500">Live Wire</span>
-            </div>
-            <h3 className="text-base font-black font-display uppercase text-neutral-950 dark:text-white">
-              Funding & Seed Rounds
-            </h3>
-            <p className="text-xs font-body text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Lead investors, valuations, dilution multiples, and cap table mechanics from Pre-Seed to Series F.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121316] shadow-sm space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#06B6D4]" />
-              <span className="text-[10px] font-mono font-bold uppercase text-neutral-500">Live Wire</span>
-            </div>
-            <h3 className="text-base font-black font-display uppercase text-neutral-950 dark:text-white">
-              Crypto & Web3
-            </h3>
-            <p className="text-xs font-body text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Parallelized EVM throughput, Layer-2 fee metrics, decentralized compute, and protocol treasuries.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121316] shadow-sm space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#8B5CF6]" />
-              <span className="text-[10px] font-mono font-bold uppercase text-neutral-500">Live Wire</span>
-            </div>
-            <h3 className="text-base font-black font-display uppercase text-neutral-950 dark:text-white">
-              Venture Capital & LPs
-            </h3>
-            <p className="text-xs font-body text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Fund sizes, DPI returns, term sheet liquidation preferences, and secondary market discounts.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121316] shadow-sm space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]" />
-              <span className="text-[10px] font-mono font-bold uppercase text-neutral-500">Live Wire</span>
-            </div>
-            <h3 className="text-base font-black font-display uppercase text-neutral-950 dark:text-white">
-              AI & Hardware Compute
-            </h3>
-            <p className="text-xs font-body text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Inference accelerator chips, sovereign datacenter power contracts, and frontier model benchmarks.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121316] shadow-sm space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#EC4899]" />
-              <span className="text-[10px] font-mono font-bold uppercase text-neutral-500">Live Wire</span>
-            </div>
-            <h3 className="text-base font-black font-display uppercase text-neutral-950 dark:text-white">
-              FinTech & Global Rails
-            </h3>
-            <p className="text-xs font-body text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Cross-border payroll settlement, interchange economics, corporate treasury software, and neo-banks.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* 6. COMPARISON MATRIX (VENTURE ATLAS VS TRADITIONAL MEDIA) */}
-      <div className="w-full max-w-4xl mx-auto px-4 space-y-4">
-        <div className="text-center space-y-1">
-          <h2 className="text-2xl sm:text-3xl font-black font-display uppercase tracking-tight text-neutral-950 dark:text-white">
-            The Signal vs. Noise Comparison
-          </h2>
-          <p className="text-xs font-mono text-neutral-500 uppercase">
-            How Venture Atlas replaces 10 bloated newsletters
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-[#121316] shadow-lg">
-          <div className="grid grid-cols-3 bg-neutral-100 dark:bg-neutral-900/80 p-3.5 border-b border-neutral-200 dark:border-neutral-800 text-xs font-mono font-bold uppercase text-neutral-700 dark:text-neutral-300">
-            <div>Feature</div>
-            <div className="text-center text-[#0066FF] dark:text-amber-400 font-black">Venture Atlas</div>
-            <div className="text-center text-neutral-500">Legacy Tech Media</div>
-          </div>
-
-          <div className="divide-y divide-neutral-100 dark:divide-neutral-800/60 text-xs sm:text-sm font-medium">
-            <div className="grid grid-cols-3 p-3.5 items-center">
-              <div className="font-bold text-neutral-900 dark:text-white">Story Length</div>
-              <div className="text-center font-bold text-emerald-600 dark:text-emerald-400">Strictly 60 words</div>
-              <div className="text-center text-neutral-500">1,500 – 3,000 words</div>
+          {/* 6th Slot: Visual Canvas Studio Highlight */}
+          <div className="border border-[#2A2F3A] bg-[#0B0E14] p-5 flex flex-col justify-between space-y-4 relative">
+            <div className="border-b border-dashed border-[#2A2F3A] pb-3 flex items-center justify-between font-mono text-[10px]">
+              <span className="text-[#2FA8A0] font-bold">CANVAS STUDIO</span>
+              <span className="text-[#555C6E]">VISUAL TEARDOWNS</span>
             </div>
 
-            <div className="grid grid-cols-3 p-3.5 items-center">
-              <div className="font-bold text-neutral-900 dark:text-white">Time To Read Daily</div>
-              <div className="text-center font-bold text-emerald-600 dark:text-emerald-400">3 Minutes</div>
-              <div className="text-center text-neutral-500">45+ Minutes</div>
+            <div className="space-y-2">
+              <h3 className="font-fraunces text-lg text-[#E6E8EC] font-normal">
+                Infographic Breakdown Cards
+              </h3>
+              <p className="text-xs text-[#8C93A3] font-body leading-relaxed">
+                For complex capital stacks, cap table waterfall simulations, and unit economics that cannot be compressed into 60 words alone.
+              </p>
             </div>
 
-            <div className="grid grid-cols-3 p-3.5 items-center">
-              <div className="font-bold text-neutral-900 dark:text-white">Audio Narration</div>
-              <div className="text-center font-bold text-emerald-600 dark:text-emerald-400">Instant AI Neural Voice</div>
-              <div className="text-center text-neutral-500">None / 1hr Podcasts</div>
+            <div className="p-3 bg-[#07090D] border border-[#2A2F3A] space-y-2 font-mono">
+              <div className="text-[9px] text-[#555C6E] uppercase tracking-wider">SAMPLE VISUAL METRIC MATRIX</div>
+              <div className="grid grid-cols-2 gap-2 text-[10px]">
+                <div className="text-[#D9A441]">CAC Payback: 5.2 Mo</div>
+                <div className="text-[#2FA8A0]">Gross Margin: 84%</div>
+                <div className="text-[#E6E8EC]">Burn Multiple: 0.8x</div>
+                <div className="text-[#C24B3F]">Ch. 11 Risk: Low</div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-3 p-3.5 items-center">
-              <div className="font-bold text-neutral-900 dark:text-white">Visual Canvas Teardowns</div>
-              <div className="text-center font-bold text-emerald-600 dark:text-emerald-400">Included on Every Deal</div>
-              <div className="text-center text-neutral-500">Walls of Unstructured Text</div>
-            </div>
-
-            <div className="grid grid-cols-3 p-3.5 items-center">
-              <div className="font-bold text-neutral-900 dark:text-white">Ads & Sponsorships</div>
-              <div className="text-center font-bold text-emerald-600 dark:text-emerald-400">Zero Ads</div>
-              <div className="text-center text-neutral-500">Popups, Trackers & Banners</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 7. TESTIMONIALS & CLIENT FEEDBACK */}
-      <div className="w-full max-w-6xl mx-auto px-4">
-        <ClientFeedback />
-      </div>
-
-      {/* 8. FINAL HIGH-IMPACT CALL TO ACTION */}
-      <div className="w-full max-w-4xl mx-auto px-4 text-center py-4 space-y-4">
-        <div className="p-6 sm:p-10 rounded-2xl bg-gradient-to-b from-neutral-950 to-neutral-900 text-white shadow-xl space-y-4 border border-white/10">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black font-display uppercase tracking-tight">
-            Stop scrolling bloated feeds.
-          </h2>
-          <p className="text-xs sm:text-sm text-neutral-300 font-body max-w-lg mx-auto leading-relaxed">
-            Get the high-signal 60-word briefs and startup execution breakdowns trusted by 24,000+ founders and investors.
-          </p>
-
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={focusInput}
-              className="w-full sm:w-auto px-7 py-3 rounded-full bg-amber-400 hover:bg-amber-300 text-black font-mono font-bold text-xs sm:text-sm uppercase tracking-wider transition-all active:scale-95 shadow-lg cursor-pointer"
-            >
-              Enter Work Email to Read Now
-            </button>
             <button
               type="button"
               onClick={focusInput}
-              className="w-full sm:w-auto px-7 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono font-bold text-xs sm:text-sm uppercase tracking-wider transition-all border border-white/15 cursor-pointer"
+              className="w-full py-2 bg-[#2FA8A0]/10 border border-[#2FA8A0]/40 text-[#2FA8A0] hover:bg-[#2FA8A0] hover:text-[#0B0E14] font-mono text-[11px] uppercase tracking-wider transition-colors text-center"
             >
-              View Live Stream
+              Access Visual Canvas
             </button>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* ==========================================
+          READER COHORT / VERIFICATION QUOTES
+          ========================================== */}
+      <section aria-label="Reader Verdicts" className="border-t border-[#2A2F3A] bg-[#07090D] py-14 px-4 sm:px-6 my-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="font-mono text-[11px] text-[#555C6E] uppercase tracking-widest text-center">
+            DAILY VERDICT // READ BY GENERAL PARTNERS & TECHNICAL FOUNDERS
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono">
+            <div className="p-5 border border-[#2A2F3A] bg-[#0B0E14] space-y-3">
+              <p className="text-xs text-[#A6ADB8] font-body leading-relaxed">
+                "Traditional tech journalism is 90% filler quotes and PR boilerplate. Venture Atlas is the first wire where I can clear 20 funding events before my first standup."
+              </p>
+              <div className="pt-2 border-t border-[#2A2F3A] text-[10px] text-[#555C6E] flex justify-between">
+                <span className="text-[#E6E8EC] font-bold">Partner, Series A Fund</span>
+                <span>Bengaluru</span>
+              </div>
+            </div>
+
+            <div className="p-5 border border-[#2A2F3A] bg-[#0B0E14] space-y-3">
+              <p className="text-xs text-[#A6ADB8] font-body leading-relaxed">
+                "The 60-word constraint forces the writer to tell you the only numbers that matter: post-money valuation, round size, and real growth bottlenecks. Invaluable."
+              </p>
+              <div className="pt-2 border-t border-[#2A2F3A] text-[10px] text-[#555C6E] flex justify-between">
+                <span className="text-[#E6E8EC] font-bold">Co-Founder & CTO</span>
+                <span>San Francisco</span>
+              </div>
+            </div>
+
+            <div className="p-5 border border-[#2A2F3A] bg-[#0B0E14] space-y-3">
+              <p className="text-xs text-[#A6ADB8] font-body leading-relaxed">
+                "The failure desk alone is worth checking daily. Seeing why a $70M startup burned through capital without sugarcoating provides more lessons than any puff piece."
+              </p>
+              <div className="pt-2 border-t border-[#2A2F3A] text-[10px] text-[#555C6E] flex justify-between">
+                <span className="text-[#E6E8EC] font-bold">VP Product</span>
+                <span>London</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================
+          SECONDARY BOTTOM CONVERSION GATE
+          ========================================== */}
+      <section aria-label="Acquisition Clearance Gate" className="max-w-4xl mx-auto px-4 sm:px-6 py-12 text-center space-y-6">
+        <div className="p-8 sm:p-12 border border-[#2A2F3A] bg-[#07090D] space-y-4">
+          <div className="font-mono text-xs text-[#D9A441] uppercase tracking-wider">
+            WIRE CLEARANCE TERMINAL
+          </div>
+          <h2 className="font-fraunces text-3xl sm:text-4xl text-[#E6E8EC] font-normal leading-tight">
+            Stop scrolling 3,000-word fluff pieces.
+          </h2>
+          <p className="text-sm text-[#8C93A3] font-body max-w-lg mx-auto">
+            Get the institutional 60-word dispatches and venture intelligence read by founders, VCs, and operators across 5 global hubs.
+          </p>
+
+          <form onSubmit={handleSubscribe} className="pt-4 max-w-md mx-auto flex flex-col sm:flex-row gap-2.5">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="work-email@firm.com"
+              required
+              aria-label="Work Email Address"
+              className="flex-1 px-4 py-3 rounded bg-[#0B0E14] border border-[#2A2F3A] text-xs font-mono text-[#E6E8EC] placeholder:text-[#555C6E] focus:outline-none focus:border-[#D9A441]"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-6 py-3 rounded bg-[#D9A441] hover:bg-[#c99534] text-[#0B0E14] font-mono font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50 whitespace-nowrap"
+            >
+              {loading ? 'Clearing...' : 'Enter the feed'}
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* ==========================================
+          TERMINAL FOOTER
+          ========================================== */}
+      <footer className="border-t border-[#2A2F3A] bg-[#07090D] py-10 px-4 sm:px-6 select-none font-mono text-xs text-[#555C6E]">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <span className="font-fraunces text-base text-[#E6E8EC] font-bold">Venture Atlas</span>
+              <span>//</span>
+              <span className="text-[#8C93A3]">VENTUREATLAS.IN</span>
+            </div>
+            <div className="text-[10px]">
+              ENGINEERED IN BENGALURU & SAN FRANCISCO • LATENCY: ~20MS
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-6 text-[11px]">
+            <Link href="/feed.xml" className="hover:text-[#E6E8EC] transition-colors">
+              RSS WIRE
+            </Link>
+            <Link href="/sitemap.xml" className="hover:text-[#E6E8EC] transition-colors">
+              SITEMAP
+            </Link>
+            <Link href="/privacy" className="hover:text-[#E6E8EC] transition-colors">
+              PRIVACY
+            </Link>
+            <Link href="/terms" className="hover:text-[#E6E8EC] transition-colors">
+              TERMS
+            </Link>
+            <Link href="/admin/login" className="text-[#D9A441] hover:underline">
+              STAFF LOGIN
+            </Link>
+          </div>
+        </div>
+      </footer>
 
     </div>
   );

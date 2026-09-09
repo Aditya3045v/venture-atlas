@@ -3,9 +3,9 @@ import dynamic from 'next/dynamic';
 import { constructMetadata } from '@/lib/seo';
 
 export const metadata = constructMetadata({
-  title: 'Executive Intelligence & 60-Word News',
+  title: 'Venture Atlas — Bloomberg + Inshorts for Tech Founders & VCs',
   description:
-    'Catch up on seed rounds, venture capital, AI breakthroughs, and market shifts with 60-word concise news briefs and audio summaries.',
+    'Real-time startup, venture capital, and founder intelligence. 60-word dispatches, visual canvas breakdowns, and global funding telemetry for founders, VCs, and operators.',
   canonicalPath: '/landing',
 });
 

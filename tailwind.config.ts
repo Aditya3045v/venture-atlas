@@ -34,11 +34,22 @@ const config: Config = {
           danger: 'var(--danger)',
           info: 'var(--info)',
         },
+        // Venture Atlas Intelligence Design Tokens
+        atlas: {
+          ink: '#0B0E14',
+          mist: '#E6E8EC',
+          brass: '#D9A441',
+          teal: '#2FA8A0',
+          brick: '#C24B3F',
+          graphite: '#2A2F3A',
+        },
       },
       fontFamily: {
         display: ['var(--font-display)', '"Space Grotesk"', 'sans-serif'],
+        fraunces: ['var(--font-fraunces)', 'Georgia', 'serif'],
         body: ['var(--font-body)', '"Plus Jakarta Sans"', 'var(--font-inter)', '"Inter"', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-mono)', '"JetBrains Mono"', '"Space Mono"', 'monospace'],
+        mono: ['var(--font-plex-mono)', 'var(--font-mono)', '"JetBrains Mono"', '"Space Mono"', 'monospace'],
+        plex: ['var(--font-plex-mono)', 'monospace'],
       },
       boxShadow: {
         'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
