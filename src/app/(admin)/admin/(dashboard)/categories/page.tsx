@@ -99,6 +99,22 @@ export default function AdminCategoriesPage() {
     }
   };
 
+  const handleDelete = async (cat: CategoryItem) => {
+    if (!confirm(`Are you sure you want to delete "${cat.name}"?`)) return;
+    try {
+      const res = await fetch(`/api/categories/${cat.id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (res.ok) {
+        toast(`Category "${cat.name}" deleted`, 'success');
+        fetchCategories();
+      } else {
+        toast(data.error || 'Failed to delete category', 'error');
+      }
+    } catch {
+      toast('Error deleting category', 'error');
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
@@ -145,12 +161,22 @@ export default function AdminCategoriesPage() {
               </p>
             </div>
 
-            <button
-              onClick={() => openEditModal(cat)}
-              className="p-2 rounded-lg border border-border text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors shrink-0"
-            >
-              <Edit2 size={14} />
-            </button>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => openEditModal(cat)}
+                className="p-2 rounded-lg border border-border text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
+                title="Edit Desk"
+              >
+                <Edit2 size={14} />
+              </button>
+              <button
+                onClick={() => handleDelete(cat)}
+                className="p-2 rounded-lg border border-border text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+                title="Delete Desk"
+              >
+                <Trash2 size={14} />
+              </button>
+            </div>
           </div>
         ))}
       </div>

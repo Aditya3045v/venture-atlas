@@ -28,6 +28,20 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 
     const validated = blogSchema.parse(json);
 
+    const { data: existing, error: findError } = await supabaseAdmin
+      .from('blog_posts')
+      .select('id, slug, published_at')
+      .eq('id', params.id)
+      .single();
+
+    if (findError || !existing) {
+      return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
+    }
+
+    const publishedAt = validated.status === 'PUBLISHED'
+      ? (existing.published_at || new Date().toISOString())
+      : null;
+
     const { data: updated, error } = await supabaseAdmin
       .from('blog_posts')
       .update({
@@ -38,7 +52,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
         cover_image: validated.coverImage,
         read_time_minutes: validated.readTimeMinutes || 4,
         status: validated.status as any,
-        published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
+        published_at: publishedAt,
         seo_title: validated.seoTitle || null,
         seo_description: validated.seoDescription || null,
       })

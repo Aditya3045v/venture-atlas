@@ -29,6 +29,7 @@ import {
   RotateCcw,
   Sparkles,
   Image as ImageIcon,
+  Trash2,
 } from 'lucide-react';
 
 interface ArticleEditorFormProps {
@@ -413,6 +414,11 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       return;
     }
 
+    if (targetStatus === 'SCHEDULED' && !scheduledFor) {
+      toast('Please select a scheduled release date and time', 'error');
+      return;
+    }
+
     // Auto-generate resilient fallbacks for SEO & Photo credit if empty
     const effectiveSeoTitle = seoTitle.trim() || title.trim().slice(0, 68);
     const effectiveSeoDescription = seoDescription.trim() || summary.trim().slice(0, 155);
@@ -483,6 +489,8 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
         toast(
           targetStatus === 'PUBLISHED'
             ? 'Article published to live feed!'
+            : targetStatus === 'SCHEDULED'
+            ? 'Article scheduled successfully!'
             : 'Story saved successfully',
           'success'
         );
@@ -496,6 +504,28 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     } catch {
       isSubmittingRef.current = false;
       toast('Network error saving article', 'error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteArticle = async () => {
+    if (!initialArticle) return;
+    if (!confirm('Are you sure you want to permanently delete this story? This action cannot be undone.')) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/articles/${initialArticle.id}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast('Article deleted successfully', 'success');
+        router.push('/admin/articles');
+        router.refresh();
+      } else {
+        const data = await res.json();
+        toast(data.error || 'Failed to delete article', 'error');
+      }
+    } catch {
+      toast('Error deleting article', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -1188,6 +1218,24 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                   <option value="SCHEDULED">SCHEDULED (Timed Release)</option>
                   <option value="PUBLISHED">PUBLISHED (Live on Feed)</option>
                 </select>
+
+                {status === 'SCHEDULED' && (
+                  <div className="space-y-1.5 mt-3 pt-3 border-t border-border">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary font-mono">
+                      Scheduled Release Date & Time *
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={scheduledFor}
+                      onChange={e => setScheduledFor(e.target.value)}
+                      className="w-full p-2.5 rounded-xl border border-border bg-surface text-xs font-mono font-bold text-text-primary focus:outline-none focus:ring-2 focus:ring-brand"
+                      required
+                    />
+                    <p className="text-[10px] font-mono text-text-tertiary">
+                      The publishing engine will automatically release this story when this time arrives.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Flags */}
@@ -1241,6 +1289,20 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {initialArticle && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="text-red-500 hover:text-red-600 border-red-200 hover:bg-red-50 dark:hover:bg-red-950/20"
+              onClick={handleDeleteArticle}
+              isLoading={submitting}
+            >
+              <Trash2 size={14} className="mr-1" />
+              Delete
+            </Button>
+          )}
+
           <Button
             type="button"
             variant="outline"
@@ -1250,6 +1312,35 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
           >
             Save Draft
           </Button>
+
+          {status === 'SCHEDULED' && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => handleSubmit('SCHEDULED')}
+              isLoading={submitting}
+              className="bg-amber-400 hover:bg-amber-500 text-black font-bold font-mono"
+            >
+              <Calendar size={14} className="mr-1" />
+              Schedule Release
+            </Button>
+          )}
+
+          {status === 'IN_REVIEW' && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => handleSubmit('IN_REVIEW')}
+              isLoading={submitting}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold font-mono"
+            >
+              <Send size={14} className="mr-1" />
+              Submit for Review
+            </Button>
+          )}
+
           <Button
             type="button"
             variant="primary"

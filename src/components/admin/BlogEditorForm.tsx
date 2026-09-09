@@ -7,7 +7,7 @@ import { normalizeImageUrl } from '../../lib/validation';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
-import { ArrowLeft, Send, Image as ImageIcon, X, Sparkles } from 'lucide-react';
+import { ArrowLeft, Send, Image as ImageIcon, X, Sparkles, Trash2 } from 'lucide-react';
 
 interface BlogEditorFormProps {
   initialBlog?: BlogItem | null;
@@ -114,6 +114,28 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
       }
     } catch {
       toast('Network error saving blog', 'error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteBlog = async () => {
+    if (!initialBlog) return;
+    if (!confirm('Are you sure you want to permanently delete this essay? This action cannot be undone.')) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/blogs/${initialBlog.id}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast('Essay deleted successfully', 'success');
+        router.push('/admin/blogs');
+        router.refresh();
+      } else {
+        const data = await res.json();
+        toast(data.error || 'Failed to delete essay', 'error');
+      }
+    } catch {
+      toast('Error deleting essay', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -427,6 +449,19 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
 
       {/* Bottom Action Footer */}
       <div className="sticky bottom-4 z-30 p-4 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-xl flex items-center justify-end gap-3">
+        {initialBlog && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="text-red-500 hover:text-red-600 border-red-200 hover:bg-red-50 dark:hover:bg-red-950/20 mr-auto"
+            onClick={handleDeleteBlog}
+            isLoading={submitting}
+          >
+            <Trash2 size={14} className="mr-1" />
+            Delete Essay
+          </Button>
+        )}
         <Button
           type="button"
           variant="outline"

@@ -18,6 +18,20 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
   try {
     const json = await req.json();
 
+    const { data: existing, error: findError } = await supabaseAdmin
+      .from('case_studies')
+      .select('id, slug, published_at')
+      .eq('id', params.id)
+      .single();
+
+    if (findError || !existing) {
+      return NextResponse.json({ error: 'Case study not found' }, { status: 404 });
+    }
+
+    const publishedAt = json.status === 'PUBLISHED'
+      ? (existing.published_at || new Date().toISOString())
+      : null;
+
     const { data: updated, error } = await supabaseAdmin
       .from('case_studies')
       .update({
@@ -36,7 +50,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
         category_id: json.categoryId,
         read_time_minutes: Number(json.readTimeMinutes) || 8,
         status: (json.status || 'PUBLISHED') as any,
-        published_at: json.status === 'PUBLISHED' ? new Date().toISOString() : null,
+        published_at: publishedAt,
       })
       .eq('id', params.id)
       .select()

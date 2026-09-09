@@ -37,6 +37,69 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({ initialUsers
   const [bio, setBio] = useState('');
   const [password, setPassword] = useState('');
 
+  // Edit user state
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<any | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editRole, setEditRole] = useState<UserRole>('WRITER');
+  const [editBio, setEditBio] = useState('');
+  const [editPassword, setEditPassword] = useState('');
+  const [editLoading, setEditLoading] = useState(false);
+
+  const openEditUserModal = (u: any) => {
+    setEditingUser(u);
+    setEditName(u.name || '');
+    setEditRole(u.role || 'WRITER');
+    setEditBio(u.bio || '');
+    setEditPassword('');
+    setEditModalOpen(true);
+  };
+
+  const handleUpdateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    if (!editName.trim()) {
+      toast('Full name is required', 'error');
+      return;
+    }
+    if (editPassword && editPassword.length < 12) {
+      toast('Password policy: New password must be at least 12 characters', 'error');
+      return;
+    }
+
+    setEditLoading(true);
+    try {
+      const payload: any = {
+        id: editingUser.id,
+        name: editName.trim(),
+        role: editRole,
+        bio: editBio.trim() || null,
+      };
+      if (editPassword) {
+        payload.password = editPassword;
+      }
+
+      const res = await fetch('/api/admin/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.user) {
+        toast(`Updated profile & role for ${editName}`, 'success');
+        setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, ...data.user } : u));
+        setEditModalOpen(false);
+      } else {
+        toast(data.error || 'Failed to update user', 'error');
+      }
+    } catch {
+      toast('Network error updating user', 'error');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   const filteredUsers = users.filter(
     u =>
       u.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -212,13 +275,22 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({ initialUsers
                   </td>
 
                   <td className="p-4 text-right">
-                    <button
-                      onClick={() => handleDeleteUser(u.id, u.name)}
-                      className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
-                      title="Delete User"
-                    >
-                      <Trash2 size={15} />
-                    </button>
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => openEditUserModal(u)}
+                        className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
+                        title="Edit User & Permissions"
+                      >
+                        <Edit size={15} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(u.id, u.name)}
+                        className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                        title="Delete User"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -347,6 +419,117 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({ initialUsers
                   className="px-6 py-2.5 rounded-xl bg-amber-400 text-black font-mono font-bold text-xs uppercase tracking-wider hover:bg-amber-300 transition-all shadow-md active:scale-95"
                 >
                   {loading ? 'Creating...' : 'Create Team Member'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {editModalOpen && editingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-lg rounded-3xl bg-surface border border-border p-6 sm:p-8 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div className="flex items-center gap-2">
+                <Shield size={20} className="text-amber-400" />
+                <h3 className="text-lg font-black font-display uppercase tracking-tight text-text-primary">
+                  Edit Member & Permissions
+                </h3>
+              </div>
+              <button
+                onClick={() => setEditModalOpen(false)}
+                className="p-1.5 rounded-full text-text-tertiary hover:text-text-primary hover:bg-surface-muted transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateUser} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono font-bold uppercase text-text-tertiary">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
+                  placeholder="e.g. Aditya Poddar"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-surface-muted border border-border text-xs font-mono text-text-primary focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono font-bold uppercase text-text-tertiary">
+                  Work Email
+                </label>
+                <input
+                  type="email"
+                  disabled
+                  value={editingUser.email}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-surface-muted/50 border border-border/50 text-xs font-mono text-text-tertiary cursor-not-allowed"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono font-bold uppercase text-text-tertiary">
+                  Staff Clearance Role *
+                </label>
+                <select
+                  value={editRole}
+                  onChange={e => setEditRole(e.target.value as UserRole)}
+                  className="w-full px-3 py-2.5 rounded-xl bg-surface-muted border border-border text-xs font-mono font-bold text-text-primary focus:outline-none focus:border-amber-400"
+                >
+                  <option value="WRITER">WRITER (Create & edit own drafts)</option>
+                  <option value="EDITOR">EDITOR (Edit all, publish & moderate)</option>
+                  <option value="ADMIN">ADMIN (Full management & users)</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[11px] font-mono font-bold uppercase text-text-tertiary">
+                  Bio / Role Title
+                </label>
+                <input
+                  type="text"
+                  value={editBio}
+                  onChange={e => setEditBio(e.target.value)}
+                  placeholder="e.g. Senior Silicon & Hardware Analyst"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-surface-muted border border-border text-xs font-mono text-text-primary focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div className="space-y-1 pt-2 border-t border-border">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-mono font-bold uppercase text-text-tertiary">
+                    Reset Access Key / Password
+                  </label>
+                  <span className="text-[10px] font-mono text-text-tertiary">Optional</span>
+                </div>
+                <input
+                  type="password"
+                  value={editPassword}
+                  onChange={e => setEditPassword(e.target.value)}
+                  placeholder="Leave blank to keep existing password (min 12 chars)"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-surface-muted border border-border text-xs font-mono text-text-primary focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div className="pt-3 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditModalOpen(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-mono text-text-secondary hover:text-text-primary"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={editLoading}
+                  className="px-6 py-2.5 rounded-xl bg-amber-400 text-black font-mono font-bold text-xs uppercase tracking-wider hover:bg-amber-300 transition-all shadow-md active:scale-95"
+                >
+                  {editLoading ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>

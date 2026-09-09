@@ -21,11 +21,25 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     const json = await req.json();
     const validated = statusChangeSchema.parse(json);
 
+    const { data: existing, error: findError } = await supabaseAdmin
+      .from('articles')
+      .select('id, slug, status, published_at')
+      .eq('id', params.id)
+      .single();
+
+    if (findError || !existing) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
+    }
+
+    const publishedAt = validated.status === 'PUBLISHED'
+      ? (existing.published_at || new Date().toISOString())
+      : null;
+
     const { data: updated, error } = await supabaseAdmin
       .from('articles')
       .update({
         status: validated.status as any,
-        published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
+        published_at: publishedAt,
       })
       .eq('id', params.id)
       .select()

@@ -59,6 +59,27 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
+    // Check if category is currently in use across articles, blogs, or case studies
+    const [
+      { count: articleCount },
+      { count: blogCount },
+      { count: caseCount }
+    ] = await Promise.all([
+      supabaseAdmin.from('articles').select('*', { count: 'exact', head: true }).eq('category_id', params.id),
+      supabaseAdmin.from('blog_posts').select('*', { count: 'exact', head: true }).eq('category_id', params.id),
+      supabaseAdmin.from('case_studies').select('*', { count: 'exact', head: true }).eq('category_id', params.id),
+    ]);
+
+    const totalUsed = (articleCount || 0) + (blogCount || 0) + (caseCount || 0);
+    if (totalUsed > 0) {
+      return NextResponse.json(
+        {
+          error: `Cannot delete category: ${totalUsed} content items (${articleCount || 0} briefs, ${blogCount || 0} essays, ${caseCount || 0} teardowns) are currently assigned to it. Please reassign them first.`
+        },
+        { status: 400 }
+      );
+    }
+
     const { error } = await supabaseAdmin
       .from('categories')
       .delete()
@@ -77,8 +98,14 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
       metadata: { id: params.id },
     });
 
+    try {
+      const { revalidateTag, revalidatePath } = require('next/cache');
+      revalidateTag('categories');
+      revalidatePath('/', 'layout');
+    } catch {}
+
     return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete category' }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || 'Failed to delete category' }, { status: 500 });
   }
 }

@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     // Check existing article ownership
     const { data: existing, error: findError } = await supabaseAdmin
       .from('articles')
-      .select('id, author_id, status, slug')
+      .select('id, author_id, status, slug, published_at')
       .eq('id', params.id)
       .single();
 
@@ -109,7 +109,9 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       is_featured: validated.isFeatured || false,
       is_trending: validated.isTrending || false,
       scheduled_for: validated.scheduledFor ? new Date(validated.scheduledFor).toISOString() : null,
-      published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
+      published_at: validated.status === 'PUBLISHED'
+        ? (existing.published_at || new Date().toISOString())
+        : null,
       seo_title: validated.seoTitle || null,
       seo_description: validated.seoDescription || null,
       canvas_data: finalCanvasData,

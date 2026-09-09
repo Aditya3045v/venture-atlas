@@ -143,7 +143,7 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const { id, role, name, password } = body;
+    const { id, role, name, bio, password } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'Target user ID is required.' }, { status: 400 });
@@ -164,6 +164,8 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    const authUpdates: any = {};
+
     if (password) {
       if (password.length < 12) {
         return NextResponse.json(
@@ -171,10 +173,25 @@ export async function PUT(req: NextRequest) {
           { status: 400 }
         );
       }
-      const { error: pwErr } = await supabaseAdmin.auth.admin.updateUserById(id, { password });
-      if (pwErr) {
-        return NextResponse.json({ error: `Password update failed: ${pwErr.message}` }, { status: 400 });
+      authUpdates.password = password;
+    }
+
+    // Keep Supabase Auth metadata in sync with profiles
+    const metadataUpdates: any = {};
+    if (role) metadataUpdates.role = role;
+    if (name) metadataUpdates.name = name.trim();
+    if (Object.keys(metadataUpdates).length > 0) {
+      authUpdates.user_metadata = metadataUpdates;
+    }
+
+    if (Object.keys(authUpdates).length > 0) {
+      const { error: authErr } = await supabaseAdmin.auth.admin.updateUserById(id, authUpdates);
+      if (authErr) {
+        return NextResponse.json({ error: `Auth sync failed: ${authErr.message}` }, { status: 400 });
       }
+    }
+
+    if (password) {
       await logAuditEvent({
         action: 'PASSWORD_RESET',
         entityType: 'USER',
@@ -186,7 +203,8 @@ export async function PUT(req: NextRequest) {
 
     const updatePayload: any = { updated_at: new Date().toISOString() };
     if (role) updatePayload.role = role;
-    if (name) updatePayload.name = name;
+    if (name) updatePayload.name = name.trim();
+    if (bio !== undefined) updatePayload.bio = bio;
 
     const { data: updated, error } = await supabaseAdmin
       .from('profiles')
@@ -199,13 +217,13 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    if (role || name) {
+    if (role || name || bio !== undefined) {
       await logAuditEvent({
         action: 'UPDATE_USER_ROLE',
         entityType: 'USER',
         entityId: id,
         actor: currentUser,
-        metadata: { newRole: role, newName: name },
+        metadata: { newRole: role, newName: name, bioUpdated: bio !== undefined },
       });
     }
 

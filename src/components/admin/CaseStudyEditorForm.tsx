@@ -8,7 +8,7 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
 import { CanvasBlockEditor } from './CanvasBlockEditor';
-import { ArrowLeft, Send, Palette, FileText, Image as ImageIcon, X, Sparkles } from 'lucide-react';
+import { ArrowLeft, Send, Palette, FileText, Image as ImageIcon, X, Sparkles, Trash2 } from 'lucide-react';
 
 interface CaseStudyEditorFormProps {
   initialCaseStudy?: CaseStudyItem | null;
@@ -215,6 +215,28 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       }
     } catch {
       toast('Network error saving case study', 'error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteCaseStudy = async () => {
+    if (!initialCaseStudy) return;
+    if (!confirm('Are you sure you want to permanently delete this teardown? This action cannot be undone.')) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/case-studies/${initialCaseStudy.id}`, { method: 'DELETE' });
+      if (res.ok) {
+        toast('Case study deleted successfully', 'success');
+        router.push('/admin/case-studies');
+        router.refresh();
+      } else {
+        const data = await res.json();
+        toast(data.error || 'Failed to delete case study', 'error');
+      }
+    } catch {
+      toast('Error deleting case study', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -579,6 +601,19 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
 
       {/* Bottom Action Footer */}
       <div className="sticky bottom-4 z-30 p-4 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-xl flex items-center justify-end gap-3">
+        {initialCaseStudy && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="text-red-500 hover:text-red-600 border-red-200 hover:bg-red-50 dark:hover:bg-red-950/20 mr-auto"
+            onClick={handleDeleteCaseStudy}
+            isLoading={submitting}
+          >
+            <Trash2 size={14} className="mr-1" />
+            Delete Teardown
+          </Button>
+        )}
         <Button
           type="button"
           variant="outline"
