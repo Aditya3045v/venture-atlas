@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Clock } from 'lucide-react';
@@ -15,13 +17,35 @@ export const FeaturedStory: React.FC<{ article: ArticleItem }> = ({ article }) =
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
         {/* Cover Photo (7 cols on lg) */}
         <div className="lg:col-span-7 relative h-64 sm:h-80 lg:h-full min-h-[320px] bg-surface-muted overflow-hidden">
-          {article.coverImage && (
-            <img
-              src={article.coverImage}
-              alt={article.title}
-              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-            />
-          )}
+          {(() => {
+            const fallbackMap: Record<string, string> = {
+              unicorn: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80',
+              failure: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+              finance: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
+              'crypto-web3': 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
+              'founder-biography': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80',
+              'case-studies': 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80',
+            };
+            const fallbackUrl =
+              fallbackMap[article.category?.slug || ''] ||
+              'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80';
+            const displayImage = article.coverImage?.trim() || fallbackUrl;
+
+            return (
+              <img
+                src={displayImage}
+                alt={article.title}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                onError={e => {
+                  const target = e.target as HTMLImageElement;
+                  if (target.src !== fallbackUrl) {
+                    target.src = fallbackUrl;
+                  }
+                }}
+              />
+            );
+          })()}
           <div className="absolute top-4 left-4 flex items-center gap-2">
             <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-black/80 backdrop-blur-md text-white border border-white/10 shadow-xs flex items-center gap-1.5">
               <IconBolt size={12} className="text-amber-400" />

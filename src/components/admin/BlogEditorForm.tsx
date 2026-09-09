@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BlogItem, CategoryItem, ContentStatus } from '../../types';
+import { normalizeImageUrl } from '../../lib/validation';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
@@ -76,7 +77,8 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
 
     const effectiveSeoTitle = seoTitle.trim() || title.trim().slice(0, 68);
     const effectiveSeoDescription = seoDescription.trim() || excerpt.trim().slice(0, 155);
-    const effectivePhotoCredit = photoCredit.trim() || (coverImage.trim() ? 'Editorial Archive' : '');
+    const normalizedCover = normalizeImageUrl(coverImage);
+    const effectivePhotoCredit = photoCredit.trim() || (normalizedCover ? 'Editorial Archive' : '');
 
     setSubmitting(true);
     const payload = {
@@ -84,7 +86,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
       excerpt,
       body,
       categoryId,
-      coverImage: coverImage.trim() || null,
+      coverImage: normalizedCover || null,
       photoCredit: effectivePhotoCredit || null,
       readTimeMinutes: Number(readTimeMinutes),
       status: targetStatus,
@@ -292,10 +294,10 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
               <div className="md:col-span-7 space-y-2">
                 <input
-                  type="url"
+                  type="text"
                   value={coverImage}
                   onChange={e => setCoverImage(e.target.value)}
-                  placeholder="https://images.unsplash.com/..."
+                  placeholder="Paste image URL (https://...)"
                   className="w-full text-xs font-mono p-2.5 bg-surface border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
                 />
 
@@ -336,9 +338,14 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                 >
                   {coverImage ? (
                     <img
-                      src={coverImage}
+                      src={normalizeImageUrl(coverImage) || coverImage}
                       alt={photoCredit || 'Cover Preview'}
+                      referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"
+                      onError={e => {
+                        (e.target as HTMLImageElement).src =
+                          'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80';
+                      }}
                     />
                   ) : (
                     <div className="text-center p-2 text-text-tertiary">

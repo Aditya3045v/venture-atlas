@@ -52,9 +52,16 @@ export const HomeMobileView: React.FC<HomeMobileViewProps> = ({
   const [activeStory, setActiveStory] = useState<ArticleItem | null>(null);
   const [activeTab, setActiveTab] = useState<'home' | 'explore' | 'bookmarks' | 'profile'>('home');
 
-  // Featured stories for the top horizontal snap-carousel
-  const featuredStories = articles.filter(a => a.isFeatured || a.isTrending).slice(0, 4);
-  const carouselStories = featuredStories.length > 0 ? featuredStories : articles.slice(0, 4);
+  // Featured & trending stories with images for the top horizontal snap-carousel
+  const carouselStories = [...articles]
+    .sort((a, b) => {
+      if (a.coverImage && !b.coverImage) return -1;
+      if (!a.coverImage && b.coverImage) return 1;
+      if ((a.isFeatured || a.isTrending) && !(b.isFeatured || b.isTrending)) return -1;
+      if (!(a.isFeatured || a.isTrending) && (b.isFeatured || b.isTrending)) return 1;
+      return 0;
+    })
+    .slice(0, 5);
 
   // Filtered stories for the list section
   const filteredArticles = articles.filter(article => {
@@ -147,11 +154,16 @@ export const HomeMobileView: React.FC<HomeMobileViewProps> = ({
               {/* Background Cover Image */}
               <img
                 src={
-                  story.coverImage ||
+                  story.coverImage?.trim() ||
                   'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'
                 }
                 alt={story.title}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                onError={e => {
+                  (e.target as HTMLImageElement).src =
+                    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80';
+                }}
               />
 
               {/* Dark Linear Gradient for legibility */}
@@ -232,11 +244,16 @@ export const HomeMobileView: React.FC<HomeMobileViewProps> = ({
           <div className="w-20 h-20 rounded-2xl overflow-hidden bg-surface shrink-0 border border-border/80 shadow-xs">
             <img
               src={
-                articles[1].coverImage ||
+                articles[1].coverImage?.trim() ||
                 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'
               }
               alt={articles[1].title}
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
+              onError={e => {
+                (e.target as HTMLImageElement).src =
+                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+              }}
             />
           </div>
         </div>
@@ -288,13 +305,19 @@ export const HomeMobileView: React.FC<HomeMobileViewProps> = ({
               >
                 {/* Left Thumbnail Image with deep rounded corners */}
                 <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-[18px] overflow-hidden bg-surface-muted shrink-0 relative border border-border/60">
-                  {article.coverImage && (
-                    <img
-                      src={article.coverImage}
-                      alt={article.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  )}
+                  <img
+                    src={
+                      article.coverImage?.trim() ||
+                      'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&q=80'
+                    }
+                    alt={article.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={e => {
+                      (e.target as HTMLImageElement).src =
+                        'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&q=80';
+                    }}
+                  />
                 </div>
 
                 {/* Right Text Block */}
@@ -350,22 +373,36 @@ export const HomeMobileView: React.FC<HomeMobileViewProps> = ({
               <Link
                 key={cs.id}
                 href={`/case-studies/${cs.slug}`}
-                className="p-4 rounded-[24px] bg-gradient-to-r from-blue-500/[0.06] via-surface to-surface dark:from-blue-500/[0.08] dark:via-[#121316] dark:to-[#121316] border border-blue-500/20 hover:border-blue-500/40 p-4 block space-y-2 transition-all active:scale-[0.99]"
+                className="p-3.5 rounded-[24px] bg-gradient-to-r from-blue-500/[0.06] via-surface to-surface dark:from-blue-500/[0.08] dark:via-[#121316] dark:to-[#121316] border border-blue-500/20 hover:border-blue-500/40 block transition-all active:scale-[0.99] flex items-center gap-3.5"
               >
-                <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-blue-600 text-white shadow-xs">
-                    {cs.company}
-                  </span>
-                  <span className="text-text-tertiary">{cs.stage}</span>
-                </div>
-                <h4 className="text-sm font-bold font-display text-text-primary line-clamp-2">
-                  {cs.title}
-                </h4>
-                <div className="flex items-center justify-between text-xs font-mono text-text-tertiary pt-1 border-t border-border/50">
-                  <span>Valuation: <strong className="text-text-primary">{cs.valuation || 'Private'}</strong></span>
-                  <span className="text-blue-600 dark:text-amber-400 font-bold flex items-center gap-1">
-                    Playbook →
-                  </span>
+                {cs.coverImage && (
+                  <div className="w-16 h-16 rounded-[16px] overflow-hidden bg-surface-muted shrink-0 border border-border/60">
+                    <img
+                      src={cs.coverImage}
+                      alt={cs.company}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover"
+                      onError={e => {
+                        (e.target as HTMLImageElement).src =
+                          'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=300&q=80';
+                      }}
+                    />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0 space-y-1">
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-blue-600 text-white shadow-xs">
+                      {cs.company}
+                    </span>
+                    <span className="text-text-tertiary text-[10px]">{cs.stage}</span>
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-bold font-display text-text-primary line-clamp-2">
+                    {cs.title}
+                  </h4>
+                  <div className="flex items-center justify-between text-[10px] font-mono text-text-tertiary pt-0.5">
+                    <span>Valuation: <strong className="text-text-primary">{cs.valuation || 'Private'}</strong></span>
+                    <span className="text-blue-600 dark:text-amber-400 font-bold">Playbook →</span>
+                  </div>
                 </div>
               </Link>
             ))}

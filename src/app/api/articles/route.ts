@@ -173,6 +173,16 @@ export async function POST(req: NextRequest) {
     const slug = slugify(validated.title);
     const words = countWords(validated.summary);
 
+    const finalCanvasData = validated.canvasData
+      ? {
+          ...validated.canvasData,
+          header: {
+            ...(validated.canvasData.header || {}),
+            founderPhoto: validated.coverImage || validated.canvasData.header?.founderPhoto || null,
+          },
+        }
+      : null;
+
     const insertPayload = {
       title: validated.title,
       slug,
@@ -194,7 +204,7 @@ export async function POST(req: NextRequest) {
       published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
       seo_title: validated.seoTitle || null,
       seo_description: validated.seoDescription || null,
-      canvas_data: validated.canvasData || null,
+      canvas_data: finalCanvasData,
     };
 
     const { data, error } = await supabaseAdmin

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CaseStudyItem, CategoryItem, ContentStatus, CanvasData } from '../../types';
+import { normalizeImageUrl } from '../../lib/validation';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
@@ -155,7 +156,20 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       return;
     }
 
-    const effectivePhotoCredit = photoCredit.trim() || (coverImage.trim() ? 'Editorial Archive' : '');
+    const normalizedCover = normalizeImageUrl(coverImage);
+    const effectivePhotoCredit = photoCredit.trim() || (normalizedCover ? 'Editorial Archive' : '');
+    const finalCanvasData = canvasData
+      ? {
+          ...canvasData,
+          header: {
+            ...(canvasData.header || {}),
+            founderPhoto:
+              normalizedCover ||
+              canvasData.header?.founderPhoto ||
+              'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
+          },
+        }
+      : null;
 
     setSubmitting(true);
     const payload = {
@@ -172,13 +186,13 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       authorRole: authorRole.trim() || 'Senior Venture Analyst',
       body: body.trim() || summary,
       categoryId,
-      coverImage: coverImage.trim() || null,
+      coverImage: normalizedCover || null,
       photoCredit: effectivePhotoCredit || null,
       readTimeMinutes: Number(readTimeMinutes),
       status: targetStatus,
       seoTitle: seoTitle.trim() || null,
       seoDescription: seoDescription.trim() || null,
-      canvasData,
+      canvasData: finalCanvasData,
     };
 
     try {
@@ -288,10 +302,10 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div className="md:col-span-7 space-y-2">
           <input
-            type="url"
+            type="text"
             value={coverImage}
             onChange={e => setCoverImage(e.target.value)}
-            placeholder="https://images.unsplash.com/..."
+            placeholder="Paste image URL (https://...)"
             className="w-full text-xs font-mono p-2.5 bg-surface border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
           />
 
@@ -333,9 +347,14 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
           >
             {coverImage ? (
               <img
-                src={coverImage}
+                src={normalizeImageUrl(coverImage) || coverImage}
                 alt={photoCredit || 'Cover Preview'}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
+                onError={e => {
+                  (e.target as HTMLImageElement).src =
+                    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80';
+                }}
               />
             ) : (
               <div className="text-center p-2 text-text-tertiary">

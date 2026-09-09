@@ -108,6 +108,16 @@ export default async function CoreHomePage() {
                   href={`/case-studies/${cs.slug}`}
                   className="ios-card p-5 rounded-2xl flex flex-col justify-between group hover:border-amber-400/50 transition-colors"
                 >
+                  {cs.coverImage && (
+                    <div className="relative w-full h-36 rounded-xl overflow-hidden mb-3 bg-surface-muted border border-border/60">
+                      <img
+                        src={cs.coverImage}
+                        alt={cs.company}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs font-mono text-text-tertiary">
                       <span className="font-bold text-text-primary uppercase">{cs.company}</span>
@@ -156,6 +166,16 @@ export default async function CoreHomePage() {
                   href={`/blogs/${blog.slug}`}
                   className="ios-card p-6 rounded-2xl flex flex-col justify-between group hover:border-blue-500/50 transition-colors"
                 >
+                  {blog.coverImage && (
+                    <div className="relative w-full h-44 rounded-xl overflow-hidden mb-3 bg-surface-muted border border-border/60">
+                      <img
+                        src={blog.coverImage}
+                        alt={blog.title}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                  )}
                   <div className="space-y-2.5">
                     <div className="flex items-center gap-2 text-xs font-mono text-text-tertiary">
                       <span className="px-2 py-0.5 rounded-full bg-surface-muted text-text-primary font-bold uppercase text-[10px]">

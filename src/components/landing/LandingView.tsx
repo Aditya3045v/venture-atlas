@@ -246,14 +246,34 @@ export function LandingView() {
     }, 2000);
   };
 
-  const handleCaptureSubmit = (e: React.FormEvent) => {
+  const handleDirectEnter = () => {
+    try {
+      document.cookie = 'va_reader=1; path=/; max-age=31536000';
+      document.cookie = 'va_reader_client=1; path=/; max-age=31536000';
+      localStorage.setItem('va_reader_active', 'true');
+    } catch {}
+  };
+
+  const handleCaptureSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!captureEmail) return;
     setCaptureDone(true);
+    handleDirectEnter();
+    try {
+      await fetch('/api/reader/enter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: captureEmail.trim().toLowerCase(),
+          source: 'LANDING_PAGE_HERO',
+        }),
+      });
+    } catch (err) {
+      console.warn('Reader enter fetch error:', err);
+    }
     setTimeout(() => {
-      setCaptureDone(false);
-      setCaptureEmail('');
-    }, 3000);
+      window.location.href = '/';
+    }, 500);
   };
 
   return (
@@ -274,7 +294,7 @@ export function LandingView() {
         <div className="flex items-center gap-4">
           <span className="hidden sm:inline">GLOBAL LATENCY: 24MS</span>
           <Link
-            href="/feed"
+            href="/feed" onClick={handleDirectEnter}
             className="flex items-center gap-1 text-slate-800 hover:text-blue-600 font-medium transition-colors"
           >
             Reader Feed <ArrowRight size={12} />
@@ -342,7 +362,7 @@ export function LandingView() {
                 </motion.button>
 
                 <Link
-                  href="/feed"
+                  href="/feed" onClick={handleDirectEnter}
                   className="px-6 py-3 rounded-full bg-white/20 hover:bg-white/30 text-white text-[14px] font-medium border border-white/30 shadow-md transition-all flex items-center gap-2 backdrop-blur-md"
                 >
                   <span>Enter Reader Feed</span>
@@ -382,7 +402,7 @@ export function LandingView() {
                   Docs
                 </button>
                 <Link
-                  href="/feed"
+                  href="/feed" onClick={handleDirectEnter}
                   className="text-slate-600 hover:text-slate-900 text-[13px] font-medium px-4 py-2 rounded-full hover:bg-slate-100/80 transition-colors"
                 >
                   Feed
@@ -558,7 +578,7 @@ export function LandingView() {
                 </div>
 
                 <Link
-                  href="/feed"
+                  href="/feed" onClick={handleDirectEnter}
                   className="px-4 py-2 rounded-full bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-medium transition-colors flex items-center gap-1.5 shadow-sm"
                 >
                   Read Full Dispatch in Feed <ArrowRight size={12} />
@@ -748,7 +768,7 @@ export function LandingView() {
 
             <div className="mt-8">
               <Link
-                href="/feed"
+                href="/feed" onClick={handleDirectEnter}
                 className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:underline transition-colors"
               >
                 Or enter the live web app directly <ArrowRight size={14} />
@@ -774,7 +794,7 @@ export function LandingView() {
           </div>
 
           <div className="flex flex-wrap items-center gap-6 text-slate-600 font-medium">
-            <Link href="/feed" className="hover:text-slate-900 transition-colors">Feed</Link>
+            <Link href="/feed" onClick={handleDirectEnter} className="hover:text-slate-900 transition-colors">Feed</Link>
             <button onClick={() => setIsProductsOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Products</button>
             <button onClick={() => setIsDocsOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Docs</button>
             <button onClick={() => setIsContactOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Contact</button>
@@ -856,7 +876,7 @@ export function LandingView() {
                   </div>
                   <div className="pt-2 flex items-center justify-between gap-3">
                     <Link
-                      href="/feed"
+                      href="/feed" onClick={handleDirectEnter}
                       className="text-xs text-slate-500 hover:text-slate-900 font-medium transition-colors flex items-center gap-1"
                     >
                       Enter Feed Directly <ArrowRight size={12} />
@@ -905,7 +925,10 @@ export function LandingView() {
               <div className="grid gap-3">
                 <Link
                   href="/feed"
-                  onClick={() => setIsProductsOpen(false)}
+                  onClick={() => {
+                    handleDirectEnter();
+                    setIsProductsOpen(false);
+                  }}
                   className="p-4 rounded-2xl border border-slate-200/80 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50 transition-all group flex items-start gap-4"
                 >
                   <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
@@ -937,7 +960,7 @@ export function LandingView() {
 
               <div className="mt-6 pt-4 border-t border-slate-100 flex justify-end">
                 <Link
-                  href="/feed"
+                  href="/feed" onClick={handleDirectEnter}
                   className="px-6 py-2.5 rounded-full bg-[#0a152d] text-white text-sm font-medium hover:bg-slate-800 transition-all shadow-sm flex items-center gap-2"
                 >
                   Open Reader Feed <ArrowRight size={14} />

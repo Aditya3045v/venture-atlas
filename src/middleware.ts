@@ -76,6 +76,24 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // 1.5. Feed route: intentional visitor transition into the reader feed
+  if (path === '/feed') {
+    const feedResponse = NextResponse.redirect(new URL('/', request.url));
+    feedResponse.cookies.set('va_reader', '1', {
+      path: '/',
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 365 * 24 * 60 * 60,
+    });
+    feedResponse.cookies.set('va_reader_client', '1', {
+      path: '/',
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 365 * 24 * 60 * 60,
+    });
+    return feedResponse;
+  }
+
   // 2. Cold visitor gate: users opening the website root '/' must reach the landing page first
   const hasReaderCookie =
     Boolean(request.cookies.get('va_reader')?.value) ||

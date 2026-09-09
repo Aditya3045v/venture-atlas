@@ -165,6 +165,7 @@ export default async function SingleBlogPage({ params }: BlogPageProps) {
               <img
                 src={blog.coverImage}
                 alt={blog.title}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
               />
             </div>

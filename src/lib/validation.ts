@@ -1,5 +1,29 @@
 import { z } from 'zod';
 
+export function normalizeImageUrl(val: unknown): string | null {
+  if (!val || typeof val !== 'string') return null;
+  let trimmed = val.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith('//')) {
+    trimmed = 'https:' + trimmed;
+  } else if (trimmed.startsWith('http://')) {
+    trimmed = 'https://' + trimmed.slice(7);
+  } else if (
+    !trimmed.startsWith('http://') &&
+    !trimmed.startsWith('https://') &&
+    !trimmed.startsWith('data:') &&
+    !trimmed.startsWith('/')
+  ) {
+    trimmed = 'https://' + trimmed;
+  }
+  return trimmed;
+}
+
+const optionalImageUrl = z.preprocess(
+  (val) => normalizeImageUrl(val),
+  z.string().optional().or(z.literal('')).nullable()
+);
+
 export const articleSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters').max(150, 'Title cannot exceed 150 characters'),
   summary: z.string().min(10, 'Summary must be at least 10 characters').max(500, 'Summary cannot exceed 500 characters'),
@@ -10,7 +34,7 @@ export const articleSchema = z.object({
   sourceAuthor: z.string().optional().nullable(),
   authorName: z.string().optional().nullable(),
   authorRole: z.string().optional().nullable(),
-  coverImage: z.string().url('Cover image must be a valid URL').optional().or(z.literal('')).nullable(),
+  coverImage: optionalImageUrl,
   photoCredit: z.string().optional().nullable(),
   status: z.enum(['DRAFT', 'IN_REVIEW', 'APPROVED', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED', 'UNPUBLISHED']),
   isFeatured: z.boolean().default(false),
@@ -37,7 +61,7 @@ export const caseStudySchema = z.object({
   authorRole: z.string().optional().nullable(),
   body: z.string().min(10, 'Body content is required'),
   categoryId: z.string().min(1, 'Category is required'),
-  coverImage: z.string().url().optional().or(z.literal('')).nullable(),
+  coverImage: optionalImageUrl,
   photoCredit: z.string().optional().nullable(),
   readTimeMinutes: z.number().int().positive().default(4),
   status: z.enum(['DRAFT', 'IN_REVIEW', 'APPROVED', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED', 'UNPUBLISHED']),
@@ -53,7 +77,7 @@ export const blogSchema = z.object({
   categoryId: z.string().min(1, 'Category is required'),
   authorName: z.string().optional().nullable(),
   authorRole: z.string().optional().nullable(),
-  coverImage: z.string().url().optional().or(z.literal('')).nullable(),
+  coverImage: optionalImageUrl,
   photoCredit: z.string().optional().nullable(),
   readTimeMinutes: z.number().int().positive().default(4),
   status: z.enum(['DRAFT', 'IN_REVIEW', 'APPROVED', 'SCHEDULED', 'PUBLISHED', 'ARCHIVED', 'UNPUBLISHED']),

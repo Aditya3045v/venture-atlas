@@ -83,6 +83,16 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 
     const words = countWords(validated.summary);
 
+    const finalCanvasData = validated.canvasData
+      ? {
+          ...validated.canvasData,
+          header: {
+            ...(validated.canvasData.header || {}),
+            founderPhoto: validated.coverImage || validated.canvasData.header?.founderPhoto || null,
+          },
+        }
+      : null;
+
     const updatePayload = {
       title: validated.title,
       summary: validated.summary,
@@ -102,7 +112,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
       seo_title: validated.seoTitle || null,
       seo_description: validated.seoDescription || null,
-      canvas_data: validated.canvasData || null,
+      canvas_data: finalCanvasData,
     };
 
     const { data: updated, error: updateError } = await supabaseAdmin

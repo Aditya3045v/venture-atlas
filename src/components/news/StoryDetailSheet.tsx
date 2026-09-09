@@ -269,13 +269,19 @@ export const StoryDetailSheet: React.FC<StoryDetailSheetProps> = ({ article, onC
           
           {/* Full-Bleed Edge-to-Edge Hero Image (No top gap, extends to top border) */}
           <div className="relative w-full h-[360px] sm:h-[400px] bg-neutral-950 overflow-hidden shrink-0">
-            {article.coverImage && (
-              <img
-                src={article.coverImage}
-                alt={article.title}
-                className="w-full h-full object-cover object-center block"
-              />
-            )}
+            <img
+              src={
+                article.coverImage?.trim() ||
+                'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80'
+              }
+              alt={article.title}
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover object-center block"
+              onError={e => {
+                (e.target as HTMLImageElement).src =
+                  'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80';
+              }}
+            />
             {/* Smooth Vignette Gradient from transparent top to dark bottom */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
 

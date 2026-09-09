@@ -200,21 +200,43 @@ export const StoryCard: React.FC<StoryCardProps> = ({
           </div>
 
           {/* Cover Photo */}
-          {article.coverImage && (
-            <div className="relative w-full h-44 sm:h-48 rounded-2xl overflow-hidden bg-surface-muted border border-border/60 group-hover:border-border transition-colors">
-              <img
-                src={article.coverImage}
-                alt={article.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="lazy"
-              />
-              {article.photoCredit && (
-                <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/65 backdrop-blur-md text-[9px] font-mono text-white/90 border border-white/10 uppercase tracking-widest pointer-events-none">
-                  {article.photoCredit}
-                </span>
-              )}
-            </div>
-          )}
+          {(() => {
+            const fallbackMap: Record<string, string> = {
+              unicorn: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80',
+              failure: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+              finance: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
+              'crypto-web3': 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
+              'founder-biography': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80',
+              'case-studies': 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80',
+            };
+            const fallbackUrl =
+              fallbackMap[article.category?.slug || ''] ||
+              'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80';
+            const displayImage = article.coverImage?.trim() || fallbackUrl;
+
+            return (
+              <div className="relative w-full h-44 sm:h-48 rounded-2xl overflow-hidden bg-surface-muted border border-border/60 group-hover:border-border transition-colors">
+                <img
+                  src={displayImage}
+                  alt={article.title}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                  onError={e => {
+                    const target = e.target as HTMLImageElement;
+                    if (target.src !== fallbackUrl) {
+                      target.src = fallbackUrl;
+                    }
+                  }}
+                />
+                {article.photoCredit && (
+                  <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/65 backdrop-blur-md text-[9px] font-mono text-white/90 border border-white/10 uppercase tracking-widest pointer-events-none">
+                    {article.photoCredit}
+                  </span>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Title & 60-Word Brief */}
           <div className="space-y-2">

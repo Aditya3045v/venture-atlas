@@ -55,11 +55,19 @@ export default async function CaseStudiesPage() {
         <section className="relative rounded-3xl ios-card overflow-hidden group">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
             <div className="lg:col-span-6 relative h-72 sm:h-96 bg-surface-muted overflow-hidden">
-              {featured.coverImage && (
+              {featured.coverImage ? (
                 <img
                   src={featured.coverImage}
                   alt={featured.title}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                />
+              ) : (
+                <img
+                  src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80"
+                  alt={featured.title}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
                 />
               )}
               <div className="absolute top-4 left-4 flex items-center gap-2">

@@ -328,20 +328,24 @@ export const CanvasStoryView: React.FC<CanvasStoryViewProps> = ({
           
           {/* Left: Founder / Story Portrait Photo */}
           <div className="sm:col-span-6 relative flex items-center justify-center overflow-hidden bg-[#111114]">
-            {data.header?.founderPhoto ? (
-              <img
-                src={data.header.founderPhoto}
-                alt={data.profile?.founderName || 'Story Cover'}
-                className="w-full h-full object-cover object-top max-h-[320px] select-none pointer-events-none"
-              />
-            ) : (
-              <div className="p-8 text-center space-y-2">
-                <User size={48} className="mx-auto text-neutral-600" />
-                <div className="text-xs font-mono uppercase text-neutral-400">
-                  {data.profile?.founderName || 'Founder Profile'}
-                </div>
-              </div>
-            )}
+            {(() => {
+              const displayPhoto =
+                story?.coverImage?.trim() ||
+                data.header?.founderPhoto ||
+                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
+              return (
+                <img
+                  src={displayPhoto}
+                  alt={data.profile?.founderName || 'Story Cover'}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-top max-h-[320px] select-none pointer-events-none"
+                  onError={e => {
+                    (e.target as HTMLImageElement).src =
+                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
+                  }}
+                />
+              );
+            })()}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#09090b]/80 hidden sm:block pointer-events-none" />
           </div>
 

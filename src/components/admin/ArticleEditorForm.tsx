@@ -7,6 +7,7 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
 import { countWords } from '../../lib/sanitize';
+import { normalizeImageUrl } from '../../lib/validation';
 import { CanvasBlockEditor } from './CanvasBlockEditor';
 import { StoryCard } from '../news/StoryCard';
 import { CanvasStoryView } from '../canvas/CanvasStoryView';
@@ -426,6 +427,20 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       .map(t => t.trim())
       .filter(Boolean);
 
+    const normalizedCover = normalizeImageUrl(coverImage);
+    const finalCanvasData = canvasData
+      ? {
+          ...canvasData,
+          header: {
+            ...(canvasData.header || {}),
+            founderPhoto:
+              normalizedCover ||
+              canvasData.header?.founderPhoto ||
+              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+          },
+        }
+      : null;
+
     const payload = {
       title,
       slug: slug.trim() || generateSlug(title),
@@ -437,7 +452,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       sourceAuthor: sourceAuthor.trim() || null,
       authorName: authorName.trim() || 'Aditya Poddar',
       authorRole: authorRole.trim() || 'Staff Reporter',
-      coverImage: coverImage.trim() || null,
+      coverImage: normalizedCover || null,
       photoCredit: effectivePhotoCredit || null,
       status: targetStatus,
       isFeatured,
@@ -446,7 +461,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       tags: tagsArray,
       seoTitle: effectiveSeoTitle || null,
       seoDescription: effectiveSeoDescription || null,
-      canvasData,
+      canvasData: finalCanvasData,
     };
 
     try {
@@ -589,10 +604,10 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
               Cover Image URL
             </label>
             <input
-              type="url"
+              type="text"
               value={coverImage}
               onChange={e => setCoverImage(e.target.value)}
-              placeholder="https://images.unsplash.com/..."
+              placeholder="Paste image URL (https://...)"
               className="w-full text-xs font-mono p-2.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
             />
           </div>
@@ -652,9 +667,14 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
               {coverImage ? (
                 <>
                   <img
-                    src={coverImage}
+                    src={normalizeImageUrl(coverImage) || coverImage}
                     alt="Cover Preview"
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
+                    onError={e => {
+                      (e.target as HTMLImageElement).src =
+                        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80';
+                    }}
                   />
                   {photoCredit && (
                     <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md text-[9px] font-mono text-white/90 border border-white/10 uppercase tracking-wider pointer-events-none">
