@@ -1,10 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: #F8F9FA;
+    --font-sans: 'Inter', sans-serif;
+    --font-display: 'Outfit', sans-serif;
+    --background: #f9fafb;
     --surface: #FFFFFF;
     --surface-muted: #F1F3F5;
     --surface-card: #FFFFFF;
@@ -43,9 +47,9 @@
   }
 
   body {
-    background-color: var(--background);
+    background-color: #f9fafb;
     color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+    font-family: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     letter-spacing: -0.01em;
   }
@@ -203,16 +207,26 @@ html[data-magicui-theme-vt="active"]::view-transition-group(root) {
 .animate-ticker {
   display: flex;
   width: max-content;
-  animation: tickerTape 36s linear infinite;
+  animation: tickerTape 35s linear infinite;
 }
 
-.animate-ticker:hover,
-.animate-ticker:focus-within {
+.animate-ticker:hover {
   animation-play-state: paused;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-ticker {
-    animation: none;
-  }
+/* Seamless Marquee Logo Scroller Animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

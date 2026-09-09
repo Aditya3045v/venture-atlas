@@ -2,1599 +2,1008 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import createGlobe from 'cobe';
-import { useToast } from '../providers/ToastProvider';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  AtSign,
+  ChevronRight,
+  X,
+  Sparkles,
+  Mail,
+  ExternalLink,
   Check,
   ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
-  Sparkles,
-  Volume2,
-  VolumeX,
-  Radio,
-  TrendingUp,
+  BookOpen,
   Layers,
-  Globe as GlobeIcon,
-  ShieldAlert,
-  Zap,
-  CheckCircle2,
   Terminal,
+  Zap,
+  TrendingUp,
+  Globe,
+  Clock,
+  Shield,
   Activity,
   Bookmark,
-  Plus,
-  Compass,
-  Trophy,
-  Award,
-  User,
-  Eye,
-  EyeOff,
-  Search,
-  ExternalLink,
+  Flame,
+  BarChart2,
+  Cpu,
+  Users,
 } from 'lucide-react';
 
-// =========================================================================
-// 1. DATA DEFINITIONS
-// =========================================================================
-
-interface FocusOption {
-  id: string;
-  label: string;
-  sub: string;
-  icon: string;
+interface BrandLogo {
+  name: string;
+  src: string;
+  gradient: string;
 }
 
-const FOCUS_OPTIONS: FocusOption[] = [
-  { id: 'all', label: 'Global Venture & AI Silicon', sub: 'Unicorns, Seed & Failures', icon: '🌐' },
-  { id: 'unicorns', label: 'Unicorns & Late Stage', sub: '$100M+ rounds, IPOs & secondaries', icon: '🦄' },
-  { id: 'ai', label: 'AI & DeepTech Silicon', sub: 'Inference chips, models & clusters', icon: '🤖' },
-  { id: 'failures', label: 'Failures & Teardowns', sub: 'Post-mortems & burn rate spikes', icon: '📉' },
-  { id: 'finance', label: 'Venture Finance & LPs', sub: 'Fund closings & DPI distributions', icon: '💼' },
-  { id: 'seed', label: 'Seed & Early Radar', sub: 'Stealth founders & pre-seed term sheets', icon: '🌱' },
+const BRAND_LOGOS: BrandLogo[] = [
+  {
+    name: 'Procure',
+    src: 'https://svgl.app/library/procure.svg',
+    gradient: 'linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa)',
+  },
+  {
+    name: 'Shopify',
+    src: 'https://svgl.app/library/shopify.svg',
+    gradient: 'linear-gradient(135deg, #ca8a04, #eab308, #84cc16)',
+  },
+  {
+    name: 'Blender',
+    src: 'https://svgl.app/library/blender.svg',
+    gradient: 'linear-gradient(135deg, #0284c7, #38bdf8, #f97316)',
+  },
+  {
+    name: 'Figma',
+    src: 'https://svgl.app/library/figma.svg',
+    gradient: 'linear-gradient(135deg, #7c3aed, #a855f7, #ec4899)',
+  },
+  {
+    name: 'Spotify',
+    src: 'https://svgl.app/library/spotify.svg',
+    gradient: 'linear-gradient(135deg, #db2777, #ec4899, #ef4444)',
+  },
+  {
+    name: 'Lottielab',
+    src: 'https://svgl.app/library/lottielab.svg',
+    gradient: 'linear-gradient(135deg, #eab308, #facc15, #22c55e)',
+  },
+  {
+    name: 'Google Cloud',
+    src: 'https://svgl.app/library/google-cloud.svg',
+    gradient: 'linear-gradient(135deg, #38bdf8, #60a5fa, #818cf8)',
+  },
+  {
+    name: 'Bing',
+    src: 'https://svgl.app/library/bing.svg',
+    gradient: 'linear-gradient(135deg, #06b6d4, #0891b2, #14b8a6)',
+  },
 ];
 
-const TICKER_ITEMS = [
-  { desk: 'UNICORN', text: 'Mercor closes $32M Series A at $250M valuation led by Benchmark', change: '+680%' },
-  { desk: 'AI SILICON', text: 'Groq deploys 40MW LPU inference cluster; 520 T/s verified benchmark', change: 'HOT' },
-  { desk: 'FAILURE', text: 'Protean Dynamics enters receivership after $70M autonomous burn stall', change: '-100%', down: true },
-  { desk: 'FINANCE', text: 'Lightspeed finalizes $7.1B global fund vehicle across US and India', change: 'NEW' },
-  { desk: 'SEED', text: 'Cognition Dynamics raises $6.5M pre-seed at $40M cap from Founders Fund', change: '+320%' },
-  { desk: 'CRYPTO', text: 'Monad parallel EVM devnet logs 10,240 TPS sustained at 1s finality', change: '+44%' },
-  { desk: 'GROWTH', text: 'Databricks authorizes $400M secondary share tender at $62B valuation', change: '+48%' },
+// Sample 60-word interactive live intelligence briefs
+const SAMPLE_BRIEFS = [
+  {
+    id: 'ai-silicon',
+    category: 'AI SILICON',
+    categoryColor: 'bg-purple-50 text-purple-700 border-purple-200',
+    title: 'Groq Deploys 40MW LPU Inference Cluster to Rival Nvidia Blackwell Pricing',
+    time: '4m ago',
+    source: 'The Information',
+    sourceUrl: 'https://theinformation.com',
+    words: 60,
+    text: 'Groq has powered up a dedicated 40-megawatt deterministic inference datacenter in Texas, delivering sustained 520 tokens/second per user session on open weights. Enterprise customers report 70% cheaper API costs compared to H100 cloud instances. With OpenAI and Anthropic scaling reasoning models, high-speed single-batch throughput has become the primary bottleneck over sheer training compute.',
+    keyStats: [
+      { label: 'Token Speed', value: '520 T/s' },
+      { label: 'Cost Advantage', value: '-70%' },
+      { label: 'Cluster Scale', value: '40 MW' },
+    ],
+  },
+  {
+    id: 'unicorns',
+    category: 'UNICORNS & GROWTH',
+    categoryColor: 'bg-blue-50 text-blue-700 border-blue-200',
+    title: 'Mercor Closes $32M Series A at $250M Valuation Led by Benchmark',
+    time: '18m ago',
+    source: 'Bloomberg',
+    sourceUrl: 'https://bloomberg.com',
+    words: 59,
+    text: 'Mercor, an automated engineer hiring platform evaluating developer code via proprietary LLM interviewers, has finalized a $32M Series A led by Benchmark partner Peter Fenton. The startup reached $10M ARR in twelve months with twenty employees. The round illustrates institutional appetite for AI-native workflow automation companies that replace legacy recruitment agencies with high-margin software platforms.',
+    keyStats: [
+      { label: 'Valuation', value: '$250M' },
+      { label: 'ARR Milestone', value: '$10M' },
+      { label: 'Lead Partner', value: 'Benchmark' },
+    ],
+  },
+  {
+    id: 'failures',
+    category: 'POST-MORTEM & TEARDOWN',
+    categoryColor: 'bg-rose-50 text-rose-700 border-rose-200',
+    title: 'Protean Dynamics Enters Receivership After $70M Autonomous Drone Burn',
+    time: '42m ago',
+    source: 'Reuters',
+    sourceUrl: 'https://reuters.com',
+    words: 60,
+    text: 'Autonomous logistics startup Protean Dynamics has initiated creditor receivership after burning through $70M in Series B venture capital without securing commercial FAA waiver renewals. Hardware manufacturing scrap rates exceeded 42%, draining cash reserves to under six weeks runway. The teardown highlights the steep capital expenditure traps facing dual-use robotics hardware companies that underprice regulatory timelines.',
+    keyStats: [
+      { label: 'Total Invested', value: '$70M' },
+      { label: 'Scrap Rate', value: '42%' },
+      { label: 'Outcome', value: 'Receivership' },
+    ],
+  },
+  {
+    id: 'seed-radar',
+    category: 'SEED & STEALTH',
+    categoryColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    title: 'Cognition Dynamics Raises $6.5M Pre-Seed at $40M Post from Founders Fund',
+    time: '1h ago',
+    source: 'TechCrunch',
+    sourceUrl: 'https://techcrunch.com',
+    words: 58,
+    text: 'Former DeepMind researchers have secured $6.5M in pre-seed funding for Cognition Dynamics, a startup designing verifiable reasoning agents for drug discovery. Founders Fund led the syndicate alongside angels from Recursion and Isomorphic Labs. The team is deploying self-supervised reinforcement learning over structural biology datasets, targeting candidate molecule validation in weeks rather than quarters.',
+    keyStats: [
+      { label: 'Pre-Seed Size', value: '$6.5M' },
+      { label: 'Post Valuation', value: '$40M' },
+      { label: 'Lead Investor', value: 'Founders Fund' },
+    ],
+  },
 ];
 
 const GLOBAL_HUBS = [
-  { city: 'BENGALURU', region: 'India / SEA', coords: [12.9716, 77.5946], volume24h: '$4.8B', timeZone: 'IST', deals: 14 },
-  { city: 'SAN FRANCISCO', region: 'North America', coords: [37.7749, -122.4194], volume24h: '$14.2B', timeZone: 'PST', deals: 42 },
-  { city: 'LONDON', region: 'Europe', coords: [51.5074, -0.1278], volume24h: '$6.1B', timeZone: 'GMT', deals: 19 },
-  { city: 'SINGAPORE', region: 'APAC Rails', coords: [1.3521, 103.8198], volume24h: '$3.2B', timeZone: 'SGT', deals: 11 },
-  { city: 'NEW YORK', region: 'North America', coords: [40.7128, -74.0060], volume24h: '$9.4B', timeZone: 'EST', deals: 28 },
+  { city: 'SAN FRANCISCO', region: 'North America', volume24h: '$14.2B', deals: 42, pace: '+18%' },
+  { city: 'BENGALURU', region: 'India / SEA', volume24h: '$4.8B', deals: 14, pace: '+34%' },
+  { city: 'LONDON', region: 'Europe', volume24h: '$6.1B', deals: 19, pace: '+8%' },
+  { city: 'SINGAPORE', region: 'APAC Rails', volume24h: '$3.2B', deals: 11, pace: '+22%' },
+  { city: 'NEW YORK', region: 'North America', volume24h: '$9.4B', deals: 28, pace: '+12%' },
 ];
 
-interface LiveArticlePreview {
-  id: string;
-  badge: string;
-  badgeColor: string;
-  badgeBg: string;
-  title: string;
-  date: string;
-  hub: string;
-  coverImage: string;
-  avatar: string;
-  leadPartner: string;
-  valuation: string;
-  round: string;
-  metricLabel: string;
-  metricValue: string;
-  words: number;
-}
-
-const FEED_PREVIEWS: LiveArticlePreview[] = [
+const SPECIALIZED_DESKS = [
   {
-    id: 'stripe',
-    badge: 'UNICORN',
-    badgeColor: '#D9A441',
-    badgeBg: '#D9A44120',
-    title: 'Stripe Closes $6.5B Round at $65B Valuation, Eyes 2027 IPO',
-    date: '09/02/2026',
-    hub: 'San Francisco',
-    coverImage: '/onboarding-hero.jpg',
-    avatar: '🦄',
-    leadPartner: 'Peter Fenton • Benchmark',
-    valuation: '$65B',
-    round: 'SER I',
-    metricLabel: 'RUNWAY',
-    metricValue: '48 MO',
-    words: 58,
+    icon: <Cpu className="w-5 h-5 text-indigo-600" />,
+    title: 'AI & DeepTech Silicon',
+    description: 'Datacenter compute capacity, inference tokens/sec, GPU clustering, and model weights pricing.',
+    tag: '42 Stories / Wk',
   },
   {
-    id: 'stability',
-    badge: 'FAILURE',
-    badgeColor: '#C24B3F',
-    badgeBg: '#C24B3F20',
-    title: "Stability AI's Near-Death: Governance Crisis & Talent Flight",
-    date: '08/24/2026',
-    hub: 'London',
-    coverImage: '/onboarding-hero.jpg',
-    avatar: '📉',
-    leadPartner: 'Teardown Desk • Atlas',
-    valuation: '$75M BURN',
-    round: 'COLLAPSE',
-    metricLabel: 'DEFICIT',
-    metricValue: '-$18M',
-    words: 59,
+    icon: <Flame className="w-5 h-5 text-rose-600" />,
+    title: 'Unicorns & Late Stage',
+    description: 'Mega-rounds above $100M, private tender offers, secondary valuations, and IPO filing trackers.',
+    tag: 'Daily Telemetry',
   },
   {
-    id: 'groq',
-    badge: 'AI SILICON',
-    badgeColor: '#0066FF',
-    badgeBg: '#0066FF20',
-    title: 'Groq Expands LPU Footprint with 40MW Texas High-Density Cluster',
-    date: '09/01/2026',
-    hub: 'Mountain View',
-    coverImage: '/onboarding-hero.jpg',
-    avatar: '🤖',
-    leadPartner: 'Trae Stephens • Founders Fund',
-    valuation: '$2.8B',
-    round: 'SER D',
-    metricLabel: 'SPEED',
-    metricValue: '520 T/S',
-    words: 59,
+    icon: <BarChart2 className="w-5 h-5 text-emerald-600" />,
+    title: 'Venture Capital & LPs',
+    description: 'Institutional LP fund closes, DPI distribution metrics, management fee benchmarks, and capital calls.',
+    tag: 'Weekly Ledger',
+  },
+  {
+    icon: <Shield className="w-5 h-5 text-amber-600" />,
+    title: 'Failures & Teardowns',
+    description: 'Forensic post-mortems of venture-backed failures, runway burn spikes, and cap-table wipes.',
+    tag: 'Zero Sponsored PR',
+  },
+  {
+    icon: <Zap className="w-5 h-5 text-sky-600" />,
+    title: 'Seed & Early Radar',
+    description: 'Stealth founders, pre-seed round term sheets, incubator grads, and syndicate lead tracker.',
+    tag: 'First Look Wire',
+  },
+  {
+    icon: <Globe className="w-5 h-5 text-teal-600" />,
+    title: 'Cross-Border Capital Rails',
+    description: 'Follow capital flows linking Silicon Valley, Bengaluru, London, Tokyo, and Singapore corridors.',
+    tag: '5 Global Desks',
   },
 ];
 
-// =========================================================================
-// 2. WEBGL TELEMETRY GLOBE COMPONENT
-// =========================================================================
+export function LandingView() {
+  const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isDocsOpen, setIsDocsOpen] = useState(false);
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-function TelemetryGlobe({ activeCoords }: { activeCoords: [number, number] }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointerInteracting = useRef<number | null>(null);
-  const pointerInteractionMovement = useRef(0);
-  const [r, setR] = useState(0);
+  // Active brief tab in interactive reader demo
+  const [activeBriefIndex, setActiveBriefIndex] = useState(0);
+  const activeBrief = SAMPLE_BRIEFS[activeBriefIndex];
+
+  // Quick access email capture form state
+  const [captureEmail, setCaptureEmail] = useState('');
+  const [captureDone, setCaptureDone] = useState(false);
+
+  // Video Ref & Autoplay Guarantee (fixes React muted autoplay DOM property issue)
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    let phi = 0;
-    let width = 0;
-    let globeInstance: any = null;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const video = videoRef.current;
+    if (!video) return;
 
-    const onResize = () => {
-      if (canvasRef.current) width = canvasRef.current.offsetWidth;
-    };
-    window.addEventListener('resize', onResize);
-    onResize();
+    video.defaultMuted = true;
+    video.muted = true;
 
-    if (canvasRef.current) {
-      globeInstance = createGlobe(canvasRef.current, {
-        devicePixelRatio: 2,
-        width: width * 2,
-        height: width * 2,
-        phi: 0,
-        theta: 0.28,
-        dark: 1,
-        diffuse: 0.35,
-        mapSamples: 16000,
-        mapBrightness: 1.15,
-        baseColor: [11 / 255, 14 / 255, 20 / 255],
-        markerColor: [217 / 255, 164 / 255, 65 / 255],
-        glowColor: [47 / 255, 168 / 255, 160 / 255],
-        markers: GLOBAL_HUBS.map(h => ({
-          location: h.coords as [number, number],
-          size: h.coords[0] === activeCoords[0] ? 0.12 : 0.07,
-        })),
-        onRender: (state: Record<string, any>) => {
-          if (!pointerInteracting.current && !prefersReducedMotion) phi += 0.0028;
-          state.phi = phi + r;
-          state.width = width * 2;
-          state.height = width * 2;
-        },
-      } as any);
-
-      setTimeout(() => {
-        if (canvasRef.current) canvasRef.current.style.opacity = '1';
-      }, 150);
-    }
-
-    return () => {
-      if (globeInstance) globeInstance.destroy();
-      window.removeEventListener('resize', onResize);
-    };
-  }, [activeCoords, r]);
-
-  return (
-    <div className="relative aspect-square w-full max-w-[340px] mx-auto select-none">
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full opacity-0 transition-opacity duration-700 cursor-grab active:cursor-grabbing"
-        onPointerDown={(e) => { pointerInteracting.current = e.clientX - pointerInteractionMovement.current; }}
-        onPointerUp={() => { pointerInteracting.current = null; }}
-        onPointerOut={() => { pointerInteracting.current = null; }}
-        onMouseMove={(e) => {
-          if (pointerInteracting.current !== null) {
-            const delta = e.clientX - pointerInteracting.current;
-            pointerInteractionMovement.current = delta;
-            setR(delta / 200);
-          }
-        }}
-      />
-    </div>
-  );
-}
-
-// =========================================================================
-// 3. MAIN COMPONENT: LANDING VIEW
-// =========================================================================
-
-export const LandingView: React.FC = () => {
-  const { toast } = useToast();
-
-  // Mobile 3-Step Flow State (1: Welcome, 2: Login, 3: Discover Feed)
-  const [mobileStep, setMobileStep] = useState<1 | 2 | 3>(1);
-
-  // Desktop Screen Showcase Preview Tab (1: Welcome, 2: Login, 3: Discover Feed)
-  const [desktopShowcaseStep, setDesktopShowcaseStep] = useState<1 | 2 | 3>(3);
-
-  // Reader Authentication State
-  const [email, setEmail] = useState('');
-  const [selectedFocus, setSelectedFocus] = useState<string>('all');
-  const [showFocusDropdown, setShowFocusDropdown] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [isZooping, setIsZooping] = useState(false);
-
-  // Telemetry Globe Coordinates
-  const [selectedHubCoords, setSelectedHubCoords] = useState<[number, number]>([12.9716, 77.5946]);
-
-  const currentFocus = FOCUS_OPTIONS.find(f => f.id === selectedFocus) || FOCUS_OPTIONS[0];
-
-  // Advance from Step 1 to Step 2
-  const handleStep1Continue = (e: React.FormEvent) => {
-    e.preventDefault();
-    setMobileStep(2);
-  };
-
-  // Complete Onboarding / Login with Soft Blur & Zoop Transition
-  const handleCompleteLogin = async (userEmailToSubmit?: string) => {
-    const finalEmail = (userEmailToSubmit || email).trim().toLowerCase();
-
-    if (!finalEmail || !finalEmail.includes('@') || !finalEmail.includes('.')) {
-      toast('Please enter a valid work email address', 'error');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/reader/enter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: finalEmail,
-          source: 'LANDING_MOBILE_3STEP',
-          interests: [selectedFocus],
-        }),
-      });
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        // Save local preferences
-        try {
-          localStorage.setItem('va_reader_email', finalEmail);
-          localStorage.setItem('va_reader_focus', selectedFocus);
-          if (data.token) {
-            localStorage.setItem('va_reader_token', data.token);
-            document.cookie = `va_reader=${data.token}; path=/; max-age=31536000; SameSite=Lax`;
-          }
-          document.cookie = `va_reader_client=1; path=/; max-age=31536000; SameSite=Lax`;
-        } catch {}
-
-        // Move to Step 3 (Feed preview) or execute transition
-        if (mobileStep === 2) {
-          setMobileStep(3);
-          setLoading(false);
-          toast('Reader clearance verified. Unlocking live feed...', 'success');
-        } else {
-          // Direct Zoop animation transition
-          setIsZooping(true);
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 750);
-        }
-      } else {
-        toast(data.error || 'Failed to authenticate reader clearance', 'error');
-        setLoading(false);
+    const playVideo = () => {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.log('Video autoplay deferred by browser:', err);
+        });
       }
-    } catch {
-      toast('Network error during clearance. Please retry.', 'error');
-      setLoading(false);
+    };
+
+    if (video.readyState >= 2) {
+      playVideo();
+    } else {
+      video.addEventListener('loadeddata', playVideo, { once: true });
+      video.addEventListener('canplay', playVideo, { once: true });
     }
+  }, []);
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!contactEmail) return;
+    setIsSubmitted(true);
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setContactEmail('');
+      setContactMessage('');
+      setIsContactOpen(false);
+    }, 2000);
   };
 
-  // Final Action from Step 3: Enter Full Live Feed
-  const handleEnterFullFeed = () => {
-    setIsZooping(true);
+  const handleCaptureSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!captureEmail) return;
+    setCaptureDone(true);
     setTimeout(() => {
-      window.location.href = '/';
-    }, 750);
+      setCaptureDone(false);
+      setCaptureEmail('');
+    }, 3000);
   };
 
   return (
-    <div className="min-h-screen bg-[#07090D] text-[#E6E8EC] font-body selection:bg-[#0066FF] selection:text-white relative overflow-x-hidden">
-
-      {/* ========================================================
-          FULLSCREEN SOFT BLUR & ZOOP TRANSITION OVERLAY
-          ======================================================== */}
-      {isZooping && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#07090D]/80 backdrop-blur-2xl transition-all duration-700 ease-out animate-fadeIn">
-          <div className="text-center space-y-4 transform scale-110 animate-pulse">
-            <div className="w-16 h-16 rounded-2xl bg-[#0066FF]/20 border border-[#0066FF]/50 flex items-center justify-center text-[#0066FF] mx-auto shadow-[0_0_50px_rgba(0,102,255,0.4)]">
-              <Sparkles size={30} className="animate-spin" />
-            </div>
-            <div className="space-y-1.5">
-              <h3 className="font-fraunces text-3xl sm:text-4xl text-white font-normal">
-                Entering Venture Atlas Feed
-              </h3>
-              <p className="font-mono text-xs text-[#8C93A3] uppercase tracking-widest">
-                Tuning 60-word briefs for {currentFocus.label}...
-              </p>
-            </div>
+    <div className="min-h-screen w-full bg-[#f9fafb] text-slate-900 flex flex-col select-none font-sans">
+      {/* ─────────────────────────────────────────────────────────────
+          TOP BRAND STRIP & STATUS
+      ────────────────────────────────────────────────────────────── */}
+      <div className="w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-md px-6 py-2.5 flex items-center justify-between text-xs font-mono text-slate-500">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold text-slate-800 uppercase tracking-wider">VENTURE ATLAS WIRE</span>
           </div>
-        </div>
-      )}
-
-      {/* ========================================================
-          DESKTOP WIRE HEADER & PHYSICAL DEAL TICKER
-          (Visible on Desktop, sleek minimalist on Mobile)
-          ======================================================== */}
-      <header className="sticky top-0 z-40 bg-[#07090D]/95 backdrop-blur-md border-b border-[#1E232F] select-none">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between font-mono text-xs">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-[#E6E8EC]">
-              <span className="w-2 h-2 rounded-full bg-[#2FA8A0] animate-pulse" />
-              <span className="font-fraunces text-base font-bold tracking-tight text-white">
-                Venture Atlas
-              </span>
-              <span className="text-[#555C6E]">//</span>
-              <span className="text-[10px] text-[#8C93A3] uppercase tracking-wider hidden sm:inline">
-                FINANCIAL INTELLIGENCE WIRE
-              </span>
-            </div>
-            <span className="px-2 py-0.5 rounded border border-[#2A2F3A] bg-[#0B0E14] text-[10px] text-[#D9A441] font-bold">
-              ISSUE #1,402
-            </span>
-          </div>
-
-          {/* World Clocks (Desktop) */}
-          <div className="hidden lg:flex items-center gap-5 text-[11px] text-[#555C6E]">
-            <span className="hover:text-[#8C93A3] transition-colors">
-              <span className="text-white/80 font-bold">BLR</span> 14:02 IST
-            </span>
-            <span className="text-[#2A2F3A]">•</span>
-            <span className="hover:text-[#8C93A3] transition-colors">
-              <span className="text-white/80 font-bold">SFO</span> 00:32 PST
-            </span>
-            <span className="text-[#2A2F3A]">•</span>
-            <span className="hover:text-[#8C93A3] transition-colors">
-              <span className="text-white/80 font-bold">LDN</span> 08:32 GMT
-            </span>
-            <span className="text-[#2A2F3A]">•</span>
-            <span className="hover:text-[#8C93A3] transition-colors">
-              <span className="text-white/80 font-bold">SIN</span> 16:32 SGT
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-1 text-[10px] text-[#2FA8A0] bg-[#2FA8A0]/10 px-2 py-0.5 rounded border border-[#2FA8A0]/20">
-              <Activity size={10} />
-              <span>LATENCY: 18MS</span>
-            </div>
-            <Link
-              href="/admin/login"
-              className="px-2.5 py-1 rounded border border-[#2A2F3A] hover:border-[#D9A441] text-[10px] text-[#8C93A3] hover:text-[#D9A441] transition-all font-mono uppercase"
-            >
-              Staff Terminal
-            </Link>
-          </div>
+          <span className="hidden md:inline text-slate-300">|</span>
+          <span className="hidden md:inline">BLOOMBERG + INSHORTS FOR TECH FOUNDERS & VCS</span>
         </div>
 
-        {/* Live Deal Ticker Tape */}
-        <div className="border-t border-[#1E232F] bg-[#0B0E14] py-1.5 overflow-hidden flex items-center">
-          <div className="px-3 shrink-0 flex items-center gap-1.5 font-mono text-[10px] font-bold text-[#D9A441] border-r border-[#1E232F] bg-[#0B0E14] z-10">
-            <Radio size={11} className="text-[#D9A441] animate-pulse" />
-            <span>WIRE DEALS</span>
-          </div>
-          <div className="overflow-hidden whitespace-nowrap flex-1">
-            <div className="animate-ticker font-mono text-[11px] text-[#8C93A3] flex items-center gap-8 pl-4">
-              {TICKER_ITEMS.concat(TICKER_ITEMS).map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2 shrink-0">
-                  <span className="text-[#555C6E] font-bold">[{item.desk}]</span>
-                  <span className="text-[#E6E8EC]">{item.text}</span>
-                  <span className={`font-bold ${item.down ? 'text-[#C24B3F]' : 'text-[#D9A441]'}`}>
-                    {item.change}
-                  </span>
-                  <span className="text-[#2A2F3A] mx-2">•</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="flex items-center gap-4">
+          <span className="hidden sm:inline">GLOBAL LATENCY: 24MS</span>
+          <Link
+            href="/feed"
+            className="flex items-center gap-1 text-slate-800 hover:text-blue-600 font-medium transition-colors"
+          >
+            Reader Feed <ArrowRight size={12} />
+          </Link>
         </div>
-      </header>
-
-      {/* =========================================================================
-          MOBILE VIEW (`md:hidden`):
-          THE EXACT 3-STEP FLOW MATCHING USER REFERENCE IMAGE (media_1788973318708.png)
-          Step 1: Welcome / Splash (Illustration + Capsule Selector + Continue)
-          Step 2: Login (Illustration + Email Capsule + Login black button + Socials)
-          Step 3: Discover the Padelisto -> Discover Venture Atlas (Live Matches + Cards + Bottom Nav)
-          ========================================================================= */}
-      <div className="md:hidden min-h-[calc(100vh-80px)] flex flex-col justify-between bg-white text-neutral-900">
-
-        {/* STEP 1: WELCOME SCREEN (Matching Left Screen in Reference) */}
-        {mobileStep === 1 && (
-          <div className="flex-1 flex flex-col justify-between animate-fadeIn bg-[#07090D]">
-
-            {/* Top Half: Illustrated Scene with iOS Status Bar */}
-            <div className="relative w-full h-80 overflow-hidden bg-[#0A1128]">
-              <img
-                src="/onboarding-hero.jpg"
-                alt="Venture Atlas Tech Founders and Market Activity"
-                className="w-full h-full object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
-
-              {/* iOS 9:41 Status Bar */}
-              <div className="absolute top-4 left-6 right-6 flex items-center justify-between text-white text-xs font-mono select-none drop-shadow-md">
-                <span className="font-bold">9:41</span>
-                <div className="flex items-center gap-1.5">
-                  <span className="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-[10px] font-bold text-[#D9A441]">
-                    60-WORD DISPATCHES
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Half: Pure White Rounded Sheet Card */}
-            <div className="bg-white -mt-10 rounded-t-[36px] p-6 sm:p-8 relative z-10 flex-1 flex flex-col justify-between shadow-2xl space-y-6">
-
-              <div className="space-y-4 pt-2">
-                {/* Title styled like "Serve, Score, Connect in your Pocket" */}
-                <div className="text-center space-y-1.5">
-                  <h1 className="text-[28px] font-black font-display tracking-tight text-neutral-900 leading-tight">
-                    Speed, <span className="text-[#0066FF]">Rigor</span>, Intelligence in your Pocket
-                  </h1>
-                  <p className="text-xs text-neutral-500 max-w-xs mx-auto leading-relaxed">
-                    60-word institutional briefs & venture telemetry on your mobile.
-                  </p>
-                </div>
-
-                {/* Capsule Selector: styled like "I live in: United States" pill */}
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setShowFocusDropdown(!showFocusDropdown)}
-                    className="w-full p-4 rounded-2xl bg-[#F5F6F8] hover:bg-neutral-100 border border-neutral-200/80 transition-all flex items-center justify-between text-left cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <div className="w-10 h-10 rounded-xl bg-white border border-neutral-200 shadow-xs flex items-center justify-center text-xl shrink-0">
-                        {currentFocus.icon}
-                      </div>
-                      <div>
-                        <span className="block text-[11px] text-neutral-400 font-medium">
-                          Primary sector:
-                        </span>
-                        <span className="block text-sm font-bold text-neutral-900 leading-snug">
-                          {currentFocus.label}
-                        </span>
-                      </div>
-                    </div>
-                    <ChevronDown size={18} className={`text-neutral-400 transition-transform ${showFocusDropdown ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {showFocusDropdown && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-neutral-200 shadow-2xl p-2 z-30 space-y-1 animate-fadeIn">
-                      {FOCUS_OPTIONS.map((f) => (
-                        <button
-                          key={f.id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedFocus(f.id);
-                            setShowFocusDropdown(false);
-                          }}
-                          className={`w-full p-2.5 rounded-xl flex items-center gap-3 text-left transition-colors ${
-                            selectedFocus === f.id ? 'bg-[#0066FF]/10 text-[#0066FF]' : 'hover:bg-neutral-100 text-neutral-800'
-                          }`}
-                        >
-                          <span className="text-lg">{f.icon}</span>
-                          <div className="flex-1 min-w-0">
-                            <div className="text-xs font-bold leading-none">{f.label}</div>
-                            <div className="text-[10px] text-neutral-400 truncate mt-0.5">{f.sub}</div>
-                          </div>
-                          {selectedFocus === f.id && <Check size={14} />}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Action & Step Indicator */}
-              <div className="space-y-4 pt-2">
-                {/* Black Pill Continue Button */}
-                <button
-                  type="button"
-                  onClick={handleStep1Continue}
-                  className="w-full py-4 rounded-full bg-black hover:bg-neutral-800 active:scale-[0.98] text-white font-bold text-sm tracking-wide transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <span>Continue</span>
-                  <ArrowRight size={16} />
-                </button>
-
-                {/* Step Dots: [●] [○] [○] */}
-                <div className="flex items-center justify-center gap-2 pt-1 select-none">
-                  <span className="w-6 h-1.5 rounded-full bg-black" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        )}
-
-        {/* STEP 2: LOGIN SCREEN (Matching Middle Screen in Reference) */}
-        {mobileStep === 2 && (
-          <div className="flex-1 flex flex-col justify-between animate-fadeIn bg-[#07090D]">
-
-            {/* Top Illustration Header */}
-            <div className="relative w-full h-56 overflow-hidden bg-[#0A1128]">
-              <img
-                src="/onboarding-hero.jpg"
-                alt="Venture Atlas Tech Founders and Market Activity"
-                className="w-full h-full object-cover object-top"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
-
-              <div className="absolute top-4 left-6 right-6 flex items-center justify-between text-white text-xs font-mono select-none drop-shadow-md">
-                <button
-                  type="button"
-                  onClick={() => setMobileStep(1)}
-                  className="p-1 rounded-full bg-black/40 backdrop-blur-md text-white hover:bg-black/60 transition-colors"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <span className="font-bold">9:41</span>
-                <span className="w-6" />
-              </div>
-            </div>
-
-            {/* Bottom White Card (Expanded up) */}
-            <div className="bg-white -mt-10 rounded-t-[36px] p-6 sm:p-8 relative z-10 flex-1 flex flex-col justify-between shadow-2xl space-y-5">
-
-              <div className="space-y-4 pt-1">
-                {/* Title & Subtitle */}
-                <div className="text-center space-y-1">
-                  <h2 className="text-2xl font-bold text-neutral-900 tracking-tight">
-                    Login
-                  </h2>
-                  <p className="text-xs text-neutral-500">
-                    Welcome! Please login to your reader account
-                  </p>
-                </div>
-
-                {/* Input 1: Email Capsule */}
-                <div className="space-y-1">
-                  <div className="p-3.5 rounded-2xl bg-[#F5F6F8] border border-neutral-200/80 flex items-center gap-3 focus-within:ring-2 focus-within:ring-neutral-900/10 focus-within:bg-white transition-all">
-                    <div className="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-neutral-700 shrink-0">
-                      <AtSign size={16} />
-                    </div>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="founder@venture.io"
-                      required
-                      autoFocus
-                      className="flex-1 bg-transparent text-sm font-semibold text-neutral-900 placeholder:text-neutral-400 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Input 2: Fast Sector Token / Instant Clearance */}
-                <div className="space-y-1">
-                  <div className="p-3.5 rounded-2xl bg-[#F5F6F8] border border-neutral-200/80 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-lg bg-white border border-neutral-200 flex items-center justify-center text-emerald-600 shrink-0">
-                        <CheckCircle2 size={16} />
-                      </div>
-                      <div className="truncate">
-                        <span className="block text-xs font-semibold text-neutral-800">
-                          Passwordless Clearance
-                        </span>
-                        <span className="block text-[10px] text-neutral-400">
-                          Instant token • Zero passwords
-                        </span>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-mono text-[#0066FF] font-bold uppercase shrink-0">
-                      ACTIVE
-                    </span>
-                  </div>
-                </div>
-
-                {/* Action Row: Sign up / Skip on left, Login Black Pill on right */}
-                <div className="flex items-center justify-between pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setMobileStep(3)}
-                    className="text-xs font-semibold text-neutral-400 hover:text-neutral-900 transition-colors"
-                  >
-                    Preview feed
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleCompleteLogin()}
-                    disabled={loading}
-                    className="py-3 px-8 rounded-full bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md active:scale-95 disabled:opacity-50 cursor-pointer"
-                  >
-                    {loading ? 'Clearing...' : 'Login'}
-                  </button>
-                </div>
-
-                {/* "Or" Divider */}
-                <div className="flex items-center gap-3 my-3">
-                  <div className="flex-1 h-px bg-neutral-200" />
-                  <span className="text-xs text-neutral-400 font-medium">Or</span>
-                  <div className="flex-1 h-px bg-neutral-200" />
-                </div>
-
-                {/* Social Login Circles (Matching Reference) */}
-                <div className="flex items-center justify-center gap-4 pt-1">
-                  {/* Facebook */}
-                  <button
-                    type="button"
-                    onClick={() => handleCompleteLogin('reader.fb@ventureatlas.in')}
-                    className="w-11 h-11 rounded-full bg-[#1877F2] text-white flex items-center justify-center font-bold text-base shadow-sm hover:scale-105 active:scale-95 transition-transform"
-                    title="1-Tap Access"
-                  >
-                    f
-                  </button>
-                  {/* Apple */}
-                  <button
-                    type="button"
-                    onClick={() => handleCompleteLogin('reader.apple@ventureatlas.in')}
-                    className="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm shadow-sm hover:scale-105 active:scale-95 transition-transform"
-                    title="Sign in with Apple"
-                  >
-                    
-                  </button>
-                  {/* Google */}
-                  <button
-                    type="button"
-                    onClick={() => handleCompleteLogin('reader.google@ventureatlas.in')}
-                    className="w-11 h-11 rounded-full bg-white border border-neutral-200 text-neutral-800 flex items-center justify-center font-bold text-sm shadow-sm hover:scale-105 active:scale-95 transition-transform"
-                    title="Sign in with Google"
-                  >
-                    G
-                  </button>
-                </div>
-
-              </div>
-
-              {/* Step Dots: [○] [●] [○] */}
-              <div className="flex items-center justify-center gap-2 pt-2 select-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-                <span className="w-6 h-1.5 rounded-full bg-black" />
-                <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-              </div>
-
-            </div>
-
-          </div>
-        )}
-
-        {/* STEP 3: DISCOVER FEED SCREEN (Matching Right Screen in Reference: "Discover the Padelisto") */}
-        {mobileStep === 3 && (
-          <div className="flex-1 flex flex-col justify-between animate-fadeIn bg-[#F8F9FA] pb-6">
-
-            {/* iOS Status Bar */}
-            <div className="px-6 pt-3 pb-1 flex items-center justify-between text-neutral-900 text-xs font-mono select-none">
-              <span className="font-bold">9:41</span>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold text-[#0066FF] bg-[#0066FF]/10 px-2 py-0.5 rounded-full">
-                  LIVE WIRE
-                </span>
-              </div>
-            </div>
-
-            {/* Top Title: "Discover the Padelisto" -> "Discover Venture Atlas" */}
-            <div className="px-6 pt-2 pb-3 flex items-center justify-between">
-              <h2 className="text-2xl font-black font-display tracking-tight text-neutral-900">
-                Discover Venture Atlas
-              </h2>
-              <button
-                type="button"
-                onClick={handleEnterFullFeed}
-                className="text-xs font-bold text-[#0066FF] hover:underline"
-              >
-                View All
-              </button>
-            </div>
-
-            {/* Feed Scroll Content */}
-            <div className="flex-1 overflow-y-auto px-4 space-y-4">
-
-              {/* Section 1: "Live matches" -> "Breaking Live Deals" */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between px-2">
-                  <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider">
-                    Breaking Live Deals
-                  </span>
-                  <button type="button" onClick={handleEnterFullFeed} className="text-[11px] font-semibold text-[#0066FF]">
-                    View All
-                  </button>
-                </div>
-
-                {/* Horizontal Live Deal Card (matching reference format) */}
-                <div className="p-4 rounded-2xl bg-white border border-neutral-200/80 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-bold">
-                        Deal 1 • Late Stage
-                      </span>
-                      <span className="text-neutral-400 text-[11px]">28 Jan 2026</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => toast('Saved to private portfolio radar', 'success')}
-                      className="px-2.5 py-1 rounded-full bg-[#0066FF]/10 text-[#0066FF] font-bold text-[10px] flex items-center gap-1 hover:bg-[#0066FF]/20 transition-colors"
-                    >
-                      <Bookmark size={10} />
-                      <span>Bookmark</span>
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-sm font-bold">
-                        🦄
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-neutral-900">Mercor AI</div>
-                        <div className="text-[10px] text-neutral-400">$250M Valuation</div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs font-bold text-[#0066FF]">$32M Round</div>
-                      <div className="text-[10px] text-neutral-400">Peter Fenton • Benchmark</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 2: "Institutional Dispatches" Feed Cards */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between px-2">
-                  <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider">
-                    Institutional Dispatches
-                  </span>
-                  <button type="button" onClick={handleEnterFullFeed} className="text-[11px] font-semibold text-[#0066FF]">
-                    View All
-                  </button>
-                </div>
-
-                {/* Card 1 (Unicorn) */}
-                <div className="p-4 rounded-3xl bg-white border border-neutral-200/80 shadow-sm space-y-3">
-                  <div className="relative rounded-2xl overflow-hidden h-32 bg-neutral-900">
-                    <img
-                      src="/onboarding-hero.jpg"
-                      alt="Stripe 6.5B round"
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
-                    <span className="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[#D9A441] text-[10px] font-mono font-bold border border-white/20">
-                      🦄 UNICORN DESK
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => toast('Saved to bookmarks', 'success')}
-                      className="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 backdrop-blur-md text-white hover:text-[#0066FF]"
-                    >
-                      <Bookmark size={14} />
-                    </button>
-                  </div>
-
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-bold text-neutral-900 leading-snug">
-                      Stripe Closes $6.5B Round at $65B Valuation, Eyes 2027 IPO
-                    </h3>
-                    <p className="text-[10px] text-neutral-400 font-mono">
-                      09/02/2026 • San Francisco & Global rails
-                    </p>
-                  </div>
-
-                  {/* 4 Stats Grid matching reference image */}
-                  <div className="grid grid-cols-4 gap-1.5 text-center font-mono">
-                    <div className="p-1.5 rounded-xl bg-neutral-50 border border-neutral-100">
-                      <div className="text-[8px] text-neutral-400 uppercase">Valuation</div>
-                      <div className="text-xs font-bold text-neutral-900">$65B</div>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-neutral-50 border border-neutral-100">
-                      <div className="text-[8px] text-neutral-400 uppercase">Round</div>
-                      <div className="text-xs font-bold text-[#0066FF]">SER I</div>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-neutral-50 border border-neutral-100">
-                      <div className="text-[8px] text-neutral-400 uppercase">Lead</div>
-                      <div className="text-xs font-bold text-neutral-900">Sequoia</div>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-neutral-50 border border-neutral-100">
-                      <div className="text-[8px] text-neutral-400 uppercase">Words</div>
-                      <div className="text-xs font-bold text-neutral-900">58/60</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 2 (Failure) */}
-                <div className="p-4 rounded-3xl bg-white border border-neutral-200/80 shadow-sm space-y-3">
-                  <div className="relative rounded-2xl overflow-hidden h-32 bg-neutral-900">
-                    <img
-                      src="/onboarding-hero.jpg"
-                      alt="Stability AI Teardown"
-                      className="w-full h-full object-cover filter saturate-50"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
-                    <span className="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[#C24B3F] text-[10px] font-mono font-bold border border-white/20">
-                      📉 FAILURE TEARDOWN
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => toast('Saved to bookmarks', 'success')}
-                      className="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 backdrop-blur-md text-white hover:text-[#0066FF]"
-                    >
-                      <Bookmark size={14} />
-                    </button>
-                  </div>
-
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-bold text-neutral-900 leading-snug">
-                      Stability AI's Near-Death: Governance Crisis & Talent Exodus
-                    </h3>
-                    <p className="text-[10px] text-neutral-400 font-mono">
-                      08/24/2026 • London & Silicon Valley
-                    </p>
-                  </div>
-
-                  {/* 4 Stats Grid */}
-                  <div className="grid grid-cols-4 gap-1.5 text-center font-mono">
-                    <div className="p-1.5 rounded-xl bg-neutral-50 border border-neutral-100">
-                      <div className="text-[8px] text-neutral-400 uppercase">Total Burn</div>
-                      <div className="text-xs font-bold text-[#C24B3F]">$75M</div>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-neutral-50 border border-neutral-100">
-                      <div className="text-[8px] text-neutral-400 uppercase">Deficit</div>
-                      <div className="text-xs font-bold text-[#C24B3F]">-$18M</div>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-neutral-50 border border-neutral-100">
-                      <div className="text-[8px] text-neutral-400 uppercase">Recovery</div>
-                      <div className="text-xs font-bold text-neutral-900">0.08/$1</div>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-neutral-50 border border-neutral-100">
-                      <div className="text-[8px] text-neutral-400 uppercase">Words</div>
-                      <div className="text-xs font-bold text-neutral-900">59/60</div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* Bottom Floating Pill Action Button & Bottom Bar */}
-            <div className="pt-3 px-4 space-y-3">
-              {/* Primary Black Pill "Enter Full Live Feed" */}
-              <button
-                type="button"
-                onClick={handleEnterFullFeed}
-                className="w-full py-4 rounded-full bg-black hover:bg-neutral-800 text-white font-bold text-sm tracking-wide shadow-xl active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>Enter Full Live Feed</span>
-                <ArrowRight size={16} />
-              </button>
-
-              {/* Step Dots: [○] [○] [●] */}
-              <div className="flex items-center justify-center gap-2 select-none">
-                <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-                <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-                <span className="w-6 h-1.5 rounded-full bg-black" />
-              </div>
-
-              {/* Bottom Navigation Bar (Matching Screen 3 in Reference) */}
-              <div className="border-t border-neutral-200/80 pt-2 flex items-center justify-around text-[10px] text-neutral-400 font-medium select-none">
-                <button type="button" className="flex flex-col items-center gap-1 text-[#0066FF] font-bold">
-                  <Compass size={18} />
-                  <span>Discover</span>
-                </button>
-                <button type="button" onClick={handleEnterFullFeed} className="flex flex-col items-center gap-1 hover:text-neutral-900">
-                  <Layers size={18} />
-                  <span>Desks</span>
-                </button>
-                <button type="button" onClick={handleEnterFullFeed} className="flex flex-col items-center gap-1 hover:text-neutral-900">
-                  <Award size={18} />
-                  <span>Radar</span>
-                </button>
-                <button type="button" onClick={handleEnterFullFeed} className="flex flex-col items-center gap-1 hover:text-neutral-900">
-                  <User size={18} />
-                  <span>Profile</span>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        )}
-
       </div>
 
-      {/* =========================================================================
-          DESKTOP VIEW (`hidden md:block`):
-          ELEVATED, HIGH-DENSITY BLOOMBERG TERMINAL + INSHORTS COMMAND CENTER
-          ========================================================================= */}
-      <div className="hidden md:block">
-
-        {/* Master Hero Command Center */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-16">
-
-          <div className={`grid grid-cols-12 gap-8 lg:gap-12 items-start transition-all duration-700 ${isZooping ? 'scale-105 blur-md opacity-30' : 'scale-100 blur-0 opacity-100'}`}>
-
-            {/* LEFT COLUMN: Editorial Power, Authority & Clearance Gate (7 cols) */}
-            <div className="col-span-7 space-y-6">
-
-              {/* Monospace Badge */}
-              <div className="flex items-center gap-2.5 font-mono text-xs">
-                <span className="px-2.5 py-1 rounded bg-[#0066FF]/10 border border-[#0066FF]/30 text-[#0066FF] font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Terminal size={12} />
-                  <span>BLOOMBERG + INSHORTS FOR TECH FOUNDERS</span>
-                </span>
-                <span className="text-[#555C6E]">•</span>
-                <span className="text-[#8C93A3]">INSTITUTIONAL RADAR</span>
-              </div>
-
-              {/* Grand Serif Editorial Headline */}
-              <div className="space-y-3">
-                <h1 className="font-fraunces text-4xl lg:text-5xl xl:text-6xl text-white font-normal tracking-tight leading-[1.1]">
-                  Speed. <span className="italic text-[#D9A441]">Rigor.</span> Intelligence in your Pocket.
-                </h1>
-                <p className="text-base lg:text-lg text-[#8C93A3] font-body leading-relaxed max-w-xl">
-                  Institutional startup briefs, raw cap-table multiples, and unvarnished failure post-mortems. Cleared in <span className="text-white font-semibold underline decoration-[#D9A441]/50 underline-offset-4">under 90 seconds a day</span>.
-                </p>
-              </div>
-
-              {/* Monospace Proof Strip */}
-              <div className="grid grid-cols-4 gap-2 font-mono text-center select-none pt-1">
-                <div className="p-2.5 rounded-lg border border-[#1E232F] bg-[#0B0E14] space-y-0.5">
-                  <div className="text-sm lg:text-base font-bold text-white">60 WORDS</div>
-                  <div className="text-[9px] text-[#555C6E] uppercase">Hard Ceiling</div>
-                </div>
-                <div className="p-2.5 rounded-lg border border-[#1E232F] bg-[#0B0E14] space-y-0.5">
-                  <div className="text-sm lg:text-base font-bold text-[#0066FF]">90 SEC</div>
-                  <div className="text-[9px] text-[#555C6E] uppercase">Daily Clearance</div>
-                </div>
-                <div className="p-2.5 rounded-lg border border-[#1E232F] bg-[#0B0E14] space-y-0.5">
-                  <div className="text-sm lg:text-base font-bold text-[#D9A441]">5 DESKS</div>
-                  <div className="text-[9px] text-[#555C6E] uppercase">Continuous Wire</div>
-                </div>
-                <div className="p-2.5 rounded-lg border border-[#1E232F] bg-[#0B0E14] space-y-0.5">
-                  <div className="text-sm lg:text-base font-bold text-[#2FA8A0]">0 FLUFF</div>
-                  <div className="text-[9px] text-[#555C6E] uppercase">No Sponsored PR</div>
-                </div>
-              </div>
-
-              {/* Desktop Clearance Terminal */}
-              <div className="p-6 rounded-2xl border border-[#2A2F3A] bg-[#0B0E14] shadow-2xl space-y-4">
-                <div className="flex items-center justify-between border-b border-[#1E232F] pb-3 text-xs font-mono">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#0066FF]" />
-                    <span className="text-white font-bold uppercase tracking-wider">
-                      READER CLEARANCE TERMINAL
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-[#555C6E]">
-                    NO PASSWORD NEEDED • INSTANT ACCESS
-                  </span>
-                </div>
-
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleCompleteLogin();
-                  }}
-                  className="space-y-3"
-                >
-                  <div className="flex flex-col sm:flex-row gap-2.5">
-                    <div className="flex-1 p-3 rounded-xl bg-[#07090D] border border-[#2A2F3A] flex items-center gap-3 focus-within:ring-2 focus-within:ring-[#0066FF]/40 focus-within:border-[#0066FF] transition-all">
-                      <div className="w-8 h-8 rounded-lg bg-[#0066FF]/10 border border-[#0066FF]/30 flex items-center justify-center text-[#0066FF] shrink-0">
-                        <AtSign size={16} />
-                      </div>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="gp@venturefirm.com or founder@startup.io"
-                        required
-                        className="flex-1 bg-transparent text-sm font-mono text-white placeholder:text-[#555C6E] focus:outline-none"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="py-3 px-6 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.99] text-neutral-950 font-mono font-bold text-sm uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap disabled:opacity-50"
-                    >
-                      <span>{loading ? 'Clearing...' : 'Access Wire Feed'}</span>
-                      <ArrowRight size={16} />
-                    </button>
-                  </div>
-
-                  {/* Sector Quick Tags */}
-                  <div className="flex flex-wrap items-center gap-2 pt-1 font-mono text-[11px]">
-                    <span className="text-[#555C6E]">Tracking Focus:</span>
-                    {FOCUS_OPTIONS.map((f) => (
-                      <button
-                        key={f.id}
-                        type="button"
-                        onClick={() => setSelectedFocus(f.id)}
-                        className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                          selectedFocus === f.id
-                            ? 'bg-[#0066FF] text-white font-bold'
-                            : 'bg-[#07090D] text-[#8C93A3] border border-[#1E232F] hover:text-white'
-                        }`}
-                      >
-                        {f.icon} {f.label.split(' ')[0]}
-                      </button>
-                    ))}
-                  </div>
-                </form>
-
-                <div className="flex items-center justify-between text-[11px] text-[#555C6E] font-mono pt-1">
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 size={12} className="text-[#2FA8A0]" />
-                    Encrypted reader session
-                  </span>
-                  <span>Instant clearance • Real-time wire</span>
-                </div>
-              </div>
-
-              {/* Reader Cohort Social Proof */}
-              <div className="pt-2 flex items-center gap-3 text-xs text-[#555C6E] font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2FA8A0]" />
-                <span>Read daily by 14,800+ GPs, Founders & Analysts across Sequoia, Lightspeed, Benchmark & Accel alumni.</span>
-              </div>
-
-            </div>
-
-            {/* RIGHT COLUMN: Interactive 3-Screen Mobile Showcase (5 cols) */}
-            <div className="col-span-5 space-y-4">
-
-              {/* Container Frame */}
-              <div className="rounded-2xl border border-[#2A2F3A] bg-[#0B0E14] overflow-hidden shadow-2xl flex flex-col">
-
-                {/* Window Title Bar */}
-                <div className="bg-[#07090D] border-b border-[#1E232F] px-4 py-3 flex items-center justify-between select-none">
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#C24B3F]/70" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#D9A441]/70" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#2FA8A0]/70" />
-                    </div>
-                    <span className="ml-2 font-mono text-[11px] font-bold text-[#8C93A3] uppercase tracking-wider">
-                      MOBILE WIRE EXPERIENCE
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1 font-mono text-[10px]">
-                    <span className="text-[#D9A441]">3-STEP FLOW</span>
-                  </div>
-                </div>
-
-                {/* 3 Steps Tabs Selector */}
-                <div className="bg-[#0B0E14] border-b border-[#1E232F] p-1.5 flex items-center gap-1 font-mono text-[10px]">
-                  <button
-                    type="button"
-                    onClick={() => setDesktopShowcaseStep(1)}
-                    className={`flex-1 py-1.5 rounded-md transition-all uppercase text-center cursor-pointer ${
-                      desktopShowcaseStep === 1
-                        ? 'bg-white text-neutral-950 font-bold shadow-xs'
-                        : 'text-[#8C93A3] hover:text-white hover:bg-[#1E232F]'
-                    }`}
-                  >
-                    1. Welcome Card
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDesktopShowcaseStep(2)}
-                    className={`flex-1 py-1.5 rounded-md transition-all uppercase text-center cursor-pointer ${
-                      desktopShowcaseStep === 2
-                        ? 'bg-white text-neutral-950 font-bold shadow-xs'
-                        : 'text-[#8C93A3] hover:text-white hover:bg-[#1E232F]'
-                    }`}
-                  >
-                    2. Instant Login
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDesktopShowcaseStep(3)}
-                    className={`flex-1 py-1.5 rounded-md transition-all uppercase text-center cursor-pointer ${
-                      desktopShowcaseStep === 3
-                        ? 'bg-white text-neutral-950 font-bold shadow-xs'
-                        : 'text-[#8C93A3] hover:text-white hover:bg-[#1E232F]'
-                    }`}
-                  >
-                    3. Discover Feed
-                  </button>
-                </div>
-
-                {/* Live Preview Container (Simulating Phone Display) */}
-                <div className="p-4 bg-[#07090D] flex justify-center">
-
-                  {/* Simulated Mobile Mockup */}
-                  <div className="w-full max-w-[320px] rounded-[32px] overflow-hidden border border-neutral-700 shadow-2xl bg-white text-neutral-900 font-body">
-
-                    {/* Step 1 Showcase */}
-                    {desktopShowcaseStep === 1 && (
-                      <div className="h-[460px] flex flex-col justify-between bg-[#07090D] animate-fadeIn">
-                        <div className="relative h-48 overflow-hidden">
-                          <img src="/onboarding-hero.jpg" alt="Hero" className="w-full h-full object-cover" />
-                          <div className="absolute top-3 left-4 right-4 flex justify-between text-white text-[10px] font-mono">
-                            <span>9:41</span>
-                            <span className="text-[#D9A441] font-bold">60 WORDS</span>
-                          </div>
-                        </div>
-                        <div className="bg-white -mt-8 rounded-t-[28px] p-5 flex-1 flex flex-col justify-between space-y-3">
-                          <div className="space-y-1 text-center">
-                            <h4 className="text-base font-black font-display text-neutral-900 leading-tight">
-                              Speed, <span className="text-[#0066FF]">Rigor</span>, Intelligence
-                            </h4>
-                            <p className="text-[10px] text-neutral-500">
-                              Institutional briefs on your mobile.
-                            </p>
-                          </div>
-                          <div className="p-2.5 rounded-xl bg-[#F5F6F8] flex items-center gap-2 border border-neutral-200">
-                            <span className="text-base">🌐</span>
-                            <div className="text-[10px] truncate">
-                              <span className="block text-neutral-400">Focus:</span>
-                              <strong className="text-neutral-900">Global Venture & AI</strong>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setDesktopShowcaseStep(2)}
-                            className="w-full py-2.5 rounded-full bg-black text-white font-bold text-xs"
-                          >
-                            Continue →
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Step 2 Showcase */}
-                    {desktopShowcaseStep === 2 && (
-                      <div className="h-[460px] flex flex-col justify-between bg-[#07090D] animate-fadeIn">
-                        <div className="relative h-36 overflow-hidden">
-                          <img src="/onboarding-hero.jpg" alt="Hero" className="w-full h-full object-cover object-top" />
-                          <div className="absolute top-3 left-4 right-4 flex justify-between text-white text-[10px] font-mono">
-                            <span>9:41</span>
-                            <span className="text-white font-bold">LOGIN</span>
-                          </div>
-                        </div>
-                        <div className="bg-white -mt-8 rounded-t-[28px] p-5 flex-1 flex flex-col justify-between space-y-3">
-                          <div className="space-y-0.5 text-center">
-                            <h4 className="text-base font-bold text-neutral-900">Login</h4>
-                            <p className="text-[10px] text-neutral-500">Welcome! Please login</p>
-                          </div>
-                          <div className="space-y-2">
-                            <div className="p-2 rounded-xl bg-[#F5F6F8] border border-neutral-200 flex items-center gap-2 text-xs">
-                              <AtSign size={14} className="text-neutral-500" />
-                              <span className="text-neutral-700 font-mono text-[11px]">gp@venturefirm.com</span>
-                            </div>
-                            <div className="p-2 rounded-xl bg-[#F5F6F8] border border-neutral-200 flex items-center justify-between text-xs">
-                              <span className="text-[10px] text-neutral-600">Passwordless Clearance</span>
-                              <CheckCircle2 size={12} className="text-emerald-600" />
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-neutral-400">Skip</span>
-                            <button
-                              type="button"
-                              onClick={() => setDesktopShowcaseStep(3)}
-                              className="py-1.5 px-4 rounded-full bg-black text-white font-bold text-[10px]"
-                            >
-                              Login
-                            </button>
-                          </div>
-                          <div className="flex justify-center gap-2 pt-1">
-                            <span className="w-7 h-7 rounded-full bg-[#1877F2] text-white flex items-center justify-center text-xs font-bold">f</span>
-                            <span className="w-7 h-7 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold"></span>
-                            <span className="w-7 h-7 rounded-full bg-white border border-neutral-200 text-neutral-800 flex items-center justify-center text-xs font-bold">G</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Step 3 Showcase: Discover Feed */}
-                    {desktopShowcaseStep === 3 && (
-                      <div className="h-[460px] flex flex-col justify-between bg-[#F8F9FA] p-3 animate-fadeIn space-y-2 overflow-hidden">
-                        <div className="flex justify-between items-center px-1">
-                          <h4 className="text-xs font-black text-neutral-900">Discover Venture Atlas</h4>
-                          <span className="text-[9px] text-[#0066FF] font-bold">View All</span>
-                        </div>
-
-                        {/* Mini Breaking Deal Card */}
-                        <div className="p-2.5 rounded-xl bg-white border border-neutral-200 space-y-1">
-                          <div className="flex justify-between text-[9px]">
-                            <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 font-bold">UNICORN</span>
-                            <span className="text-neutral-400">14m ago</span>
-                          </div>
-                          <div className="text-[10px] font-bold text-neutral-900 leading-tight">
-                            Mercor closes $32M Series A at $250M
-                          </div>
-                        </div>
-
-                        {/* Mini Dispatch Card */}
-                        <div className="p-2.5 rounded-2xl bg-white border border-neutral-200 space-y-1.5">
-                          <div className="h-16 rounded-lg overflow-hidden relative">
-                            <img src="/onboarding-hero.jpg" alt="Cover" className="w-full h-full object-cover" />
-                            <span className="absolute bottom-1 left-1.5 px-1.5 py-0.5 rounded bg-black/60 text-[#D9A441] text-[8px] font-bold">
-                              STRIPE $65B
-                            </span>
-                          </div>
-                          <div className="text-[10px] font-bold text-neutral-900 leading-snug">
-                            Stripe Closes $6.5B Round at $65B Valuation
-                          </div>
-                          <div className="grid grid-cols-4 gap-1 text-center font-mono text-[8px]">
-                            <div className="p-1 rounded bg-neutral-50 font-bold">$65B</div>
-                            <div className="p-1 rounded bg-neutral-50 font-bold text-[#0066FF]">SER I</div>
-                            <div className="p-1 rounded bg-neutral-50 font-bold">Sequoia</div>
-                            <div className="p-1 rounded bg-neutral-50 font-bold">58W</div>
-                          </div>
-                        </div>
-
-                        {/* Enter Full Feed Button */}
-                        <button
-                          type="button"
-                          onClick={handleEnterFullFeed}
-                          className="w-full py-2 rounded-full bg-black text-white font-bold text-[10px] hover:bg-neutral-800 transition-colors"
-                        >
-                          Enter Live Feed →
-                        </button>
-                      </div>
-                    )}
-
-                  </div>
-
-                </div>
-
-                <div className="bg-[#07090D] border-t border-[#1E232F] px-4 py-2 flex items-center justify-between font-mono text-[10px] text-[#555C6E]">
-                  <span>INTERACTIVE MOBILE PROTOTYPE</span>
-                  <span className="text-[#2FA8A0]">LIVE ON SMARTPHONES</span>
-                </div>
-
-              </div>
-
-            </div>
-
+      {/* ─────────────────────────────────────────────────────────────
+          MAIN CONTENT WRAPPER
+      ────────────────────────────────────────────────────────────── */}
+      <main className="flex-1 py-8 sm:py-12 px-4 sm:px-6 md:px-8 space-y-16 max-w-[1440px] mx-auto w-full">
+        {/* ─────────────────────────────────────────────────────────────
+            1. MAIN HERO CONTAINER & VIDEO BACKGROUND
+        ────────────────────────────────────────────────────────────── */}
+        <section className="relative w-full max-w-[1400px] mx-auto rounded-[48px] bg-slate-950 border border-slate-800/80 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden h-[600px] flex flex-col">
+          {/* Absolutely positioned underlying video layer - NO overlays */}
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none">
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              poster="/hero-poster.jpg"
+              className="w-full h-full object-cover scale-105 transition-transform duration-1000"
+            >
+              {/* Local high-speed source (no CORS/network failure) */}
+              <source src="/hero-video.mp4" type="video/mp4" />
+              {/* CloudFront remote source */}
+              <source
+                src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260613_180732_a54afbf6-b30d-470e-861f-669871f09f67.mp4"
+                type="video/mp4"
+              />
+            </video>
           </div>
 
-        </main>
+          {/* ─────────────────────────────────────────────────────────────
+              HERO CONTENT LAYOUT
+          ────────────────────────────────────────────────────────────── */}
+          <div className="z-20 flex-1 px-8 md:px-16 pt-12 md:pt-16 flex flex-col items-start">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="max-w-3xl"
+            >
+              <h1 className="font-display text-[42px] md:text-[56px] font-medium tracking-tight leading-[1.08] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+                Foundation of the<br />new digital epoch
+              </h1>
 
-        {/* ========================================================
-            DESKTOP BENTO GRID: 60-WORD ENGINE & CAPITAL TELEMETRY
-            ======================================================== */}
-        <section className="border-t border-[#1E232F] bg-[#07090D] py-16 px-4 sm:px-6">
-          <div className="max-w-7xl mx-auto space-y-16">
+              <p className="font-sans text-[14px] md:text-[15px] text-slate-200/90 mt-4 max-w-xl font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+                Designing products, powering ecosystems, and scaling platforms that shape the future. The real-time intelligence wire for tech founders, venture capitalists, and operators.
+              </p>
 
-            {/* The 60-Word Rule Engine: "The Death of PR Fluff" */}
-            <div className="space-y-6">
-              <div className="text-center space-y-2 max-w-2xl mx-auto">
-                <div className="font-mono text-xs text-[#D9A441] uppercase tracking-widest">
-                  THE 60-WORD CONSTRAINT ENGINE
-                </div>
-                <h2 className="font-fraunces text-3xl sm:text-4xl text-white font-normal">
-                  Why 90% of tech journalism is unreadable fluff.
-                </h2>
-                <p className="text-sm text-[#8C93A3] font-body">
-                  We ban embargoed PR quotes, speculative corporate spin, and repetitive background summaries. Only raw valuation numbers, round structures, and genuine bottlenecks.
-                </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setIsContactOpen(true)}
+                  className="px-6 py-3 rounded-full bg-white text-slate-950 hover:bg-slate-100 text-[14px] font-medium transition-all shadow-lg hover:shadow-xl cursor-pointer flex items-center gap-2"
+                >
+                  <span>Contact Us</span>
+                  <ArrowRight size={14} />
+                </motion.button>
+
+                <Link
+                  href="/feed"
+                  className="px-6 py-3 rounded-full bg-white/20 hover:bg-white/30 text-white text-[14px] font-medium border border-white/30 shadow-md transition-all flex items-center gap-2 backdrop-blur-md"
+                >
+                  <span>Enter Reader Feed</span>
+                  <ChevronRight size={14} className="text-white/70" />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ─────────────────────────────────────────────────────────────
+              FLOATING BOTTOM NAVIGATION BAR
+          ────────────────────────────────────────────────────────────── */}
+          <motion.nav
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30"
+          >
+            <div className="flex items-center bg-white/90 backdrop-blur-2xl px-1.5 py-1.5 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.08)] border border-slate-200/40">
+              {/* Sparkle Logo Mark */}
+              <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm select-none">
+                ✦
               </div>
 
-              {/* Side-by-Side Comparison Container */}
-              <div className="grid grid-cols-2 gap-6 max-w-5xl mx-auto font-mono text-xs">
-
-                {/* Left: Traditional Tech News */}
-                <div className="p-6 rounded-2xl border border-[#2A2F3A] bg-[#0B0E14] space-y-4 opacity-70">
-                  <div className="flex items-center justify-between text-[#C24B3F] pb-2 border-b border-[#1E232F]">
-                    <span className="font-bold uppercase">TRADITIONAL TECH JOURNALISM</span>
-                    <span className="px-2 py-0.5 rounded bg-[#C24B3F]/10 border border-[#C24B3F]/30 text-[10px]">
-                      2,800 WORDS // 12 MIN READ
-                    </span>
-                  </div>
-                  <div className="space-y-2.5 text-[#555C6E] leading-relaxed select-none">
-                    <p className="blur-[1px]">
-                      "In an era where digital transformation continues to accelerate across global enterprise ecosystems, visionary leaders are increasingly turning to next-generation paradigms to unlock previously unimaginable efficiencies..."
-                    </p>
-                    <p className="blur-[1.5px]">
-                      "'We are thrilled to embark on this monumental journey with our esteemed partners,' remarked the CEO in a prepared statement that took three PR agencies 4 weeks to draft without saying anything..."
-                    </p>
-                    <p className="blur-[2px]">
-                      "The funding round, whose exact terms, post-money valuation, and liquidation preferences remain undisclosed to readers, will be used to aggressively hire across sales and marketing..."
-                    </p>
-                  </div>
-                  <div className="pt-2 text-[10px] text-[#C24B3F] font-bold">
-                    RESULT: 12 minutes wasted. Zero actionable venture numbers.
-                  </div>
-                </div>
-
-                {/* Right: Venture Atlas Signal Wire */}
-                <div className="p-6 rounded-2xl border-2 border-[#0066FF] bg-[#0B0E14] space-y-4 shadow-[0_0_40px_rgba(0,102,255,0.15)] relative">
-                  <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-[#0066FF] text-white text-[10px] font-bold tracking-wider uppercase">
-                    VENTURE ATLAS STANDARD
-                  </div>
-                  <div className="flex items-center justify-between text-[#0066FF] pb-2 border-b border-[#1E232F]">
-                    <span className="font-bold uppercase">INSTITUTIONAL SIGNAL BRIEF</span>
-                    <span className="px-2 py-0.5 rounded bg-[#0066FF]/10 border border-[#0066FF]/30 text-[10px] text-white">
-                      60 WORDS // 20 SECONDS
-                    </span>
-                  </div>
-                  <div className="space-y-3 font-body text-sm text-[#E6E8EC] leading-relaxed">
-                    <p>
-                      <strong className="text-white font-semibold">Mercor closed $32M Series A at $250M valuation</strong> led by Benchmark’s Peter Fenton. Run-rate crossed $50M from automated engineer placement. Syndicate took 12.8% equity; zero venture debt. Capital funds sovereign compute clusters for multimodal technical vetting.
-                    </p>
-                  </div>
-                  <div className="pt-3 border-t border-[#1E232F] grid grid-cols-3 gap-2 font-mono text-[11px]">
-                    <div className="p-2 rounded bg-[#07090D] border border-[#1E232F] text-center">
-                      <span className="text-[#555C6E] block text-[9px]">VALUATION</span>
-                      <strong className="text-[#D9A441]">$250M</strong>
-                    </div>
-                    <div className="p-2 rounded bg-[#07090D] border border-[#1E232F] text-center">
-                      <span className="text-[#555C6E] block text-[9px]">DILUTION</span>
-                      <strong className="text-white">12.8%</strong>
-                    </div>
-                    <div className="p-2 rounded bg-[#07090D] border border-[#1E232F] text-center">
-                      <span className="text-[#555C6E] block text-[9px]">EFFICIENCY</span>
-                      <strong className="text-[#2FA8A0]">36x</strong>
-                    </div>
-                  </div>
-                </div>
-
+              {/* Center Navigation Links */}
+              <div className="hidden sm:flex items-center gap-1 mx-2">
+                <button
+                  onClick={() => setIsProductsOpen(true)}
+                  className="text-slate-600 hover:text-slate-900 text-[13px] font-medium px-4 py-2 rounded-full hover:bg-slate-100/80 transition-colors cursor-pointer"
+                >
+                  Products
+                </button>
+                <button
+                  onClick={() => setIsDocsOpen(true)}
+                  className="text-slate-600 hover:text-slate-900 text-[13px] font-medium px-4 py-2 rounded-full hover:bg-slate-100/80 transition-colors cursor-pointer"
+                >
+                  Docs
+                </button>
+                <Link
+                  href="/feed"
+                  className="text-slate-600 hover:text-slate-900 text-[13px] font-medium px-4 py-2 rounded-full hover:bg-slate-100/80 transition-colors"
+                >
+                  Feed
+                </Link>
               </div>
+
+              {/* "Get in touch" Action Button (Marquee Card structure + animated hover gradient) */}
+              <button
+                onClick={() => setIsContactOpen(true)}
+                className="group relative flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-slate-200/60 shadow-sm text-slate-800 text-[13px] font-medium hover:border-slate-300 transition-all overflow-hidden cursor-pointer"
+              >
+                <div
+                  className="absolute inset-0 opacity-0 scale-150 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6)',
+                  }}
+                />
+                <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
+                  Get in touch
+                </span>
+                <ChevronRight
+                  size={14}
+                  className="relative z-10 transition-all duration-300 group-hover:text-white group-hover:translate-x-0.5"
+                />
+              </button>
             </div>
+          </motion.nav>
+        </section>
 
-            {/* Global Capital Flow Telemetry & 3D Globe */}
-            <div className="rounded-2xl border border-[#1E232F] bg-[#0B0E14] p-10 space-y-8">
-              <div className="text-center space-y-2 max-w-2xl mx-auto">
-                <div className="font-mono text-[10px] text-[#2FA8A0] uppercase tracking-wider flex items-center justify-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#2FA8A0] animate-pulse" />
-                  <span>GLOBAL CAPITAL TELEMETRY RADAR</span>
-                </div>
-                <h3 className="font-fraunces text-3xl text-white font-normal">
-                  Continuous venture deployment across primary innovation corridors
-                </h3>
-                <p className="text-sm text-[#8C93A3] font-body">
-                  Select a global node to inspect 24-hour venture capital liquidity and transaction velocity.
-                </p>
-              </div>
+        {/* ─────────────────────────────────────────────────────────────
+            2. SEAMLESS MARQUEE LOGO SCROLLER
+        ────────────────────────────────────────────────────────────── */}
+        <section className="mt-10 w-full max-w-[1400px] mx-auto overflow-hidden">
+          <div className="text-center mb-6">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 font-medium">
+              Ecosystem Backed & Researched Across Leading Tech Platforms
+            </span>
+          </div>
 
-              <TelemetryGlobe activeCoords={selectedHubCoords} />
-
-              <div className="grid grid-cols-5 gap-3 font-mono text-xs max-w-4xl mx-auto">
-                {GLOBAL_HUBS.map(hub => {
-                  const isActive = hub.coords[0] === selectedHubCoords[0];
-                  return (
-                    <button
-                      key={hub.city}
-                      type="button"
-                      onClick={() => setSelectedHubCoords(hub.coords as [number, number])}
-                      className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                        isActive
-                          ? 'border-[#0066FF] bg-[#0066FF]/10 text-white font-bold shadow-md'
-                          : 'border-[#1E232F] bg-[#07090D] text-[#8C93A3] hover:border-[#2A2F3A] hover:text-white'
-                      }`}
-                    >
-                      <div className="font-bold text-white text-xs">{hub.city}</div>
-                      <div className="text-[10px] text-[#D9A441] mt-1">{hub.volume24h} 24h</div>
-                      <div className="text-[9px] text-[#555C6E] mt-0.5">{hub.deals} Active Deals</div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* The 5 Dedicated Intelligence Desks */}
-            <div className="space-y-6">
-              <div className="text-center space-y-1 max-w-xl mx-auto">
-                <div className="font-mono text-xs text-[#D9A441] uppercase tracking-widest">
-                  CONTINUOUS COVERAGE INFRASTRUCTURE
-                </div>
-                <h3 className="font-fraunces text-3xl text-white font-normal">
-                  Five Specialized Desks. Zero Noise.
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-5 gap-4 font-mono text-xs">
-                <div className="p-4 rounded-xl border border-[#1E232F] bg-[#0B0E14] space-y-2">
-                  <div className="text-[#D9A441] font-bold text-sm flex items-center gap-1.5">
-                    <span>🦄</span>
-                    <span>UNICORNS</span>
-                  </div>
-                  <p className="text-[#8C93A3] text-[11px] font-body leading-relaxed">
-                    Valuations exceeding $1B, secondary tender offers, pre-IPO filings, and cap table reorganizations.
-                  </p>
-                  <div className="pt-2 text-[10px] text-[#555C6E] border-t border-[#1E232F]">
-                    AVG CLEARANCE: 1.1 MIN
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl border border-[#1E232F] bg-[#0B0E14] space-y-2">
-                  <div className="text-[#0066FF] font-bold text-sm flex items-center gap-1.5">
-                    <span>🤖</span>
-                    <span>AI SILICON</span>
-                  </div>
-                  <p className="text-[#8C93A3] text-[11px] font-body leading-relaxed">
-                    Inference economics, cluster energy footprint, sovereign model weights, and custom chip benchmarks.
-                  </p>
-                  <div className="pt-2 text-[10px] text-[#555C6E] border-t border-[#1E232F]">
-                    AVG CLEARANCE: 1.3 MIN
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl border border-[#1E232F] bg-[#0B0E14] space-y-2">
-                  <div className="text-[#C24B3F] font-bold text-sm flex items-center gap-1.5">
-                    <span>📉</span>
-                    <span>FAILURES</span>
-                  </div>
-                  <p className="text-[#8C93A3] text-[11px] font-body leading-relaxed">
-                    Unspared post-mortems of startups burning $50M+, covenant defaults, and liquidation auction prices.
-                  </p>
-                  <div className="pt-2 text-[10px] text-[#555C6E] border-t border-[#1E232F]">
-                    AVG CLEARANCE: 1.4 MIN
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl border border-[#1E232F] bg-[#0B0E14] space-y-2">
-                  <div className="text-[#2FA8A0] font-bold text-sm flex items-center gap-1.5">
-                    <span>💼</span>
-                    <span>FINANCE & LPS</span>
-                  </div>
-                  <p className="text-[#8C93A3] text-[11px] font-body leading-relaxed">
-                    Fund vintages, LP liquidity demands, DPI realities, capital call defaults, and GP carried interest shifts.
-                  </p>
-                  <div className="pt-2 text-[10px] text-[#555C6E] border-t border-[#1E232F]">
-                    AVG CLEARANCE: 0.9 MIN
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-xl border border-[#1E232F] bg-[#0B0E14] space-y-2">
-                  <div className="text-[#10B981] font-bold text-sm flex items-center gap-1.5">
-                    <span>🌱</span>
-                    <span>SEED RADAR</span>
-                  </div>
-                  <p className="text-[#8C93A3] text-[11px] font-body leading-relaxed">
-                    Stealth departures from tier-1 labs, pre-seed term sheet multiples, and angel syndicate cap tables.
-                  </p>
-                  <div className="pt-2 text-[10px] text-[#555C6E] border-t border-[#1E232F]">
-                    AVG CLEARANCE: 1.0 MIN
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Reader Cohort & Verification Quotes */}
-            <div className="space-y-6 pt-4">
-              <div className="font-mono text-center text-xs text-[#555C6E] uppercase tracking-widest">
-                DAILY VERDICT // READ BY GENERAL PARTNERS & TECHNICAL OPERATORS
-              </div>
-
-              <div className="grid grid-cols-3 gap-6 font-mono">
-                <div className="p-6 rounded-xl border border-[#1E232F] bg-[#0B0E14] space-y-3">
-                  <p className="text-xs text-[#A6ADB8] font-body leading-relaxed">
-                    "Traditional tech journalism is 90% PR boilerplate. Venture Atlas is the first wire where I can clear 20 funding events before my first 9 AM partner meeting."
-                  </p>
-                  <div className="pt-3 border-t border-[#1E232F] text-[11px] text-[#555C6E] flex justify-between">
-                    <span className="text-white font-bold">Partner, Series A Fund</span>
-                    <span>Bengaluru</span>
-                  </div>
-                </div>
-
-                <div className="p-6 rounded-xl border border-[#1E232F] bg-[#0B0E14] space-y-3">
-                  <p className="text-xs text-[#A6ADB8] font-body leading-relaxed">
-                    "The 60-word constraint forces the analyst to report only what matters: post-money valuation, dilution, and real technical bottlenecks. Invaluable."
-                  </p>
-                  <div className="pt-3 border-t border-[#1E232F] text-[11px] text-[#555C6E] flex justify-between">
-                    <span className="text-white font-bold">Co-Founder & CTO</span>
-                    <span>San Francisco</span>
-                  </div>
-                </div>
-
-                <div className="p-6 rounded-xl border border-[#1E232F] bg-[#0B0E14] space-y-3">
-                  <p className="text-xs text-[#A6ADB8] font-body leading-relaxed">
-                    "The failure teardowns alone are worth reading every morning. Seeing why a $70M startup burned through capital without sugarcoating saves months of trial."
-                  </p>
-                  <div className="pt-3 border-t border-[#1E232F] text-[11px] text-[#555C6E] flex justify-between">
-                    <span className="text-white font-bold">VP Product</span>
-                    <span>London</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Secondary Clearance Terminal */}
-            <div className="max-w-3xl mx-auto text-center space-y-6 pt-6">
-              <div className="p-12 rounded-2xl border border-[#2A2F3A] bg-[#0B0E14] space-y-4 shadow-2xl">
-                <div className="font-mono text-xs text-[#D9A441] uppercase tracking-wider">
-                  IMMEDIATE WIRE CLEARANCE
-                </div>
-                <h2 className="font-fraunces text-4xl text-white font-normal leading-tight">
-                  Stop scrolling 3,000-word fluff pieces.
-                </h2>
-                <p className="text-sm text-[#8C93A3] font-body max-w-lg mx-auto">
-                  Get the institutional 60-word dispatches and venture telemetry read by founders, VCs, and operators across 5 global hubs.
-                </p>
-
-                <div className="pt-2 flex justify-center">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className="px-8 py-3.5 rounded-full bg-white hover:bg-neutral-200 text-neutral-950 font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-lg cursor-pointer"
+          <div
+            className="w-full overflow-hidden"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
+            }}
+          >
+            <div className="flex w-max animate-marquee">
+              {/* First Sequence of 8 Logos */}
+              <div className="flex items-center gap-5 pr-5 shrink-0">
+                {BRAND_LOGOS.map((logo, index) => (
+                  <div
+                    key={`logo-seq1-${index}`}
+                    className="group relative h-24 w-40 shrink-0 flex items-center justify-center rounded-full bg-white border border-slate-200/60 shadow-sm hover:border-slate-300 transition-all overflow-hidden cursor-pointer"
                   >
-                    Enter Your Email at the Top Terminal
-                  </button>
-                </div>
+                    {/* Card Hover Background: Vibrant Linear Gradient */}
+                    <div
+                      className="absolute inset-0 opacity-0 scale-150 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
+                      style={{ background: logo.gradient }}
+                    />
+                    {/* Logo Icon */}
+                    <img
+                      src={logo.src}
+                      alt={logo.name}
+                      loading="lazy"
+                      className="w-8 h-8 object-contain relative z-10 transition-all duration-300 group-hover:brightness-0 group-hover:invert"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Second Identical Sequence of 8 Logos for Seamless 100% Looping */}
+              <div className="flex items-center gap-5 pr-5 shrink-0" aria-hidden="true">
+                {BRAND_LOGOS.map((logo, index) => (
+                  <div
+                    key={`logo-seq2-${index}`}
+                    className="group relative h-24 w-40 shrink-0 flex items-center justify-center rounded-full bg-white border border-slate-200/60 shadow-sm hover:border-slate-300 transition-all overflow-hidden cursor-pointer"
+                  >
+                    {/* Card Hover Background: Vibrant Linear Gradient */}
+                    <div
+                      className="absolute inset-0 opacity-0 scale-150 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
+                      style={{ background: logo.gradient }}
+                    />
+                    {/* Logo Icon */}
+                    <img
+                      src={logo.src}
+                      alt={logo.name}
+                      loading="lazy"
+                      className="w-8 h-8 object-contain relative z-10 transition-all duration-300 group-hover:brightness-0 group-hover:invert"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-
           </div>
         </section>
 
-        {/* Desktop Footer */}
-        <footer className="border-t border-[#1E232F] bg-[#07090D] py-10 px-4 sm:px-6 font-mono text-xs text-[#555C6E] select-none">
-          <div className="max-w-7xl mx-auto flex flex-row items-center justify-between gap-6">
-            <div className="space-y-1 text-left">
-              <div className="flex items-center gap-2">
-                <span className="font-fraunces text-base text-white font-bold">Venture Atlas</span>
-                <span>//</span>
-                <span className="text-[#8C93A3]">VENTUREATLAS.IN</span>
+        {/* ─────────────────────────────────────────────────────────────
+            3. INTERACTIVE 60-WORD DISPATCH SIMULATOR
+        ────────────────────────────────────────────────────────────── */}
+        <section className="w-full max-w-[1400px] mx-auto bg-white rounded-[40px] border border-slate-200/70 p-8 md:p-14 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.03)]">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-mono font-medium uppercase mb-3">
+                <Layers size={13} /> The 60-Word Engine
               </div>
-              <div className="text-[10px]">
-                ENGINEERED FOR FOUNDERS & VENTURE CAPITAL • 60-WORD DISPATCH CEILING
+              <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33]">
+                Bloomberg rigor. Inshorts scanning speed.
+              </h2>
+              <p className="text-slate-500 text-sm mt-2 max-w-xl">
+                Every story is algorithmically and editorially audited to strictly 60 words. No padding, no opinion fluff, verified source provenance.
+              </p>
+            </div>
+
+            {/* Category selection tabs */}
+            <div className="flex flex-wrap gap-2">
+              {SAMPLE_BRIEFS.map((b, idx) => (
+                <button
+                  key={b.id}
+                  onClick={() => setActiveBriefIndex(idx)}
+                  className={`px-4 py-2 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                    activeBriefIndex === idx
+                      ? 'bg-[#0a152d] text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {b.category}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Interactive Card Preview */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            {/* Left: 60-Word Card */}
+            <div className="lg:col-span-8 bg-slate-50/70 rounded-3xl p-6 md:p-8 border border-slate-200/80 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold border ${activeBrief.categoryColor}`}>
+                      {activeBrief.category}
+                    </span>
+                    <span className="text-xs text-slate-400 font-mono">·</span>
+                    <span className="text-xs text-slate-500 font-mono flex items-center gap-1">
+                      <Clock size={12} /> {activeBrief.time}
+                    </span>
+                  </div>
+
+                  <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    {activeBrief.words} WORDS
+                  </span>
+                </div>
+
+                <h3 className="font-display text-xl md:text-2xl font-medium text-[#0a1b33] leading-snug mb-4">
+                  {activeBrief.title}
+                </h3>
+
+                <p className="text-slate-700 text-base leading-relaxed font-normal">
+                  {activeBrief.text}
+                </p>
+              </div>
+
+              <div className="pt-6 mt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2 text-slate-500">
+                  <span>Source Verification:</span>
+                  <a
+                    href={activeBrief.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-slate-800 hover:text-blue-600 flex items-center gap-1 transition-colors"
+                  >
+                    {activeBrief.source} <ExternalLink size={11} />
+                  </a>
+                </div>
+
+                <Link
+                  href="/feed"
+                  className="px-4 py-2 rounded-full bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-medium transition-colors flex items-center gap-1.5 shadow-sm"
+                >
+                  Read Full Dispatch in Feed <ArrowRight size={12} />
+                </Link>
               </div>
             </div>
 
-            <div className="flex items-center gap-6 text-[11px]">
-              <Link href="/feed.xml" className="hover:text-white transition-colors">
-                RSS WIRE
-              </Link>
-              <Link href="/sitemap.xml" className="hover:text-white transition-colors">
-                SITEMAP
-              </Link>
-              <Link href="/privacy" className="hover:text-white transition-colors">
-                PRIVACY
-              </Link>
-              <Link href="/terms" className="hover:text-white transition-colors">
-                TERMS
-              </Link>
-              <Link href="/admin/login" className="text-[#D9A441] hover:underline">
-                STAFF TERMINAL
+            {/* Right: Key Institutional Metrics */}
+            <div className="lg:col-span-4 bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm flex flex-col justify-between space-y-6">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-widest text-slate-400 block mb-4">
+                  Telemetry Analysis
+                </span>
+                <div className="space-y-4">
+                  {activeBrief.keyStats.map((stat, i) => (
+                    <div key={i} className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                      <span className="text-xs text-slate-500 font-medium block">{stat.label}</span>
+                      <span className="text-2xl font-display font-medium text-[#0a1b33] mt-1 block">
+                        {stat.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 text-xs text-blue-900 leading-relaxed">
+                <span className="font-semibold block mb-1">Venture Atlas Standard</span>
+                Curated by algorithmic extraction and verified by tech analysts. No sponsored placement.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────────────────────
+            4. SPECIALIZED INTELLIGENCE DESKS (BENTO GRID)
+        ────────────────────────────────────────────────────────────── */}
+        <section className="w-full max-w-[1400px] mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold block mb-2">
+              Coverage Scope
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl font-medium text-[#0a1b33] tracking-tight">
+              Six Specialized Intelligence Desks
+            </h2>
+            <p className="text-slate-500 text-sm mt-3">
+              Institutional rigor applied to the exact spaces where technology, venture financing, and market power converge.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SPECIALIZED_DESKS.map((desk, idx) => (
+              <div
+                key={idx}
+                className="group relative bg-white rounded-3xl p-8 border border-slate-200/70 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center">
+                      {desk.icon}
+                    </div>
+                    <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                      {desk.tag}
+                    </span>
+                  </div>
+
+                  <h3 className="font-display text-lg font-medium text-[#0a1b33] mb-2">
+                    {desk.title}
+                  </h3>
+
+                  <p className="text-slate-500 text-xs leading-relaxed font-normal">
+                    {desk.description}
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600 font-medium">
+                  <span>Explore desk</span>
+                  <ChevronRight size={14} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────────────────────
+            5. GLOBAL TELEMETRY HUBS RADAR
+        ────────────────────────────────────────────────────────────── */}
+        <section className="w-full max-w-[1400px] mx-auto bg-white rounded-[40px] border border-slate-200/70 p-8 md:p-14 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-mono font-medium uppercase mb-3">
+                <Activity size={13} /> Real-Time Dealflow
+              </div>
+              <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33]">
+                Global Capital Corridors
+              </h2>
+              <p className="text-slate-500 text-sm mt-2">
+                Live volume and deal telemetry aggregated across the five primary startup venture rails.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs font-mono text-slate-500 bg-slate-50 px-4 py-2 rounded-full border border-slate-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>LIVE 24H SYNCHRONIZED FEED</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {GLOBAL_HUBS.map((hub, i) => (
+              <div
+                key={i}
+                className="p-5 rounded-2xl bg-slate-50/70 border border-slate-200/70 hover:bg-slate-50 hover:border-slate-300 transition-all"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] font-mono text-slate-400">{hub.region}</span>
+                  <span className="text-xs font-mono font-bold text-emerald-600">{hub.pace}</span>
+                </div>
+                <h4 className="font-display text-base font-semibold text-[#0a1b33]">{hub.city}</h4>
+                <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-[10px] text-slate-400 block font-mono">24H VOLUME</span>
+                    <span className="font-display font-medium text-slate-900 text-sm">{hub.volume24h}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-slate-400 block font-mono">DEALS</span>
+                    <span className="font-display font-medium text-slate-900 text-sm">{hub.deals}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────────────────────
+            6. EXECUTIVE ACCESS & NEWSLETTER CAPTURE TERMINAL
+        ────────────────────────────────────────────────────────────── */}
+        <section className="w-full max-w-[1400px] mx-auto bg-gradient-to-b from-white to-slate-50/80 rounded-[40px] border border-slate-200/80 p-8 md:p-16 text-center shadow-sm">
+          <div className="max-w-2xl mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg mx-auto mb-6 shadow-md">
+              ✦
+            </div>
+
+            <h2 className="font-display text-3xl md:text-5xl font-medium tracking-tight text-[#0a1b33] leading-tight">
+              Unlock the Full 60-Word Venture Intelligence Wire
+            </h2>
+
+            <p className="text-slate-600 text-sm md:text-base mt-4 font-normal leading-relaxed">
+              Every critical funding round, AI compute milestone, failure post-mortem, and valuation shift — delivered every morning with zero sponsored fluff.
+            </p>
+
+            {captureDone ? (
+              <div className="mt-8 p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center justify-center gap-2">
+                <Check size={18} />
+                <span>You're on the wire. We will dispatch the next morning briefing to your inbox.</span>
+              </div>
+            ) : (
+              <form onSubmit={handleCaptureSubmit} className="mt-8 max-w-md mx-auto flex flex-col sm:flex-row gap-2.5">
+                <input
+                  type="email"
+                  required
+                  value={captureEmail}
+                  onChange={e => setCaptureEmail(e.target.value)}
+                  placeholder="founder@venture.com"
+                  className="flex-1 px-5 py-3.5 rounded-full bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all font-sans shadow-sm"
+                />
+                <button
+                  type="submit"
+                  className="px-7 py-3.5 rounded-full bg-[#0a152d] text-white text-sm font-medium hover:bg-slate-800 transition-all shadow-md cursor-pointer whitespace-nowrap"
+                >
+                  Get VIP Wire
+                </button>
+              </form>
+            )}
+
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 font-mono">
+              <span className="flex items-center gap-1">
+                <Check size={13} className="text-emerald-500" /> Free Morning Wire
+              </span>
+              <span>·</span>
+              <span className="flex items-center gap-1">
+                <Check size={13} className="text-emerald-500" /> 60-Word Strict Constraint
+              </span>
+              <span>·</span>
+              <span className="flex items-center gap-1">
+                <Check size={13} className="text-emerald-500" /> Primary Source Links
+              </span>
+            </div>
+
+            <div className="mt-8">
+              <Link
+                href="/feed"
+                className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:underline transition-colors"
+              >
+                Or enter the live web app directly <ArrowRight size={14} />
               </Link>
             </div>
           </div>
-        </footer>
+        </section>
+      </main>
 
-      </div>
+      {/* ─────────────────────────────────────────────────────────────
+          7. EDITORIAL FOOTER
+      ────────────────────────────────────────────────────────────── */}
+      <footer className="w-full border-t border-slate-200/80 bg-white py-12 px-6 md:px-12 mt-16 text-xs text-slate-500 select-none">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+              ✦
+            </div>
+            <div>
+              <span className="font-display font-medium text-slate-900 text-sm block">Venture Atlas</span>
+              <span className="text-[11px] text-slate-400">The 60-word tech & venture intelligence platform</span>
+            </div>
+          </div>
 
+          <div className="flex flex-wrap items-center gap-6 text-slate-600 font-medium">
+            <Link href="/feed" className="hover:text-slate-900 transition-colors">Feed</Link>
+            <button onClick={() => setIsProductsOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Products</button>
+            <button onClick={() => setIsDocsOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Docs</button>
+            <button onClick={() => setIsContactOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Contact</button>
+            <Link href="/about" className="hover:text-slate-900 transition-colors">About</Link>
+            <Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-slate-900 transition-colors">Terms</Link>
+          </div>
+
+          <div className="font-mono text-slate-400 text-[11px]">
+            © {new Date().getFullYear()} Venture Atlas Intelligence Inc. All rights reserved.
+          </div>
+        </div>
+      </footer>
+
+      {/* ─────────────────────────────────────────────────────────────
+          8. INTERACTIVE MODALS (Contact Us, Products, Docs)
+      ────────────────────────────────────────────────────────────── */}
+      {/* Contact Modal */}
+      <AnimatePresence>
+        {isContactOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="relative w-full max-w-lg bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl overflow-hidden"
+            >
+              <button
+                onClick={() => setIsContactOpen(false)}
+                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-base font-bold">
+                  ✦
+                </div>
+                <div>
+                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">Get in touch</h3>
+                  <p className="text-xs text-slate-500 font-sans">Direct access to the intelligence network</p>
+                </div>
+              </div>
+
+              {isSubmitted ? (
+                <div className="py-10 text-center flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-3">
+                    <Check size={24} />
+                  </div>
+                  <h4 className="text-lg font-medium text-slate-900">Message dispatched</h4>
+                  <p className="text-sm text-slate-500 mt-1">Our team will reach out within 24 hours.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit} className="space-y-4 mt-6">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 mb-1.5 font-sans">
+                      Work Email
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={contactEmail}
+                      onChange={e => setContactEmail(e.target.value)}
+                      placeholder="founder@venture.com"
+                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all font-sans"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 mb-1.5 font-sans">
+                      Note or Inquiry (Optional)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={contactMessage}
+                      onChange={e => setContactMessage(e.target.value)}
+                      placeholder="Tell us what you are building or looking for..."
+                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all resize-none font-sans"
+                    />
+                  </div>
+                  <div className="pt-2 flex items-center justify-between gap-3">
+                    <Link
+                      href="/feed"
+                      className="text-xs text-slate-500 hover:text-slate-900 font-medium transition-colors flex items-center gap-1"
+                    >
+                      Enter Feed Directly <ArrowRight size={12} />
+                    </Link>
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 rounded-full bg-[#0a152d] text-white text-sm font-medium hover:bg-slate-800 transition-all shadow-sm cursor-pointer"
+                    >
+                      Send Message
+                    </button>
+                  </div>
+                </form>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Products Modal */}
+      <AnimatePresence>
+        {isProductsOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="relative w-full max-w-xl bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl"
+            >
+              <button
+                onClick={() => setIsProductsOpen(false)}
+                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-base font-bold">
+                  ✦
+                </div>
+                <div>
+                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">Ecosystem Products</h3>
+                  <p className="text-xs text-slate-500 font-sans">Real-time venture telemetry & intelligence suite</p>
+                </div>
+              </div>
+
+              <div className="grid gap-3">
+                <Link
+                  href="/feed"
+                  onClick={() => setIsProductsOpen(false)}
+                  className="p-4 rounded-2xl border border-slate-200/80 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50 transition-all group flex items-start gap-4"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                    <Layers size={20} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-display font-medium text-slate-900 text-sm">60-Word Dispatches</h4>
+                      <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Distilled intelligence briefs across AI, Unicorns, Failures, and Seed rounds with 0 fluff.
+                    </p>
+                  </div>
+                </Link>
+
+                <div className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                    <Terminal size={20} />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-display font-medium text-slate-900 text-sm">Global Telemetry Hub</h4>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Live tracking across Bengaluru, SF, London, Singapore, and NYC deal flows.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-100 flex justify-end">
+                <Link
+                  href="/feed"
+                  className="px-6 py-2.5 rounded-full bg-[#0a152d] text-white text-sm font-medium hover:bg-slate-800 transition-all shadow-sm flex items-center gap-2"
+                >
+                  Open Reader Feed <ArrowRight size={14} />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Docs Modal */}
+      <AnimatePresence>
+        {isDocsOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="relative w-full max-w-lg bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl"
+            >
+              <button
+                onClick={() => setIsDocsOpen(false)}
+                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-base font-bold">
+                  <BookOpen size={20} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">Documentation & Architecture</h3>
+                  <p className="text-xs text-slate-500 font-sans">Venture Atlas System Specifications</p>
+                </div>
+              </div>
+
+              <div className="space-y-3 text-xs text-slate-600 font-sans leading-relaxed">
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                  <p className="font-medium text-slate-900 mb-1">Architecture & Data Model</p>
+                  High-speed Next.js frontend with Supabase real-time telemetry, edge-cached ISR for ultra-low latency feeds.
+                </div>
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                  <p className="font-medium text-slate-900 mb-1">Editorial Precision</p>
+                  Every story is algorithmically and editorially audited to adhere to strict 60-word constraints with original source provenance.
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+                <Link
+                  href="/about"
+                  className="text-xs text-slate-600 hover:text-slate-900 font-medium flex items-center gap-1"
+                >
+                  Read full about page <ExternalLink size={12} />
+                </Link>
+                <button
+                  onClick={() => setIsDocsOpen(false)}
+                  className="px-5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
-};
+}

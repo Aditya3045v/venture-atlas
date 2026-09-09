@@ -45,9 +45,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['var(--font-display)', '"Space Grotesk"', 'sans-serif'],
+        display: ['"Outfit"', 'var(--font-display)', 'sans-serif'],
+        sans: ['"Inter"', 'var(--font-sans)', 'sans-serif'],
         fraunces: ['var(--font-fraunces)', 'Georgia', 'serif'],
-        body: ['var(--font-body)', '"Plus Jakarta Sans"', 'var(--font-inter)', '"Inter"', 'system-ui', 'sans-serif'],
+        body: ['var(--font-sans)', '"Inter"', '"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
         mono: ['var(--font-plex-mono)', 'var(--font-mono)', '"JetBrains Mono"', '"Space Mono"', 'monospace'],
         plex: ['var(--font-plex-mono)', 'monospace'],
       },

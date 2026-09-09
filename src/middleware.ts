@@ -109,7 +109,7 @@ export async function middleware(request: NextRequest) {
     path === '/cookies' ||
     path === '/robots.txt' ||
     path.startsWith('/_next') ||
-    path.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|mp3|txt|xml)$/);
+    path.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|mp3|mp4|webm|txt|xml)$/);
 
   if (!isPublicOpenRoute) {
     if (!hasReaderCookie && !isStaff) {
@@ -123,6 +123,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp3)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp3|mp4|webm)$).*)',
   ],
 };
