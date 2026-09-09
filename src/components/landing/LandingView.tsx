@@ -279,37 +279,13 @@ export function LandingView() {
   return (
     <div className="min-h-screen w-full bg-[#f9fafb] text-slate-900 flex flex-col select-none font-sans">
       {/* ─────────────────────────────────────────────────────────────
-          TOP BRAND STRIP & STATUS
+          MAIN CONTENT WRAPPER (Tightened top spacing on mobile)
       ────────────────────────────────────────────────────────────── */}
-      <div className="w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-md px-6 py-2.5 flex items-center justify-between text-xs font-mono text-slate-500">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-semibold text-slate-800 uppercase tracking-wider">VENTURE ATLAS WIRE</span>
-          </div>
-          <span className="hidden md:inline text-slate-300">|</span>
-          <span className="hidden md:inline">BLOOMBERG + INSHORTS FOR TECH FOUNDERS & VCS</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <span className="hidden sm:inline">GLOBAL LATENCY: 24MS</span>
-          <Link
-            href="/feed" onClick={handleDirectEnter}
-            className="flex items-center gap-1 text-slate-800 hover:text-blue-600 font-medium transition-colors"
-          >
-            Reader Feed <ArrowRight size={12} />
-          </Link>
-        </div>
-      </div>
-
-      {/* ─────────────────────────────────────────────────────────────
-          MAIN CONTENT WRAPPER
-      ────────────────────────────────────────────────────────────── */}
-      <main className="flex-1 py-8 sm:py-12 px-4 sm:px-6 md:px-8 space-y-16 max-w-[1440px] mx-auto w-full">
+      <div className="flex-1 pt-1 sm:pt-4 pb-8 sm:pb-12 px-2 sm:px-6 md:px-8 space-y-10 sm:space-y-16 max-w-[1440px] mx-auto w-full">
         {/* ─────────────────────────────────────────────────────────────
-            1. MAIN HERO CONTAINER & VIDEO BACKGROUND
+            1. MAIN HERO CONTAINER & VIDEO BACKGROUND (Pronounced Curved Radius)
         ────────────────────────────────────────────────────────────── */}
-        <section className="relative w-full max-w-[1400px] mx-auto rounded-[48px] bg-slate-950 border border-slate-800/80 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden h-[600px] flex flex-col">
+        <section className="relative w-full max-w-[1400px] mx-auto rounded-[44px] sm:rounded-[60px] md:rounded-[76px] lg:rounded-[88px] bg-slate-950 border border-slate-800/80 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden min-h-[500px] sm:min-h-[540px] md:h-[600px] flex flex-col">
           {/* Absolutely positioned underlying video layer - NO overlays */}
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none">
             <video
@@ -335,22 +311,22 @@ export function LandingView() {
           {/* ─────────────────────────────────────────────────────────────
               HERO CONTENT LAYOUT
           ────────────────────────────────────────────────────────────── */}
-          <div className="z-20 flex-1 px-8 md:px-16 pt-12 md:pt-16 flex flex-col items-start">
+          <div className="z-20 flex-1 px-5 sm:px-10 md:px-16 pt-6 sm:pt-10 md:pt-16 flex flex-col items-start">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="max-w-3xl"
             >
-              <h1 className="font-display text-[42px] md:text-[56px] font-medium tracking-tight leading-[1.08] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+              <h1 className="font-display text-[32px] sm:text-[44px] md:text-[56px] font-medium tracking-tight leading-[1.12] md:leading-[1.08] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
                 Foundation of the<br />new digital epoch
               </h1>
 
-              <p className="font-sans text-[14px] md:text-[15px] text-slate-200/90 mt-4 max-w-xl font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+              <p className="font-sans text-[14px] md:text-[15px] text-slate-200/90 mt-3 sm:mt-4 max-w-xl font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
                 Designing products, powering ecosystems, and scaling platforms that shape the future. The real-time intelligence wire for tech founders, venture capitalists, and operators.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3">
                 <motion.button
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
@@ -379,7 +355,7 @@ export function LandingView() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30"
+            className="absolute bottom-4 sm:bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-30 w-auto max-w-[95%]"
           >
             <div className="flex items-center bg-white/90 backdrop-blur-2xl px-1.5 py-1.5 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.08)] border border-slate-200/40">
               {/* Sparkle Logo Mark */}
@@ -776,7 +752,7 @@ export function LandingView() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
 
       {/* ─────────────────────────────────────────────────────────────
           7. EDITORIAL FOOTER

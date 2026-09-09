@@ -6,7 +6,7 @@ export const Footer: React.FC = () => {
     <footer className="w-full border-t border-border/80 bg-surface-muted/60 py-12 px-4 sm:px-6 lg:px-8 mt-16 transition-colors select-none">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="space-y-3">
-          <Link href="/" className="inline-block">
+          <Link href="/landing" className="inline-block" title="Venture Atlas">
             {/* Dark mode logo */}
             <img
               src="/logo-dark.png"

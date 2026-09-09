@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
         {/* Left: Official Brand Logo & Title */}
         <div className="flex items-center gap-6">
-          <Link href={pathname === '/landing' ? '/landing' : '/'} className="flex items-center group py-1.5" title="Venture Atlas">
+          <Link href="/landing" className="flex items-center group py-1.5" title="Venture Atlas">
             {/* Dark Mode Logo */}
             <img
               src="/logo-dark.png"
