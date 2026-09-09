@@ -76,9 +76,22 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 2. Public SEO & Content Routes (Accessible to crawlers, search engines & visitors)
+  // 2. Cold visitor gate: users opening the website root '/' must reach the landing page first
+  const hasReaderCookie =
+    Boolean(request.cookies.get('va_reader')?.value) ||
+    Boolean(request.cookies.get('va_reader_client')?.value);
+  const isStaff = !!user;
+
+  if (path === '/') {
+    if (!hasReaderCookie && !isStaff) {
+      const landingUrl = new URL('/landing', request.url);
+      return NextResponse.redirect(landingUrl);
+    }
+    return response;
+  }
+
+  // 3. Public SEO & Content Routes (Accessible to crawlers, search engines & visitors)
   const isPublicOpenRoute =
-    path === '/' ||
     path === '/landing' ||
     path.startsWith('/articles/') ||
     path.startsWith('/blogs') ||
@@ -99,13 +112,7 @@ export async function middleware(request: NextRequest) {
     path.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|mp3|txt|xml)$/);
 
   if (!isPublicOpenRoute) {
-    const hasReaderCookie =
-      Boolean(request.cookies.get('va_reader')?.value) ||
-      Boolean(request.cookies.get('va_reader_client')?.value);
-    const isStaff = !!user;
-
     if (!hasReaderCookie && !isStaff) {
-      // Redirect unverified visitor smoothly to landing page to enter email
       const landingUrl = new URL('/landing', request.url);
       return NextResponse.redirect(landingUrl);
     }

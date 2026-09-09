@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 const readerEnterSchema = z.object({
   email: z.string().email('Invalid email address'),
   source: z.string().optional().default('LANDING_PAGE'),
+  interests: z.array(z.string()).optional(),
 });
 
 export async function POST(req: NextRequest) {
