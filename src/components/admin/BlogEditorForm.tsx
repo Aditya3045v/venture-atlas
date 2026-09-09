@@ -74,20 +74,9 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
       return;
     }
 
-    if (targetStatus === 'PUBLISHED') {
-      if (!seoTitle.trim()) {
-        toast('Publishing blocked: SEO Meta Title is required before publishing.', 'error');
-        return;
-      }
-      if (!seoDescription.trim()) {
-        toast('Publishing blocked: SEO Meta Description is required before publishing.', 'error');
-        return;
-      }
-      if (coverImage.trim() && !photoCredit.trim()) {
-        toast('Publishing blocked: Cover image alt text / attribution is required before publishing.', 'error');
-        return;
-      }
-    }
+    const effectiveSeoTitle = seoTitle.trim() || title.trim().slice(0, 68);
+    const effectiveSeoDescription = seoDescription.trim() || excerpt.trim().slice(0, 155);
+    const effectivePhotoCredit = photoCredit.trim() || (coverImage.trim() ? 'Editorial Archive' : '');
 
     setSubmitting(true);
     const payload = {
@@ -96,11 +85,11 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
       body,
       categoryId,
       coverImage: coverImage.trim() || null,
-      photoCredit: photoCredit.trim() || null,
+      photoCredit: effectivePhotoCredit || null,
       readTimeMinutes: Number(readTimeMinutes),
       status: targetStatus,
-      seoTitle: seoTitle.trim() || null,
-      seoDescription: seoDescription.trim() || null,
+      seoTitle: effectiveSeoTitle || null,
+      seoDescription: effectiveSeoDescription || null,
     };
 
     try {

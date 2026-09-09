@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { categorySchema } from '@/lib/validation';
-import { getCurrentUser, canPublish } from '@/lib/auth';
+import { getCurrentUser, canPublish } from '@/lib/auth/staff';
 import { logAuditEvent } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';

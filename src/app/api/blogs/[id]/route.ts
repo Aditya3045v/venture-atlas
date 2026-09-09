@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { blogSchema } from '@/lib/validation';
-import { getCurrentUser, canEdit, canPublish } from '@/lib/auth';
+import { getCurrentUser, canEdit, canPublish } from '@/lib/auth/staff';
 import { logAuditEvent } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
@@ -18,6 +18,14 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 
   try {
     const json = await req.json();
+
+    if (!json.seoTitle || !String(json.seoTitle).trim()) {
+      json.seoTitle = (json.title || '').slice(0, 68);
+    }
+    if (!json.seoDescription || !String(json.seoDescription).trim()) {
+      json.seoDescription = (json.excerpt || '').slice(0, 155);
+    }
+
     const validated = blogSchema.parse(json);
 
     const { data: updated, error } = await supabaseAdmin
@@ -31,6 +39,8 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
         read_time_minutes: validated.readTimeMinutes || 4,
         status: validated.status as any,
         published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
+        seo_title: validated.seoTitle || null,
+        seo_description: validated.seoDescription || null,
       })
       .eq('id', params.id)
       .select()

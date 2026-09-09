@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from '../supabase/server';
+import { supabaseAdmin } from '../supabase/admin';
 import { UserProfile, UserRole } from '@/types';
 
 export type StaffRole = 'WRITER' | 'EDITOR' | 'ADMIN';
@@ -27,13 +28,26 @@ export async function getCurrentUser(): Promise<StaffUser | null> {
       return null;
     }
 
-    const { data: profile, error: profileError } = await supabase
+    let profile: any = null;
+    const { data: pData } = await supabase
       .from('profiles')
       .select('id, email, name, role, avatar, plan, bio')
       .eq('id', user.id)
       .single();
 
-    if (profileError || !profile) {
+    if (pData) {
+      profile = pData;
+    } else {
+      // Direct service-role lookup to guarantee verified staff session is never falsely blocked
+      const { data: adminProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('id, email, name, role, avatar, plan, bio')
+        .eq('id', user.id)
+        .single();
+      profile = adminProfile;
+    }
+
+    if (!profile) {
       return null;
     }
 

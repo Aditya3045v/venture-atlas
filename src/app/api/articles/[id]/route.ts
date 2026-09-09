@@ -59,6 +59,18 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     }
 
     const json = await req.json();
+
+    // Auto-generate fallbacks for SEO & Photo credit if omitted
+    if (!json.seoTitle || !String(json.seoTitle).trim()) {
+      json.seoTitle = (json.title || '').slice(0, 68);
+    }
+    if (!json.seoDescription || !String(json.seoDescription).trim()) {
+      json.seoDescription = (json.summary || '').slice(0, 155);
+    }
+    if (json.coverImage && (!json.photoCredit || !String(json.photoCredit).trim())) {
+      json.photoCredit = 'Editorial Archive';
+    }
+
     const validated = articleSchema.parse(json);
 
     // Permission enforcement: WRITER cannot publish directly

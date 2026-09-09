@@ -25,6 +25,14 @@ export async function POST(req: NextRequest) {
 
   try {
     const json = await req.json();
+
+    if (!json.seoTitle || !String(json.seoTitle).trim()) {
+      json.seoTitle = (json.title || '').slice(0, 68);
+    }
+    if (!json.seoDescription || !String(json.seoDescription).trim()) {
+      json.seoDescription = (json.excerpt || '').slice(0, 155);
+    }
+
     const validated = blogSchema.parse(json);
 
     if (user.role === 'WRITER' && validated.status === 'PUBLISHED') {
@@ -47,6 +55,8 @@ export async function POST(req: NextRequest) {
       read_time_minutes: validated.readTimeMinutes || 4,
       status: validated.status as any,
       published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
+      seo_title: validated.seoTitle || null,
+      seo_description: validated.seoDescription || null,
     };
 
     const { data, error } = await supabaseAdmin

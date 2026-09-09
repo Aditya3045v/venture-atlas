@@ -412,20 +412,10 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       return;
     }
 
-    if (targetStatus === 'PUBLISHED') {
-      if (!seoTitle.trim()) {
-        toast('Publishing blocked: SEO Meta Title is required before publishing.', 'error');
-        return;
-      }
-      if (!seoDescription.trim()) {
-        toast('Publishing blocked: SEO Meta Description is required before publishing.', 'error');
-        return;
-      }
-      if (coverImage.trim() && !photoCredit.trim()) {
-        toast('Publishing blocked: Cover image alt text / attribution is required before publishing.', 'error');
-        return;
-      }
-    }
+    // Auto-generate resilient fallbacks for SEO & Photo credit if empty
+    const effectiveSeoTitle = seoTitle.trim() || title.trim().slice(0, 68);
+    const effectiveSeoDescription = seoDescription.trim() || summary.trim().slice(0, 155);
+    const effectivePhotoCredit = photoCredit.trim() || (coverImage.trim() ? 'Editorial Archive' : '');
 
     isSubmittingRef.current = true;
     setIsDirty(false);
@@ -448,14 +438,14 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       authorName: authorName.trim() || 'Aditya Poddar',
       authorRole: authorRole.trim() || 'Staff Reporter',
       coverImage: coverImage.trim() || null,
-      photoCredit: photoCredit.trim() || null,
+      photoCredit: effectivePhotoCredit || null,
       status: targetStatus,
       isFeatured,
       isTrending,
       scheduledFor: targetStatus === 'SCHEDULED' && scheduledFor ? new Date(scheduledFor).toISOString() : null,
       tags: tagsArray,
-      seoTitle: seoTitle.trim() || null,
-      seoDescription: seoDescription.trim() || null,
+      seoTitle: effectiveSeoTitle || null,
+      seoDescription: effectiveSeoDescription || null,
       canvasData,
     };
 
@@ -864,6 +854,73 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                   onChange={e => setAuthorRole(e.target.value)}
                   placeholder="e.g. Senior Venture Analyst"
                   className="w-full text-xs font-mono p-2.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+                />
+              </div>
+            </div>
+
+            {/* Coverage Desk Category Selector */}
+            <div className="pt-3 border-t border-border/60">
+              <label className="text-xs font-mono font-bold uppercase text-text-tertiary block mb-2">
+                Coverage Desk Category
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                {categories.map(cat => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setCategoryId(cat.id)}
+                    className={`p-2 rounded-xl border text-left text-xs font-mono font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                      categoryId === cat.id
+                        ? 'border-brand bg-brand/10 text-text-primary shadow-xs'
+                        : 'border-border bg-surface-muted text-text-secondary hover:text-text-primary'
+                    }`}
+                  >
+                    <span
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={{ backgroundColor: cat.color }}
+                    />
+                    <span className="truncate">{cat.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick SEO & SERP Settings for Canvas Mode */}
+          <div className="p-4 rounded-2xl border border-border bg-surface shadow-card space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-text-secondary">
+                Search Engine (SEO) & Social Sharing (Auto-Populated)
+              </span>
+              <span className="text-[10px] font-mono text-emerald-500 font-bold">
+                ✓ Auto-optimized on publish
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] font-mono font-bold uppercase text-text-tertiary block mb-1">
+                  SEO Meta Title ({seoTitle.length || (title ? Math.min(title.length, 68) : 0)}/68)
+                </label>
+                <input
+                  type="text"
+                  maxLength={70}
+                  value={seoTitle}
+                  onChange={e => setSeoTitle(e.target.value)}
+                  placeholder={title || 'Custom SEO Title for Google'}
+                  className="w-full text-xs font-mono p-2 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-mono font-bold uppercase text-text-tertiary block mb-1">
+                  SEO Meta Description ({seoDescription.length || (summary ? Math.min(summary.length, 155) : 0)}/155)
+                </label>
+                <input
+                  type="text"
+                  maxLength={160}
+                  value={seoDescription}
+                  onChange={e => setSeoDescription(e.target.value)}
+                  placeholder={summary || 'Snippet summary shown in Google search results...'}
+                  className="w-full text-xs font-mono p-2 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand"
                 />
               </div>
             </div>

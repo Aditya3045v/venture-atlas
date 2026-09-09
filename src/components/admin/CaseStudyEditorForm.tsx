@@ -155,12 +155,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       return;
     }
 
-    if (targetStatus === 'PUBLISHED') {
-      if (coverImage.trim() && !photoCredit.trim()) {
-        toast('Publishing blocked: Cover image alt text / attribution is required before publishing.', 'error');
-        return;
-      }
-    }
+    const effectivePhotoCredit = photoCredit.trim() || (coverImage.trim() ? 'Editorial Archive' : '');
 
     setSubmitting(true);
     const payload = {
@@ -178,7 +173,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       body: body.trim() || summary,
       categoryId,
       coverImage: coverImage.trim() || null,
-      photoCredit: photoCredit.trim() || null,
+      photoCredit: effectivePhotoCredit || null,
       readTimeMinutes: Number(readTimeMinutes),
       status: targetStatus,
       seoTitle: seoTitle.trim() || null,

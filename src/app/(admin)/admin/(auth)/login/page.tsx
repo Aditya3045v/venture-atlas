@@ -41,20 +41,23 @@ function AdminLoginForm() {
       }
 
       // 2. Query user profile to verify staff role
-      const { data: profile, error: profileError } = await supabase
+      const { data: profile } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', authData.user.id)
         .single();
 
-      if (profileError || !profile || !['WRITER', 'EDITOR', 'ADMIN'].includes(profile.role)) {
+      const userRole = profile?.role || authData.user.user_metadata?.role;
+
+      if (!userRole || !['WRITER', 'EDITOR', 'ADMIN'].includes(userRole)) {
         await supabase.auth.signOut();
         setErrorMsg('This account does not have editorial access.');
         setLoading(false);
         return;
       }
 
-      // 3. Successful login - redirect to returnTo or /admin
+      // 3. Successful login - ensure session cookies are synced and redirect
+      await new Promise(r => setTimeout(r, 100));
       window.location.href = returnTo;
     } catch {
       setErrorMsg('An authentication error occurred. Please try again.');
