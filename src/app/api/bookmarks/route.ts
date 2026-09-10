@@ -5,9 +5,9 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const staffUser = await getCurrentUser();
+    const staffUser = await getCurrentUser(req);
     const reader = await getReader();
 
     if (!staffUser && !reader) {
@@ -44,7 +44,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const staffUser = await getCurrentUser();
+    const staffUser = await getCurrentUser(req);
     const reader = await getReader();
 
     if (!staffUser && !reader) {

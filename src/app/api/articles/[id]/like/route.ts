@@ -14,7 +14,7 @@ export async function POST(
     const body = await req.json().catch(() => ({}));
     const { liked = true } = body;
 
-    const staffUser = await getCurrentUser();
+    const staffUser = await getCurrentUser(req);
     const reader = await getReader();
 
     if (!staffUser && !reader) {

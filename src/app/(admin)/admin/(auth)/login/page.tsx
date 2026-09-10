@@ -71,6 +71,9 @@ function AdminLoginForm() {
       // 3. Successful login - ensure session cookies are synced and redirect
       try {
         document.cookie = 'va_admin_session=1; path=/; max-age=2592000; SameSite=Lax';
+        if (authData.session?.access_token) {
+          document.cookie = `va_admin_token=${authData.session.access_token}; path=/; max-age=2592000; SameSite=Lax`;
+        }
       } catch {}
       await new Promise(r => setTimeout(r, 150));
       window.location.href = returnTo;

@@ -10,7 +10,7 @@ interface RouteContext {
 }
 
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(req);
   if (!user || !canModerate(user.role)) {
     return NextResponse.json(
       { error: 'Unauthorized: Editor or Admin privileges required.' },
@@ -55,7 +55,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 }
 
 export async function DELETE(req: NextRequest, { params }: RouteContext) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(req);
   if (!user || !canModerate(user.role)) {
     return NextResponse.json(
       { error: 'Unauthorized: Editor or Admin privileges required.' },

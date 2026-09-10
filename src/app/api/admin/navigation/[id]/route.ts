@@ -17,8 +17,8 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'ADMIN') {
+  const user = await getCurrentUser(req);
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
     return NextResponse.json({ error: 'Unauthorized: Administrator privileges required.' }, { status: 403 });
   }
 
@@ -70,8 +70,8 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'ADMIN') {
+  const user = await getCurrentUser(req);
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
     return NextResponse.json({ error: 'Unauthorized: Administrator privileges required.' }, { status: 403 });
   }
 

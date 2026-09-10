@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const staffUser = await getCurrentUser();
+    const staffUser = await getCurrentUser(req);
     const reader = await getReader();
 
     if (!staffUser && !reader) {

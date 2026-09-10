@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   const cursorId = searchParams.get('cursor_id');
 
   try {
-    const staffUser = await getCurrentUser();
+    const staffUser = await getCurrentUser(req);
 
     let query = supabaseAdmin
       .from('articles')

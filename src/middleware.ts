@@ -33,7 +33,19 @@ export async function middleware(request: NextRequest) {
 
   // Use getSession first (refreshes token if needed), then getUser for security validation
   await supabase.auth.getSession();
-  const { data: { user } } = await supabase.auth.getUser();
+  let { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    const adminToken = request.cookies.get('va_admin_token')?.value;
+    if (adminToken) {
+      try {
+        const { data: { user: tokenUser } } = await supabase.auth.getUser(adminToken);
+        if (tokenUser) {
+          user = tokenUser;
+        }
+      } catch {}
+    }
+  }
 
   // 1. If any request hits legacy MFA routes, redirect immediately to /admin
   if (path.startsWith('/admin/mfa')) {

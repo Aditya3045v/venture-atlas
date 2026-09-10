@@ -17,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(req);
   if (!user || !canPublish(user.role)) {
     return NextResponse.json({ error: 'Unauthorized: Editor or Admin privileges required' }, { status: 403 });
   }

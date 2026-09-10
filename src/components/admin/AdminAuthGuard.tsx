@@ -36,12 +36,16 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
   const [loading, setLoading] = useState<boolean>(!initialUser);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(!!initialUser);
 
-  const syncAdminCookie = useCallback((isActive: boolean) => {
+  const syncAdminCookie = useCallback((isActive: boolean, token?: string | null) => {
     try {
       if (isActive) {
         document.cookie = 'va_admin_session=1; path=/; max-age=2592000; SameSite=Lax';
+        if (token) {
+          document.cookie = `va_admin_token=${token}; path=/; max-age=2592000; SameSite=Lax`;
+        }
       } else {
         document.cookie = 'va_admin_session=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'va_admin_token=; path=/; max-age=0; SameSite=Lax';
       }
     } catch {}
   }, []);
@@ -137,7 +141,7 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
             setIsAuthorized(true);
             setLoading(false);
           }
-          syncAdminCookie(true);
+          syncAdminCookie(true, currentSession.access_token);
         } else {
           syncAdminCookie(false);
           if (isMounted) {
@@ -175,7 +179,7 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
         router.replace('/admin/login');
       } else if (newSession && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
         setSession(newSession);
-        syncAdminCookie(true);
+        syncAdminCookie(true, newSession.access_token);
       }
     });
 

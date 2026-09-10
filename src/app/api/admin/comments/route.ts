@@ -5,7 +5,7 @@ import { getCurrentUser, canModerate } from '@/lib/auth/staff';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(req);
   if (!user || !canModerate(user.role)) {
     return NextResponse.json(
       { error: 'Unauthorized: Editor or Admin privileges required for comment moderation.' },

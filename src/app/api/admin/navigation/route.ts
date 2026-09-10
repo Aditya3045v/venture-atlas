@@ -22,9 +22,9 @@ const batchReorderSchema = z.object({
   })),
 });
 
-export async function GET() {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'ADMIN') {
+export async function GET(req: NextRequest) {
+  const user = await getCurrentUser(req);
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
     return NextResponse.json({ error: 'Unauthorized: Administrator privileges required.' }, { status: 403 });
   }
 
@@ -33,8 +33,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'ADMIN') {
+  const user = await getCurrentUser(req);
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
     return NextResponse.json({ error: 'Unauthorized: Administrator privileges required.' }, { status: 403 });
   }
 
@@ -79,8 +79,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'ADMIN') {
+  const user = await getCurrentUser(req);
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
     return NextResponse.json({ error: 'Unauthorized: Administrator privileges required.' }, { status: 403 });
   }
 
