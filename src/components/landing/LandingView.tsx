@@ -82,7 +82,7 @@ const SAMPLE_BRIEFS = [
   {
     id: 'startup-funding',
     category: 'STARTUP FUNDING',
-    categoryColor: 'bg-blue-50 text-blue-700 border-blue-200',
+    categoryColor: 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/50',
     title: 'Zepto Raises $350M Series F, Valuation Hits $5B as Quick Commerce War Intensifies',
     time: '6m ago',
     source: 'Bloomberg',
@@ -98,7 +98,7 @@ const SAMPLE_BRIEFS = [
   {
     id: 'crypto-markets',
     category: 'CRYPTO & WEB3',
-    categoryColor: 'bg-purple-50 text-purple-700 border-purple-200',
+    categoryColor: 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/50',
     title: 'Bitcoin ETFs See $2.1B Net Inflows in Single Week as Institutional Demand Spikes',
     time: '22m ago',
     source: 'CoinDesk',
@@ -114,7 +114,7 @@ const SAMPLE_BRIEFS = [
   {
     id: 'investment-news',
     category: 'INVESTMENT NEWS',
-    categoryColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    categoryColor: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/50',
     title: 'Sequoia India Closes $2.85B Fund VIII, Largest India-Dedicated VC Pool Ever Raised',
     time: '38m ago',
     source: 'Economic Times',
@@ -130,7 +130,7 @@ const SAMPLE_BRIEFS = [
   {
     id: 'unicorn-failure',
     category: 'FAILURE TEARDOWN',
-    categoryColor: 'bg-rose-50 text-rose-700 border-rose-200',
+    categoryColor: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800/50',
     title: "GoMechanic Collapses After $62M Raised — Founders Admit Fake Revenue Reporting",
     time: '1h ago',
     source: 'Inc42',
@@ -307,7 +307,7 @@ export function LandingView() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#f9fafb] text-slate-900 flex flex-col select-none font-sans">
+    <div className="min-h-screen w-full bg-background text-text-primary flex flex-col select-none font-sans transition-colors duration-200">
       {/* ─────────────────────────────────────────────────────────────
           MAIN CONTENT WRAPPER (Tightened top spacing on mobile)
       ────────────────────────────────────────────────────────────── */}
@@ -359,7 +359,7 @@ export function LandingView() {
               <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-xl">
                 <form
                   onSubmit={handleHeroEmailSubmit}
-                  className="flex items-center gap-1.5 p-1.5 rounded-full bg-white/95 backdrop-blur-xl border border-white/60 shadow-xl w-full sm:w-auto flex-1 transition-all focus-within:ring-2 focus-within:ring-white/80"
+                  className="flex items-center gap-1.5 p-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl border border-white/60 dark:border-white/20 shadow-xl w-full sm:w-auto flex-1 transition-all focus-within:ring-2 focus-within:ring-white/80"
                 >
                   <div className="pl-3.5 pr-1 text-slate-400">
                     <Mail size={16} />
@@ -371,14 +371,14 @@ export function LandingView() {
                     onChange={e => setHeroEmail(e.target.value)}
                     placeholder="Enter your work email..."
                     disabled={heroSubmitting || heroSuccess}
-                    className="flex-1 bg-transparent py-2 text-[14px] text-slate-900 placeholder:text-slate-400 font-sans focus:outline-none min-w-[160px]"
+                    className="flex-1 bg-transparent py-2 text-[14px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-400 font-sans focus:outline-none min-w-[160px]"
                   />
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={heroSubmitting || heroSuccess}
-                    className="px-5 py-2.5 rounded-full bg-slate-950 text-white hover:bg-slate-800 text-[13px] font-medium transition-all shadow-md flex items-center justify-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-75"
+                    className="px-5 py-2.5 rounded-full bg-slate-950 dark:bg-amber-400 text-white dark:text-black hover:bg-slate-800 dark:hover:bg-amber-300 text-[13px] font-medium transition-all shadow-md flex items-center justify-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-75"
                   >
                     {heroSubmitting ? (
                       <>
@@ -418,7 +418,7 @@ export function LandingView() {
         ────────────────────────────────────────────────────────────── */}
         <section className="mt-10 w-full max-w-[1400px] mx-auto overflow-hidden">
           <div className="text-center mb-6">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 font-medium">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-medium">
               Trusted & Cited by Founders, VCs, and Operators Across the Globe
             </span>
           </div>
@@ -436,7 +436,7 @@ export function LandingView() {
                 {BRAND_LOGOS.map((logo, index) => (
                   <div
                     key={`logo-seq1-${index}`}
-                    className="group relative h-24 w-40 shrink-0 flex items-center justify-center rounded-full bg-white border border-slate-200/60 shadow-sm hover:border-slate-300 transition-all overflow-hidden cursor-pointer"
+                    className="group relative h-24 w-40 shrink-0 flex items-center justify-center rounded-full bg-white dark:bg-[#111113] border border-slate-200/60 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all overflow-hidden cursor-pointer"
                   >
                     {/* Card Hover Background: Vibrant Linear Gradient */}
                     <div
@@ -459,7 +459,7 @@ export function LandingView() {
                 {BRAND_LOGOS.map((logo, index) => (
                   <div
                     key={`logo-seq2-${index}`}
-                    className="group relative h-24 w-40 shrink-0 flex items-center justify-center rounded-full bg-white border border-slate-200/60 shadow-sm hover:border-slate-300 transition-all overflow-hidden cursor-pointer"
+                    className="group relative h-24 w-40 shrink-0 flex items-center justify-center rounded-full bg-white dark:bg-[#111113] border border-slate-200/60 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all overflow-hidden cursor-pointer"
                   >
                     {/* Card Hover Background: Vibrant Linear Gradient */}
                     <div
@@ -483,16 +483,16 @@ export function LandingView() {
         {/* ─────────────────────────────────────────────────────────────
             3. INTERACTIVE 60-WORD DISPATCH SIMULATOR
         ────────────────────────────────────────────────────────────── */}
-        <section className="w-full max-w-[1400px] mx-auto bg-white rounded-[40px] border border-slate-200/70 p-8 md:p-14 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.03)]">
+        <section className="w-full max-w-[1400px] mx-auto bg-white dark:bg-[#0a0a0c] rounded-[40px] border border-slate-200/70 dark:border-white/10 p-8 md:p-14 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] transition-colors">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-mono font-medium uppercase mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/50 text-blue-700 dark:text-blue-400 text-xs font-mono font-medium uppercase mb-3">
                 <Layers size={13} /> The 60-Word Format
               </div>
-              <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33]">
+              <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33] dark:text-white">
                 Real news. Real fast. Real sources.
               </h2>
-              <p className="text-slate-500 text-sm mt-2 max-w-xl">
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-xl">
                 Every story — startup funding, crypto move, or VC fund close — is compressed to exactly 60 words. Primary source linked. Zero opinion. Zero filler. Read in under 20 seconds.
               </p>
             </div>
@@ -505,8 +505,8 @@ export function LandingView() {
                   onClick={() => setActiveBriefIndex(idx)}
                   className={`px-4 py-2 rounded-full text-xs font-medium transition-all cursor-pointer ${
                     activeBriefIndex === idx
-                      ? 'bg-[#0a152d] text-white shadow-sm'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-[#0a152d] dark:bg-amber-400 text-white dark:text-black font-semibold shadow-sm'
+                      : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10'
                   }`}
                 >
                   {b.category}
@@ -518,7 +518,7 @@ export function LandingView() {
           {/* Interactive Card Preview */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             {/* Left: 60-Word Card */}
-            <div className="lg:col-span-8 bg-slate-50/70 rounded-3xl p-6 md:p-8 border border-slate-200/80 flex flex-col justify-between">
+            <div className="lg:col-span-8 bg-slate-50/70 dark:bg-[#111113] rounded-3xl p-6 md:p-8 border border-slate-200/80 dark:border-white/10 flex flex-col justify-between transition-colors">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
@@ -526,33 +526,33 @@ export function LandingView() {
                       {activeBrief.category}
                     </span>
                     <span className="text-xs text-slate-400 font-mono">·</span>
-                    <span className="text-xs text-slate-500 font-mono flex items-center gap-1">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1">
                       <Clock size={12} /> {activeBrief.time}
                     </span>
                   </div>
 
-                  <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
                     {activeBrief.words} WORDS
                   </span>
                 </div>
 
-                <h3 className="font-display text-xl md:text-2xl font-medium text-[#0a1b33] leading-snug mb-4">
+                <h3 className="font-display text-xl md:text-2xl font-medium text-[#0a1b33] dark:text-white leading-snug mb-4">
                   {activeBrief.title}
                 </h3>
 
-                <p className="text-slate-700 text-base leading-relaxed font-normal">
+                <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed font-normal">
                   {activeBrief.text}
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2 text-slate-500">
+              <div className="pt-6 mt-6 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                   <span>Source Verification:</span>
                   <a
                     href={activeBrief.sourceUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="font-medium text-slate-800 hover:text-blue-600 flex items-center gap-1 transition-colors"
+                    className="font-medium text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 transition-colors"
                   >
                     {activeBrief.source} <ExternalLink size={11} />
                   </a>
@@ -560,7 +560,7 @@ export function LandingView() {
 
                 <Link
                   href="/feed" onClick={handleDirectEnter}
-                  className="px-4 py-2 rounded-full bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-medium transition-colors flex items-center gap-1.5 shadow-sm"
+                  className="px-4 py-2 rounded-full bg-white dark:bg-white/10 hover:bg-slate-100 dark:hover:bg-white/15 text-slate-800 dark:text-white border border-slate-200 dark:border-white/10 font-medium transition-colors flex items-center gap-1.5 shadow-sm"
                 >
                   Read Full Dispatch in Feed <ArrowRight size={12} />
                 </Link>
@@ -568,16 +568,16 @@ export function LandingView() {
             </div>
 
             {/* Right: Key Institutional Metrics */}
-            <div className="lg:col-span-4 bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm flex flex-col justify-between space-y-6">
+            <div className="lg:col-span-4 bg-white dark:bg-[#111113] rounded-3xl p-6 md:p-8 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between space-y-6 transition-colors">
               <div>
-                <span className="text-xs font-mono uppercase tracking-widest text-slate-400 block mb-4">
+                <span className="text-xs font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-4">
                   Telemetry Analysis
                 </span>
                 <div className="space-y-4">
                   {activeBrief.keyStats.map((stat, i) => (
-                    <div key={i} className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                      <span className="text-xs text-slate-500 font-medium block">{stat.label}</span>
-                      <span className="text-2xl font-display font-medium text-[#0a1b33] mt-1 block">
+                    <div key={i} className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+                      <span className="text-xs text-slate-500 dark:text-slate-400 font-medium block">{stat.label}</span>
+                      <span className="text-2xl font-display font-medium text-[#0a1b33] dark:text-white mt-1 block">
                         {stat.value}
                       </span>
                     </div>
@@ -585,7 +585,7 @@ export function LandingView() {
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 text-xs text-blue-900 leading-relaxed">
+              <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 text-xs text-blue-900 dark:text-blue-200 leading-relaxed">
                 <span className="font-semibold block mb-1">Venture Atlas Standard</span>
                 Every story is sourced, fact-checked, and written to exactly 60 words. No sponsored posts. No opinion. Just what happened.
               </div>
@@ -598,13 +598,13 @@ export function LandingView() {
         ────────────────────────────────────────────────────────────── */}
         <section className="w-full max-w-[1400px] mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold block mb-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-semibold block mb-2">
               What We Cover
             </span>
-            <h2 className="font-display text-3xl md:text-4xl font-medium text-[#0a1b33] tracking-tight">
+            <h2 className="font-display text-3xl md:text-4xl font-medium text-[#0a1b33] dark:text-white tracking-tight">
               Startups. Crypto. Investments.<br />All in one feed.
             </h2>
-            <p className="text-slate-500 text-sm mt-3">
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-3">
               From seed rounds to Bitcoin ETF flows — we track the money, the deals, and the collapses so you don't have to read 20 different sources.
             </p>
           </div>
@@ -613,30 +613,30 @@ export function LandingView() {
             {SPECIALIZED_DESKS.map((desk, idx) => (
               <div
                 key={idx}
-                className="group relative bg-white rounded-3xl p-8 border border-slate-200/70 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between"
+                className="group relative bg-white dark:bg-[#0a0a0c] rounded-3xl p-8 border border-slate-200/70 dark:border-white/10 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-white/20 transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-11 h-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center">
+                    <div className="w-11 h-11 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 flex items-center justify-center">
                       {desk.icon}
                     </div>
-                    <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                    <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">
                       {desk.tag}
                     </span>
                   </div>
 
-                  <h3 className="font-display text-lg font-medium text-[#0a1b33] mb-2">
+                  <h3 className="font-display text-lg font-medium text-[#0a1b33] dark:text-white mb-2">
                     {desk.title}
                   </h3>
 
-                  <p className="text-slate-500 text-xs leading-relaxed font-normal">
+                  <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed font-normal">
                     {desk.description}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600 font-medium">
+                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 font-medium">
                   <span>Explore desk</span>
-                  <ChevronRight size={14} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight size={14} className="text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             ))}
@@ -646,21 +646,21 @@ export function LandingView() {
         {/* ─────────────────────────────────────────────────────────────
             5. GLOBAL TELEMETRY HUBS RADAR
         ────────────────────────────────────────────────────────────── */}
-        <section className="w-full max-w-[1400px] mx-auto bg-white rounded-[40px] border border-slate-200/70 p-8 md:p-14 shadow-sm">
+        <section className="w-full max-w-[1400px] mx-auto bg-white dark:bg-[#0a0a0c] rounded-[40px] border border-slate-200/70 dark:border-white/10 p-8 md:p-14 shadow-sm transition-colors">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-mono font-medium uppercase mb-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 text-emerald-700 dark:text-emerald-400 text-xs font-mono font-medium uppercase mb-3">
                 <Activity size={13} /> Live Deal Tracker
               </div>
-              <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33]">
+              <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33] dark:text-white">
                 Where the money is moving right now
               </h2>
-              <p className="text-slate-500 text-sm mt-2">
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">
                 Real-time startup funding and investment volumes across the world's five biggest deal-flow hubs — updated every 24 hours.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono text-slate-500 bg-slate-50 px-4 py-2 rounded-full border border-slate-200">
+            <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-white/5 px-4 py-2 rounded-full border border-slate-200 dark:border-white/10">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>LIVE 24H SYNCHRONIZED FEED</span>
             </div>
@@ -670,21 +670,21 @@ export function LandingView() {
             {GLOBAL_HUBS.map((hub, i) => (
               <div
                 key={i}
-                className="p-5 rounded-2xl bg-slate-50/70 border border-slate-200/70 hover:bg-slate-50 hover:border-slate-300 transition-all"
+                className="p-5 rounded-2xl bg-slate-50/70 dark:bg-[#111113] border border-slate-200/70 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#161618] hover:border-slate-300 dark:hover:border-white/20 transition-all"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[11px] font-mono text-slate-400">{hub.region}</span>
-                  <span className="text-xs font-mono font-bold text-emerald-600">{hub.pace}</span>
+                  <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500">{hub.region}</span>
+                  <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">{hub.pace}</span>
                 </div>
-                <h4 className="font-display text-base font-semibold text-[#0a1b33]">{hub.city}</h4>
-                <div className="mt-4 pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs">
+                <h4 className="font-display text-base font-semibold text-[#0a1b33] dark:text-white">{hub.city}</h4>
+                <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-white/10 flex items-center justify-between text-xs">
                   <div>
-                    <span className="text-[10px] text-slate-400 block font-mono">24H VOLUME</span>
-                    <span className="font-display font-medium text-slate-900 text-sm">{hub.volume24h}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 block font-mono">24H VOLUME</span>
+                    <span className="font-display font-medium text-slate-900 dark:text-white text-sm">{hub.volume24h}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] text-slate-400 block font-mono">DEALS</span>
-                    <span className="font-display font-medium text-slate-900 text-sm">{hub.deals}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 block font-mono">DEALS</span>
+                    <span className="font-display font-medium text-slate-900 dark:text-white text-sm">{hub.deals}</span>
                   </div>
                 </div>
               </div>
@@ -695,22 +695,22 @@ export function LandingView() {
         {/* ─────────────────────────────────────────────────────────────
             6. EXECUTIVE ACCESS & NEWSLETTER CAPTURE TERMINAL
         ────────────────────────────────────────────────────────────── */}
-        <section className="w-full max-w-[1400px] mx-auto bg-gradient-to-b from-white to-slate-50/80 rounded-[40px] border border-slate-200/80 p-8 md:p-16 text-center shadow-sm">
+        <section className="w-full max-w-[1400px] mx-auto bg-gradient-to-b from-white to-slate-50/80 dark:from-[#0a0a0c] dark:to-[#050505] rounded-[40px] border border-slate-200/80 dark:border-white/10 p-8 md:p-16 text-center shadow-sm transition-colors">
           <div className="max-w-2xl mx-auto">
-            <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg mx-auto mb-6 shadow-md">
+            <div className="w-12 h-12 rounded-2xl bg-slate-900 dark:bg-amber-400 text-white dark:text-black flex items-center justify-center font-bold text-lg mx-auto mb-6 shadow-md">
               ✦
             </div>
 
-            <h2 className="font-display text-3xl md:text-5xl font-medium tracking-tight text-[#0a1b33] leading-tight">
+            <h2 className="font-display text-3xl md:text-5xl font-medium tracking-tight text-[#0a1b33] dark:text-white leading-tight">
               Get startup, crypto & investment<br />news — free, every morning
             </h2>
 
-            <p className="text-slate-600 text-sm md:text-base mt-4 font-normal leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm md:text-base mt-4 font-normal leading-relaxed">
               Join thousands of founders and investors who start their day with Venture Atlas. One email. 60-word stories. The funding rounds, crypto moves, and VC news that actually matter.
             </p>
 
             {captureDone ? (
-              <div className="mt-8 p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center justify-center gap-2">
+              <div className="mt-8 p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/50 text-emerald-800 dark:text-emerald-300 text-sm font-medium flex items-center justify-center gap-2">
                 <Check size={18} />
                 <span>You're in. Expect your first brief in the morning.</span>
               </div>
@@ -722,18 +722,18 @@ export function LandingView() {
                   value={captureEmail}
                   onChange={e => setCaptureEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="flex-1 px-5 py-3.5 rounded-full bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all font-sans shadow-sm"
+                  className="flex-1 px-5 py-3.5 rounded-full bg-white dark:bg-[#111113] border border-slate-300 dark:border-white/20 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10 focus:border-slate-400 dark:focus:border-white/30 transition-all font-sans shadow-sm"
                 />
                 <button
                   type="submit"
-                  className="px-7 py-3.5 rounded-full bg-[#0a152d] text-white text-sm font-medium hover:bg-slate-800 transition-all shadow-md cursor-pointer whitespace-nowrap"
+                  className="px-7 py-3.5 rounded-full bg-[#0a152d] dark:bg-amber-400 text-white dark:text-black font-semibold hover:bg-slate-800 dark:hover:bg-amber-300 transition-all shadow-md cursor-pointer whitespace-nowrap"
                 >
                   Send Me the News
                 </button>
               </form>
             )}
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 font-mono">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 dark:text-slate-400 font-mono">
               <span className="flex items-center gap-1">
                 <Check size={13} className="text-emerald-500" /> Free Forever
               </span>
@@ -750,7 +750,7 @@ export function LandingView() {
             <div className="mt-8">
               <Link
                 href="/feed" onClick={handleDirectEnter}
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:underline transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:underline transition-colors"
               >
                 <span>Or browse the live feed without signing up <ArrowRight size={14} /></span>
               </Link>
@@ -765,42 +765,42 @@ export function LandingView() {
       {/* Contact Modal */}
       <AnimatePresence>
         {isContactOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/70 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="relative w-full max-w-lg bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl overflow-hidden"
+              className="relative w-full max-w-lg bg-white dark:bg-[#0f0f12] rounded-3xl p-8 border border-slate-200 dark:border-white/15 shadow-2xl overflow-hidden"
             >
               <button
                 onClick={() => setIsContactOpen(false)}
-                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors cursor-pointer"
+                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 flex items-center justify-center text-slate-500 dark:text-slate-300 transition-colors cursor-pointer"
               >
                 <X size={18} />
               </button>
 
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-base font-bold">
+                <div className="w-10 h-10 rounded-2xl bg-slate-900 dark:bg-amber-400 text-white dark:text-black flex items-center justify-center text-base font-bold">
                   ✦
                 </div>
                 <div>
-                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">Get in touch</h3>
-                  <p className="text-xs text-slate-500 font-sans">Partnerships, editorial tips, press & feedback</p>
+                  <h3 className="text-xl font-display font-medium text-[#0a1b33] dark:text-white">Get in touch</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans">Partnerships, editorial tips, press & feedback</p>
                 </div>
               </div>
 
               {isSubmitted ? (
                 <div className="py-10 text-center flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-3">
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
                     <Check size={24} />
                   </div>
-                  <h4 className="text-lg font-medium text-slate-900">Message received</h4>
-                  <p className="text-sm text-slate-500 mt-1">We'll get back to you within 24 hours.</p>
+                  <h4 className="text-lg font-medium text-slate-900 dark:text-white">Message received</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">We'll get back to you within 24 hours.</p>
                 </div>
               ) : (
                 <form onSubmit={handleContactSubmit} className="space-y-4 mt-6">
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1.5 font-sans">
+                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-sans">
                       Work Email
                     </label>
                     <input
@@ -809,11 +809,11 @@ export function LandingView() {
                       value={contactEmail}
                       onChange={e => setContactEmail(e.target.value)}
                       placeholder="founder@venture.com"
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all font-sans"
+                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/15 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10 focus:border-slate-400 dark:focus:border-white/30 transition-all font-sans"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1.5 font-sans">
+                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-sans">
                       Note or Inquiry (Optional)
                     </label>
                     <textarea
@@ -821,19 +821,19 @@ export function LandingView() {
                       value={contactMessage}
                       onChange={e => setContactMessage(e.target.value)}
                       placeholder="Tell us about a story tip, partnership idea, or feedback..."
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all resize-none font-sans"
+                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/15 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10 focus:border-slate-400 dark:focus:border-white/30 transition-all resize-none font-sans"
                     />
                   </div>
                   <div className="pt-2 flex items-center justify-between gap-3">
                     <Link
                       href="/feed" onClick={handleDirectEnter}
-                      className="text-xs text-slate-500 hover:text-slate-900 font-medium transition-colors flex items-center gap-1"
+                      className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors flex items-center gap-1"
                     >
                       Enter Feed Directly <ArrowRight size={12} />
                     </Link>
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-full bg-[#0a152d] text-white text-sm font-medium hover:bg-slate-800 transition-all shadow-sm cursor-pointer"
+                      className="px-6 py-2.5 rounded-full bg-[#0a152d] dark:bg-amber-400 text-white dark:text-black font-semibold text-sm hover:bg-slate-800 dark:hover:bg-amber-300 transition-all shadow-sm cursor-pointer"
                     >
                       Send Message
                     </button>
@@ -848,27 +848,27 @@ export function LandingView() {
       {/* Products Modal */}
       <AnimatePresence>
         {isProductsOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/70 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="relative w-full max-w-xl bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl"
+              className="relative w-full max-w-xl bg-white dark:bg-[#0f0f12] rounded-3xl p-8 border border-slate-200 dark:border-white/15 shadow-2xl"
             >
               <button
                 onClick={() => setIsProductsOpen(false)}
-                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors cursor-pointer"
+                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 flex items-center justify-center text-slate-500 dark:text-slate-300 transition-colors cursor-pointer"
               >
                 <X size={18} />
               </button>
 
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-base font-bold">
+                <div className="w-10 h-10 rounded-2xl bg-slate-900 dark:bg-amber-400 text-white dark:text-black flex items-center justify-center text-base font-bold">
                   ✦
                 </div>
                 <div>
-                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">What Venture Atlas Covers</h3>
-                  <p className="text-xs text-slate-500 font-sans">Startup funding · Crypto markets · Investment & VC news</p>
+                  <h3 className="text-xl font-display font-medium text-[#0a1b33] dark:text-white">What Venture Atlas Covers</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans">Startup funding · Crypto markets · Investment & VC news</p>
                 </div>
               </div>
 
@@ -879,39 +879,39 @@ export function LandingView() {
                     handleDirectEnter();
                     setIsProductsOpen(false);
                   }}
-                  className="p-4 rounded-2xl border border-slate-200/80 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50 transition-all group flex items-start gap-4"
+                  className="p-4 rounded-2xl border border-slate-200/80 dark:border-white/10 hover:border-slate-400 dark:hover:border-white/20 bg-slate-50/50 dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 transition-all group flex items-start gap-4"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                     <Layers size={20} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-display font-medium text-slate-900 text-sm">Startup & Investment News Feed</h4>
-                      <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                      <h4 className="font-display font-medium text-slate-900 dark:text-white text-sm">Startup & Investment News Feed</h4>
+                      <ChevronRight size={16} className="text-slate-400 dark:text-slate-500 group-hover:translate-x-0.5 transition-transform" />
                     </div>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       Funding rounds, VC fund closes, unicorn valuations, startup failures — in 60 words each. Curated daily.
                     </p>
                   </div>
                 </Link>
 
-                <div className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                <div className="p-4 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
                     <Terminal size={20} />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-display font-medium text-slate-900 text-sm">Crypto & Web3 News</h4>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <h4 className="font-display font-medium text-slate-900 dark:text-white text-sm">Crypto & Web3 News</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       Bitcoin, ETF flows, DeFi protocol updates, on-chain data, and regulatory news that moves markets.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-100 flex justify-end">
+              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex justify-end">
                 <Link
                   href="/feed" onClick={handleDirectEnter}
-                  className="px-6 py-2.5 rounded-full bg-[#0a152d] text-white text-sm font-medium hover:bg-slate-800 transition-all shadow-sm flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-full bg-[#0a152d] dark:bg-amber-400 text-white dark:text-black font-semibold text-sm hover:bg-slate-800 dark:hover:bg-amber-300 transition-all shadow-sm flex items-center gap-2"
                 >
                   Open Reader Feed <ArrowRight size={14} />
                 </Link>
@@ -924,51 +924,51 @@ export function LandingView() {
       {/* Docs Modal */}
       <AnimatePresence>
         {isDocsOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/70 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="relative w-full max-w-lg bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl"
+              className="relative w-full max-w-lg bg-white dark:bg-[#0f0f12] rounded-3xl p-8 border border-slate-200 dark:border-white/15 shadow-2xl"
             >
               <button
                 onClick={() => setIsDocsOpen(false)}
-                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors cursor-pointer"
+                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 flex items-center justify-center text-slate-500 dark:text-slate-300 transition-colors cursor-pointer"
               >
                 <X size={18} />
               </button>
 
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-base font-bold">
+                <div className="w-10 h-10 rounded-2xl bg-slate-900 dark:bg-amber-400 text-white dark:text-black flex items-center justify-center text-base font-bold">
                   <BookOpen size={20} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">About Venture Atlas</h3>
-                  <p className="text-xs text-slate-500 font-sans">What we are, what we cover, and how we work</p>
+                  <h3 className="text-xl font-display font-medium text-[#0a1b33] dark:text-white">About Venture Atlas</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans">What we are, what we cover, and how we work</p>
                 </div>
               </div>
 
-              <div className="space-y-3 text-xs text-slate-600 font-sans leading-relaxed">
-                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                  <p className="font-medium text-slate-900 mb-1">What is Venture Atlas?</p>
+              <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300 font-sans leading-relaxed">
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+                  <p className="font-medium text-slate-900 dark:text-white mb-1">What is Venture Atlas?</p>
                   Venture Atlas is a news platform covering startup funding, crypto markets, and investment news — condensed to exactly 60 words per story. Built for founders, investors, and operators who need to stay informed without wading through noise.
                 </div>
-                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                  <p className="font-medium text-slate-900 mb-1">How We Work</p>
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+                  <p className="font-medium text-slate-900 dark:text-white mb-1">How We Work</p>
                   Every story is sourced from primary publications, verified by our editorial team, and compressed to exactly 60 words. No sponsored content. No opinion pieces. Just facts, figures, and the source link.
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex justify-between items-center">
                 <Link
                   href="/about"
-                  className="text-xs text-slate-600 hover:text-slate-900 font-medium flex items-center gap-1"
+                  className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium flex items-center gap-1"
                 >
                   Read full about page <ExternalLink size={12} />
                 </Link>
                 <button
                   onClick={() => setIsDocsOpen(false)}
-                  className="px-5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
+                  className="px-5 py-2 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 text-slate-700 dark:text-slate-300 text-xs font-medium transition-colors cursor-pointer"
                 >
                   Close
                 </button>
