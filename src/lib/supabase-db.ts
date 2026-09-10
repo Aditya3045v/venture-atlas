@@ -252,7 +252,7 @@ export async function fetchAdminUsers(): Promise<UserProfile[]> {
   try {
     const { data, error } = await supabaseAdmin
       .from('profiles')
-      .select('*')
+      .select('*, roles:custom_role_id(id, name, display_name)')
       .order('created_at', { ascending: false });
 
     if (error || !data) {
@@ -265,12 +265,66 @@ export async function fetchAdminUsers(): Promise<UserProfile[]> {
       name: u.name,
       role: u.role,
       avatar: u.avatar,
-      plan: u.plan || 'FREE',
+      plan: u.plan || 'ENTERPRISE',
       mfaEnabled: false,
       bio: u.bio,
+      is_active: u.is_active ?? true,
+      custom_role_id: u.custom_role_id,
+      created_at: u.created_at,
     }));
   } catch (error: any) {
     console.error('Failed to fetch admin users from Supabase:', error?.message);
+    return [];
+  }
+}
+
+export async function fetchAdminRoles(): Promise<any[]> {
+  try {
+    const [rolesRes, permsRes, rolePermsRes, userRolesRes] = await Promise.all([
+      supabaseAdmin.from('roles').select('*').order('is_system', { ascending: false }).order('name', { ascending: true }),
+      supabaseAdmin.from('permissions').select('*').order('module', { ascending: true }),
+      supabaseAdmin.from('role_permissions').select('*'),
+      supabaseAdmin.from('user_roles').select('role_id'),
+    ]);
+
+    const roles = rolesRes.data || [];
+    const permissions = permsRes.data || [];
+    const rolePerms = rolePermsRes.data || [];
+    const userRoles = userRolesRes.data || [];
+
+    const counts: Record<string, number> = {};
+    userRoles.forEach(ur => {
+      counts[ur.role_id] = (counts[ur.role_id] || 0) + 1;
+    });
+
+    const permsById = new Map(permissions.map(p => [p.id, p]));
+    const permsByRole = new Map<string, any[]>();
+    rolePerms.forEach(rp => {
+      const p = permsById.get(rp.permission_id);
+      if (p) {
+        const list = permsByRole.get(rp.role_id) || [];
+        list.push(p);
+        permsByRole.set(rp.role_id, list);
+      }
+    });
+
+    return roles.map(r => ({
+      ...r,
+      permissions: permsByRole.get(r.id) || [],
+      user_count: counts[r.id] || 0,
+    }));
+  } catch (error: any) {
+    console.error('Failed to fetch admin roles from Supabase:', error?.message);
+    return [];
+  }
+}
+
+export async function fetchAdminPermissions(): Promise<any[]> {
+  try {
+    const { data } = await supabaseAdmin.from('permissions').select('*').order('module', { ascending: true });
+    return data || [];
+  } catch (error: any) {
+    console.error('Failed to fetch admin permissions from Supabase:', error?.message);
     return [];
   }
 }

@@ -60,18 +60,23 @@ export async function middleware(request: NextRequest) {
     // User is verified: resolve role
     const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as string | undefined;
     const isRootAdmin = user.email === 'admin@ventureatlas.in';
-    let resolvedRole = isRootAdmin ? 'ADMIN' : (metaRole || 'ADMIN');
-    let resolvedName = user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Root Admin' : 'Staff Member');
+    let resolvedRole = isRootAdmin ? 'SUPER_ADMIN' : (metaRole || 'WRITER');
+    let resolvedName = user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Super Admin' : 'Staff Member');
 
-    if (!isRootAdmin && (!metaRole || !['ADMIN', 'EDITOR', 'WRITER'].includes(metaRole))) {
+    if (!isRootAdmin && (!metaRole || !['SUPER_ADMIN', 'ADMIN', 'EDITOR', 'WRITER', 'REVIEWER', 'MEDIA_MANAGER'].includes(metaRole))) {
       try {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('role, name')
+          .select('role, name, is_active')
           .eq('id', user.id)
           .single();
 
-        if (profile?.role && ['ADMIN', 'EDITOR', 'WRITER'].includes(profile.role)) {
+        if (profile?.is_active === false) {
+          const loginUrl = new URL('/admin/login', request.url);
+          return NextResponse.redirect(loginUrl);
+        }
+
+        if (profile?.role && profile.role !== 'READER') {
           resolvedRole = profile.role;
           if (profile.name) resolvedName = profile.name;
         } else if (!hasAdminSessionCookie) {

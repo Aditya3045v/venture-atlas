@@ -1,4 +1,14 @@
-export type UserRole = 'USER' | 'WRITER' | 'AUTHOR' | 'EDITOR' | 'ADMIN';
+export type UserRole =
+  | 'SUPER_ADMIN'
+  | 'ADMIN'
+  | 'EDITOR'
+  | 'WRITER'
+  | 'REVIEWER'
+  | 'MEDIA_MANAGER'
+  | 'AUTHOR'
+  | 'USER'
+  | 'READER'
+  | string;
 
 export type ContentStatus =
   | 'DRAFT'
@@ -9,6 +19,25 @@ export type ContentStatus =
   | 'ARCHIVED'
   | 'UNPUBLISHED';
 
+export interface PermissionItem {
+  id: string;
+  code: string;
+  name: string;
+  module: string;
+  description?: string | null;
+}
+
+export interface RoleItem {
+  id: string;
+  name: string;
+  display_name: string;
+  description?: string | null;
+  is_system: boolean;
+  created_at?: string;
+  permissions: PermissionItem[];
+  user_count?: number;
+}
+
 export interface UserProfile {
   id: string;
   email: string;
@@ -18,6 +47,9 @@ export interface UserProfile {
   plan: string;
   mfaEnabled: boolean;
   bio?: string | null;
+  is_active?: boolean;
+  custom_role_id?: string | null;
+  created_at?: string;
 }
 
 export interface CategoryItem {

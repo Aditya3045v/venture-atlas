@@ -1,18 +1,27 @@
 import React from 'react';
-import { fetchAdminUsers } from '@/lib/supabase-db';
+import { fetchAdminUsers, fetchAdminRoles, fetchAdminPermissions } from '@/lib/supabase-db';
 import { AdminUsersClient } from '@/components/admin/AdminUsersClient';
-import { getCurrentUser, canManageUsers } from '@/lib/auth/staff';
-import { redirect } from 'next/navigation';
+import { getCurrentUser, isSuperAdmin } from '@/lib/auth/staff';
 
 export const revalidate = 0;
 
 export default async function AdminUsersPage() {
-  const user = await getCurrentUser();
-  if (!user || !canManageUsers(user.role)) {
-    redirect('/admin');
-  }
+  const [currentUser, users, roles, allPermissions] = await Promise.all([
+    getCurrentUser(),
+    fetchAdminUsers(),
+    fetchAdminRoles(),
+    fetchAdminPermissions(),
+  ]);
 
-  const users = await fetchAdminUsers();
+  const isOwner = currentUser ? isSuperAdmin(currentUser.role, currentUser.email) : false;
 
-  return <AdminUsersClient initialUsers={users} />;
+  return (
+    <AdminUsersClient
+      initialUsers={users}
+      initialRoles={roles}
+      allPermissions={allPermissions}
+      isSuperAdmin={isOwner}
+      currentUserRole={currentUser?.role || 'WRITER'}
+    />
+  );
 }

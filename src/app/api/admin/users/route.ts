@@ -1,27 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { getCurrentUser, canManageUsers } from '@/lib/auth/staff';
+import { getCurrentUser, isSuperAdmin } from '@/lib/auth/staff';
 import { logAuditEvent } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const currentUser = await getCurrentUser();
-  if (!currentUser || !canManageUsers(currentUser.role)) {
-    return NextResponse.json({ error: 'Unauthorized: Admin privileges required.' }, { status: 403 });
+  if (!currentUser) {
+    return NextResponse.json({ error: 'Unauthorized: Staff clearance required.' }, { status: 401 });
   }
 
   try {
+    // 1. Fetch all user profiles with their custom role info
     const { data: profiles, error } = await supabaseAdmin
       .from('profiles')
-      .select('*')
+      .select('*, roles:custom_role_id(id, name, display_name)')
       .order('created_at', { ascending: false });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ users: profiles || [] });
+    // 2. Fetch all available roles for assignment
+    const { data: roles } = await supabaseAdmin
+      .from('roles')
+      .select('id, name, display_name, is_system')
+      .order('name', { ascending: true });
+
+    return NextResponse.json({
+      users: profiles || [],
+      roles: roles || [],
+      isSuperAdmin: isSuperAdmin(currentUser.role, currentUser.email),
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error?.message || 'Failed to fetch users' }, { status: 500 });
   }
@@ -29,65 +40,64 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const currentUser = await getCurrentUser();
-  if (!currentUser || !canManageUsers(currentUser.role)) {
-    return NextResponse.json({ error: 'Unauthorized: Admin privileges required.' }, { status: 403 });
+  if (!currentUser || !isSuperAdmin(currentUser.role, currentUser.email)) {
+    return NextResponse.json(
+      { error: 'Forbidden: Exclusively the Super Admin / Owner can create new user accounts.' },
+      { status: 403 }
+    );
   }
 
   try {
     const body = await req.json().catch(() => ({}));
-    const { email, password, name, role } = body;
+    const { email, password, name, role, role_id } = body;
 
-    if (!email || !password || !name || !role) {
+    if (!email || !password || !name) {
       return NextResponse.json(
-        { error: 'Email, password, full name, and role are required.' },
+        { error: 'Email, password, and full name are required.' },
         { status: 400 }
       );
     }
 
-    const COMMON_PASSWORDS = new Set([
-      'password12345', 'admin12345678', 'ventureatlas1', '123456789012',
-      'qwertyuiop12', 'administrator1', 'letmein123456', 'welcome123456',
-    ]);
-
-    if (password.length < 12) {
+    if (password.length < 8) {
       return NextResponse.json(
-        { error: 'Password policy: Access key must be at least 12 characters long.' },
-        { status: 400 }
-      );
-    }
-
-    if (COMMON_PASSWORDS.has(password.toLowerCase())) {
-      return NextResponse.json(
-        { error: 'Password policy: Common or easily guessable passwords are not permitted.' },
-        { status: 400 }
-      );
-    }
-
-    const hasUpper = /[A-Z]/.test(password);
-    const hasLower = /[a-z]/.test(password);
-    const hasDigitOrSpecial = /[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-    if (!hasUpper || !hasLower || !hasDigitOrSpecial) {
-      return NextResponse.json(
-        { error: 'Password policy: Password must contain uppercase, lowercase, and numbers or symbols.' },
-        { status: 400 }
-      );
-    }
-
-    if (!['WRITER', 'EDITOR', 'ADMIN'].includes(role)) {
-      return NextResponse.json(
-        { error: 'Invalid role. Assignable staff roles are WRITER, EDITOR, or ADMIN.' },
+        { error: 'Password policy: Access key must be at least 8 characters long.' },
         { status: 400 }
       );
     }
 
     const cleanEmail = email.trim().toLowerCase();
 
-    // 1. Create auth user in Supabase Auth
+    // Resolve role from database
+    let assignedRoleId = role_id;
+    let assignedRoleName = (role || 'WRITER').toUpperCase();
+
+    if (assignedRoleId) {
+      const { data: roleRow } = await supabaseAdmin
+        .from('roles')
+        .select('id, name')
+        .eq('id', assignedRoleId)
+        .single();
+      if (roleRow) {
+        assignedRoleName = roleRow.name;
+      }
+    } else {
+      const { data: roleRow } = await supabaseAdmin
+        .from('roles')
+        .select('id, name')
+        .eq('name', assignedRoleName)
+        .single();
+      if (roleRow) {
+        assignedRoleId = roleRow.id;
+      }
+    }
+
+    // 1. Create user in Supabase Auth
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email: cleanEmail,
       password,
       email_confirm: true,
-      user_metadata: { name: name.trim(), role },
+      user_metadata: { name: name.trim(), role: assignedRoleName },
+      app_metadata: { role: assignedRoleName },
     });
 
     if (authError || !authUser.user) {
@@ -106,27 +116,40 @@ export async function POST(req: NextRequest) {
         id: userId,
         email: cleanEmail,
         name: name.trim(),
-        role,
+        role: assignedRoleName,
+        custom_role_id: assignedRoleId || null,
+        is_active: true,
+        plan: 'ENTERPRISE',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .select()
+      .select('*, roles:custom_role_id(id, name, display_name)')
       .single();
 
     if (profileError) {
       return NextResponse.json(
-        { error: `User authenticated but profile failed: ${profileError.message}` },
+        { error: `User created but profile sync failed: ${profileError.message}` },
         { status: 500 }
       );
     }
 
-    // 3. Log to audit_logs
+    // 3. Assign role in public.user_roles
+    if (assignedRoleId) {
+      await supabaseAdmin
+        .from('user_roles')
+        .upsert({
+          user_id: userId,
+          role_id: assignedRoleId,
+          assigned_by: currentUser.id,
+        });
+    }
+
     await logAuditEvent({
-      action: 'CREATE_USER',
+      actor: currentUser,
+      action: 'USER_CREATED',
       entityType: 'USER',
       entityId: userId,
-      actor: currentUser,
-      metadata: { targetEmail: cleanEmail, assignedRole: role, targetName: name },
+      metadata: { targetEmail: cleanEmail, assignedRole: assignedRoleName, targetName: name },
     });
 
     return NextResponse.json({ success: true, user: profile }, { status: 201 });
@@ -137,51 +160,87 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const currentUser = await getCurrentUser();
-  if (!currentUser || !canManageUsers(currentUser.role)) {
-    return NextResponse.json({ error: 'Unauthorized: Admin privileges required.' }, { status: 403 });
+  if (!currentUser || !isSuperAdmin(currentUser.role, currentUser.email)) {
+    return NextResponse.json(
+      { error: 'Forbidden: Exclusively the Super Admin / Owner can modify users and roles.' },
+      { status: 403 }
+    );
   }
 
   try {
     const body = await req.json().catch(() => ({}));
-    const { id, role, name, bio, password } = body;
+    const { id, role, role_id, name, bio, password, is_active } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'Target user ID is required.' }, { status: 400 });
     }
 
-    // Admin CANNOT change their own role (prevent accidental lockout)
-    if (id === currentUser.id && role && role !== currentUser.role) {
+    // Check target user
+    const { data: targetProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('email, role')
+      .eq('id', id)
+      .single();
+
+    const isTargetRootAdmin = targetProfile?.email === 'admin@ventureatlas.in';
+
+    // Prevent modifying the root admin's core role or deactivating root admin
+    if (isTargetRootAdmin && is_active === false) {
       return NextResponse.json(
-        { error: 'PERMISSION_DENIED: Administrators cannot alter their own role assignment.' },
+        { error: 'SECURITY_RESTRICTION: The Super Admin / Owner account cannot be deactivated.' },
         { status: 403 }
       );
     }
 
-    if (role && !['WRITER', 'EDITOR', 'ADMIN'].includes(role)) {
+    if (isTargetRootAdmin && role && role !== 'SUPER_ADMIN') {
       return NextResponse.json(
-        { error: 'Invalid role. Assignable staff roles are WRITER, EDITOR, or ADMIN.' },
-        { status: 400 }
+        { error: 'SECURITY_RESTRICTION: The Super Admin / Owner account must remain SUPER_ADMIN.' },
+        { status: 403 }
       );
+    }
+
+    // Resolve new role if specified
+    let assignedRoleId = role_id;
+    let assignedRoleName = role?.toUpperCase();
+
+    if (assignedRoleId) {
+      const { data: rRow } = await supabaseAdmin
+        .from('roles')
+        .select('id, name')
+        .eq('id', assignedRoleId)
+        .single();
+      if (rRow) {
+        assignedRoleName = rRow.name;
+      }
+    } else if (assignedRoleName) {
+      const { data: rRow } = await supabaseAdmin
+        .from('roles')
+        .select('id, name')
+        .eq('name', assignedRoleName)
+        .single();
+      if (rRow) {
+        assignedRoleId = rRow.id;
+      }
     }
 
     const authUpdates: any = {};
 
     if (password) {
-      if (password.length < 12) {
+      if (password.length < 8) {
         return NextResponse.json(
-          { error: 'Password policy: Access key must be at least 12 characters long.' },
+          { error: 'Password policy: Access key must be at least 8 characters long.' },
           { status: 400 }
         );
       }
       authUpdates.password = password;
     }
 
-    // Keep Supabase Auth metadata in sync with profiles
     const metadataUpdates: any = {};
-    if (role) metadataUpdates.role = role;
+    if (assignedRoleName) metadataUpdates.role = assignedRoleName;
     if (name) metadataUpdates.name = name.trim();
     if (Object.keys(metadataUpdates).length > 0) {
       authUpdates.user_metadata = metadataUpdates;
+      if (assignedRoleName) authUpdates.app_metadata = { role: assignedRoleName };
     }
 
     if (Object.keys(authUpdates).length > 0) {
@@ -191,41 +250,41 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    if (password) {
-      await logAuditEvent({
-        action: 'PASSWORD_RESET',
-        entityType: 'USER',
-        entityId: id,
-        actor: currentUser,
-        metadata: { resetBy: currentUser.email },
-      });
-    }
-
     const updatePayload: any = { updated_at: new Date().toISOString() };
-    if (role) updatePayload.role = role;
+    if (assignedRoleName) updatePayload.role = assignedRoleName;
+    if (assignedRoleId !== undefined) updatePayload.custom_role_id = assignedRoleId;
     if (name) updatePayload.name = name.trim();
     if (bio !== undefined) updatePayload.bio = bio;
+    if (is_active !== undefined) updatePayload.is_active = is_active;
 
     const { data: updated, error } = await supabaseAdmin
       .from('profiles')
       .update(updatePayload)
       .eq('id', id)
-      .select()
+      .select('*, roles:custom_role_id(id, name, display_name)')
       .single();
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    if (role || name || bio !== undefined) {
-      await logAuditEvent({
-        action: 'UPDATE_USER_ROLE',
-        entityType: 'USER',
-        entityId: id,
-        actor: currentUser,
-        metadata: { newRole: role, newName: name, bioUpdated: bio !== undefined },
+    // Sync user_roles junction table
+    if (assignedRoleId) {
+      await supabaseAdmin.from('user_roles').delete().eq('user_id', id);
+      await supabaseAdmin.from('user_roles').insert({
+        user_id: id,
+        role_id: assignedRoleId,
+        assigned_by: currentUser.id,
       });
     }
+
+    await logAuditEvent({
+      actor: currentUser,
+      action: 'USER_UPDATED',
+      entityType: 'USER',
+      entityId: id,
+      metadata: { newRole: assignedRoleName, newName: name, is_active },
+    });
 
     return NextResponse.json({ success: true, user: updated });
   } catch (error: any) {
@@ -235,8 +294,11 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const currentUser = await getCurrentUser();
-  if (!currentUser || !canManageUsers(currentUser.role)) {
-    return NextResponse.json({ error: 'Unauthorized: Admin privileges required.' }, { status: 403 });
+  if (!currentUser || !isSuperAdmin(currentUser.role, currentUser.email)) {
+    return NextResponse.json(
+      { error: 'Forbidden: Exclusively the Super Admin / Owner can delete user accounts.' },
+      { status: 403 }
+    );
   }
 
   try {
@@ -247,13 +309,29 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
 
-    // Cannot delete yourself
-    if (id === currentUser.id) {
+    // Prevent deleting root admin account
+    const { data: targetProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('email')
+      .eq('id', id)
+      .single();
+
+    if (targetProfile?.email === 'admin@ventureatlas.in') {
       return NextResponse.json(
-        { error: 'PERMISSION_DENIED: You cannot delete your own administrator account.' },
+        { error: 'SECURITY_RESTRICTION: The Super Admin / Owner account cannot be deleted.' },
         { status: 403 }
       );
     }
+
+    if (id === currentUser.id) {
+      return NextResponse.json(
+        { error: 'PERMISSION_DENIED: You cannot delete your own active account.' },
+        { status: 403 }
+      );
+    }
+
+    // Clean up junction table
+    await supabaseAdmin.from('user_roles').delete().eq('user_id', id);
 
     // Delete profile
     await supabaseAdmin.from('profiles').delete().eq('id', id);
@@ -262,10 +340,10 @@ export async function DELETE(req: NextRequest) {
     await supabaseAdmin.auth.admin.deleteUser(id).catch(() => null);
 
     await logAuditEvent({
-      action: 'DELETE_USER',
+      actor: currentUser,
+      action: 'USER_DELETED',
       entityType: 'USER',
       entityId: id,
-      actor: currentUser,
       metadata: { deletedUserId: id },
     });
 

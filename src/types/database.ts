@@ -7,7 +7,7 @@ export type Json =
   | Json[];
 
 export type ContentStatus = 'DRAFT' | 'SCHEDULED' | 'PUBLISHED' | 'ARCHIVED';
-export type UserRole = 'READER' | 'WRITER' | 'EDITOR' | 'ADMIN';
+export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'EDITOR' | 'WRITER' | 'REVIEWER' | 'MEDIA_MANAGER' | 'READER' | string;
 export type PlanTier = 'FREE' | 'PRO' | 'ENTERPRISE';
 export type CommentStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'DELETED';
 

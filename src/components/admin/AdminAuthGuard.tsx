@@ -88,25 +88,37 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
         const isRootAdmin = authUser.email === 'admin@ventureatlas.in';
         const metaRole = (authUser.user_metadata?.role || authUser.app_metadata?.role) as UserRole | undefined;
 
-        let resolvedRole: UserRole | null = (isRootAdmin ? 'ADMIN' : (metaRole || null)) as UserRole | null;
-        let resolvedName = authUser.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Root Admin' : 'Staff Member');
+        let resolvedRole: UserRole | null = (isRootAdmin ? 'SUPER_ADMIN' : (metaRole || null)) as UserRole | null;
+        let resolvedName = authUser.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Super Admin' : 'Staff Member');
 
-        // Fallback profile check if role not yet in metadata
-        if (!resolvedRole || !['ADMIN', 'EDITOR', 'WRITER'].includes(resolvedRole)) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role, name')
-            .eq('id', authUser.id)
-            .single();
+        // Check profiles table if needed
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, name, is_active')
+          .eq('id', authUser.id)
+          .single();
 
-          if (profile?.role && ['ADMIN', 'EDITOR', 'WRITER'].includes(profile.role)) {
-            resolvedRole = profile.role as UserRole;
-            if (profile.name) resolvedName = profile.name;
+        if (profile?.is_active === false) {
+          syncAdminCookie(false);
+          if (isMounted) {
+            setUser(null);
+            setSession(null);
+            setIsAuthorized(false);
+            setLoading(false);
           }
+          router.replace('/admin/login');
+          return;
         }
 
-        if (isRootAdmin || (resolvedRole && ['ADMIN', 'EDITOR', 'WRITER'].includes(resolvedRole))) {
-          const finalRole: UserRole = resolvedRole || 'ADMIN';
+        if (profile?.role) {
+          resolvedRole = (isRootAdmin ? 'SUPER_ADMIN' : profile.role) as UserRole;
+          if (profile.name) resolvedName = profile.name;
+        }
+
+        const isAuthorizedStaff = isRootAdmin || (resolvedRole && resolvedRole !== 'READER');
+
+        if (isAuthorizedStaff) {
+          const finalRole: UserRole = resolvedRole || (isRootAdmin ? 'SUPER_ADMIN' : 'ADMIN');
           const staffUser: StaffUser = {
             id: authUser.id,
             email: authUser.email || '',
@@ -115,6 +127,7 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
             avatar: null,
             plan: 'ENTERPRISE',
             bio: null,
+            is_active: true,
             mfaEnabled: false,
           };
 
