@@ -90,7 +90,7 @@ SELECT id, email, role FROM public.profiles WHERE email = 'adityapoddarmain@gmai
 ### A. Rotating `SUPABASE_SERVICE_ROLE_KEY`
 1. Navigate to the Supabase Dashboard $\rightarrow$ **Project Settings $\rightarrow$ API**.
 2. Under **Project API keys**, click **"Generate new secret"** for the `service_role` key.
-3. Update `SUPABASE_SERVICE_ROLE_KEY` in your production hosting environment (Vercel / Netlify / Cloudflare / Docker).
+3. Update `SUPABASE_SERVICE_ROLE_KEY` in your production hosting environment (Vercel).
 4. Trigger a production zero-downtime redeployment.
 5. In Supabase Dashboard, revoke the old service role key once the new deployment is live and passing health checks (`/api/health`).
 

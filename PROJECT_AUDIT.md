@@ -10,8 +10,7 @@
 * **Name:** Venture Atlas
 * **Description:** A venture capital intelligence and executive news wire designed for investors, startup founders, and LP decision-makers. The platform delivers strict 60-word micro-briefs, startup architecture breakdowns, and long-form editorial teardowns. It features an interactive mobile-first feed with a curved slide-over reader, canvas design studio for admins, real-time database-backed likes, accessible typography controls, and an animated View Transitions theme toggler.
 * **Target User:** Early/growth-stage venture investors, angel syndicates, founders, tech executives, and corporate strategy analysts.
-* **Current Stage:** Functional MVP / Pre-Production (active local development and database synchronization).
-* **Deployment Status:** Configured for Netlify / Vercel deployment with Supabase PostgreSQL cloud sync; currently running strictly in local execution on `http://localhost:3000`.
+* **Deployment Status:** Deployed on Vercel with automatic GitHub synchronization and Supabase PostgreSQL cloud sync.
 
 ---
 
