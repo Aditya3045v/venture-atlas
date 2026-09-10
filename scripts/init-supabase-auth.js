@@ -1,7 +1,12 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const SUPABASE_URL = 'https://fckmhqyhglfnqhpjzrvu.supabase.co';
-const SUPABASE_SERVICE_ROLE_KEY = 'your-service-role-key';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://fckmhqyhglfnqhpjzrvu.supabase.co';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('ERROR: SUPABASE_SERVICE_ROLE_KEY environment variable is required.');
+  process.exit(1);
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
