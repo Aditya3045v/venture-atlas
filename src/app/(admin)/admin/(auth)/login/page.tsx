@@ -40,16 +40,28 @@ function AdminLoginForm() {
         return;
       }
 
-      // 2. Query user profile to verify staff role
+      // 2. Query user profile & role to verify staff authorization
+      const isOwner = email.trim().toLowerCase() === 'admin@ventureatlas.in';
+
       const { data: profile } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, is_active')
         .eq('id', authData.user.id)
         .single();
 
-      const userRole = profile?.role || authData.user.user_metadata?.role;
+      if (profile?.is_active === false && !isOwner) {
+        await supabase.auth.signOut();
+        setErrorMsg('This account has been deactivated. Please contact the administrator.');
+        setLoading(false);
+        return;
+      }
 
-      if (!userRole || !['WRITER', 'EDITOR', 'ADMIN'].includes(userRole)) {
+      const userRole = (isOwner ? 'SUPER_ADMIN' : (profile?.role || authData.user.user_metadata?.role)) as string;
+
+      // Allow SUPER_ADMIN, ADMIN, EDITOR, WRITER, REVIEWER, MEDIA_MANAGER or any active staff role
+      const isAuthorized = isOwner || (userRole && !['READER', 'USER'].includes(userRole));
+
+      if (!isAuthorized) {
         await supabase.auth.signOut();
         setErrorMsg('This account does not have editorial access.');
         setLoading(false);
