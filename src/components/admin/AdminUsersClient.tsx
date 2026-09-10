@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { UserRole, PermissionItem, RoleItem } from '@/types';
 import { useToast } from '@/components/providers/ToastProvider';
+import { adminFetch } from '@/lib/api/adminClient';
 import {
   UserPlus,
   Shield,
@@ -132,7 +133,7 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({
     setAddLoading(true);
     try {
       const selectedRole = roles.find(r => r.id === addRoleId);
-      const res = await fetch('/api/admin/users', {
+      const res = await adminFetch('/api/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -205,7 +206,7 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({
         payload.password = editPassword;
       }
 
-      const res = await fetch('/api/admin/users', {
+      const res = await adminFetch('/api/admin/users', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -238,7 +239,7 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({
 
     const nextStatus = !user.is_active;
     try {
-      const res = await fetch('/api/admin/users', {
+      const res = await adminFetch('/api/admin/users', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -271,7 +272,7 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({
     if (!confirm(`Are you sure you want to permanently delete ${userName} (${userEmail})?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/users?id=${id}`, {
+      const res = await adminFetch(`/api/admin/users?id=${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {
@@ -301,7 +302,7 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({
 
     setCreateRoleLoading(true);
     try {
-      const res = await fetch('/api/admin/roles', {
+      const res = await adminFetch('/api/admin/roles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -354,7 +355,7 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({
 
     setConfigRoleLoading(true);
     try {
-      const res = await fetch('/api/admin/roles', {
+      const res = await adminFetch('/api/admin/roles', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -405,7 +406,7 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({
     }
 
     try {
-      const res = await fetch(`/api/admin/roles?id=${role.id}`, {
+      const res = await adminFetch(`/api/admin/roles?id=${role.id}`, {
         method: 'DELETE',
       });
       if (res.ok) {

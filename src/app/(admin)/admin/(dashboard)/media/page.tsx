@@ -5,6 +5,7 @@ import { Image as ImageIcon, Copy, Check, Plus, Trash2, Sparkles, RefreshCw } fr
 import { useToast } from '@/components/providers/ToastProvider';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { adminFetch } from '@/lib/api/adminClient';
 
 interface MediaItem {
   id: string;
@@ -61,7 +62,7 @@ export default function AdminMediaPage() {
   const fetchMedia = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/media');
+      const res = await adminFetch('/api/admin/media');
       if (res.ok) {
         const data = await res.json();
         setMediaList(data.assets || []);
@@ -95,7 +96,7 @@ export default function AdminMediaPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/admin/media', {
+      const res = await adminFetch('/api/admin/media', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -123,7 +124,7 @@ export default function AdminMediaPage() {
 
   const handleRegisterPreset = async (preset: { title: string; url: string; category: string }) => {
     try {
-      const res = await fetch('/api/admin/media', {
+      const res = await adminFetch('/api/admin/media', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(preset),
@@ -144,7 +145,7 @@ export default function AdminMediaPage() {
     if (!confirm(`Are you sure you want to remove "${title}"?`)) return;
 
     try {
-      const res = await fetch(`/api/admin/media/${id}`, { method: 'DELETE' });
+      const res = await adminFetch(`/api/admin/media/${id}`, { method: 'DELETE' });
       if (res.ok) {
         toast('Media asset removed', 'info');
         setMediaList(prev => prev.filter(m => m.id !== id));

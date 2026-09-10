@@ -31,7 +31,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 }
 
 export async function PUT(req: NextRequest, { params }: RouteContext) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(req);
   if (!user || !canEdit(user.role)) {
     return NextResponse.json({ error: 'Unauthorized: Edit privileges required' }, { status: 403 });
   }
@@ -168,7 +168,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 }
 
 export async function DELETE(req: NextRequest, { params }: RouteContext) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(req);
   if (!user || !canPublish(user.role)) {
     return NextResponse.json({ error: 'Unauthorized: Editor or Admin privileges required to delete' }, { status: 403 });
   }

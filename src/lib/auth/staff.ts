@@ -16,13 +16,79 @@ export interface StaffUser extends UserProfile {
   permissions?: string[];
 }
 
+async function resolveStaffUserFromAuth(user: any): Promise<StaffUser | null> {
+  const isRootAdmin = user.email === 'admin@ventureatlas.in';
+
+  let profile: any = null;
+  try {
+    const { data: pData } = await supabaseAdmin
+      .from('profiles')
+      .select('id, email, name, role, avatar, plan, bio, is_active')
+      .eq('id', user.id)
+      .single();
+
+    if (pData) {
+      profile = pData;
+    }
+  } catch {}
+
+  if (profile?.is_active === false && !isRootAdmin) {
+    return null; // Deactivated account
+  }
+
+  const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as UserRole | undefined;
+  const role = (isRootAdmin ? 'SUPER_ADMIN' : (profile?.role || metaRole || 'WRITER')) as UserRole;
+
+  if (!role || role === 'READER') {
+    return null;
+  }
+
+  return {
+    id: profile?.id || user.id,
+    email: profile?.email || user.email || '',
+    name: profile?.name || user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Super Admin' : 'Staff Member'),
+    role,
+    avatar: profile?.avatar || null,
+    plan: profile?.plan || 'ENTERPRISE',
+    bio: profile?.bio || null,
+    is_active: profile?.is_active ?? true,
+    mfaEnabled: false,
+  };
+}
+
 /**
- * Resolves the authenticated staff user exclusively from Supabase Auth & public.profiles table.
+ * Resolves the authenticated staff user from:
+ * 1. Authorization: Bearer <jwt> header (highest priority, direct token verification)
+ * 2. Forwarded x-admin-* request headers (fast-path from middleware)
+ * 3. Supabase SSR cookies (createServerSupabaseClient)
  * Returns null if no verified Supabase session exists or profile role is invalid.
  */
-export async function getCurrentUser(): Promise<StaffUser | null> {
+export async function getCurrentUser(req?: Request | any): Promise<StaffUser | null> {
   try {
-    // Fast path: check forwarded request headers from middleware
+    // 1. Direct check: Authorization Bearer header
+    let authHeader: string | null = null;
+    if (req?.headers?.get) {
+      authHeader = req.headers.get('authorization');
+    }
+    if (!authHeader) {
+      try {
+        const { headers } = await import('next/headers');
+        authHeader = headers().get('authorization');
+      } catch {}
+    }
+
+    if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
+      const token = authHeader.slice(7).trim();
+      if (token) {
+        const { data: { user: tokenUser }, error: tokenErr } = await supabaseAdmin.auth.getUser(token);
+        if (tokenUser && !tokenErr) {
+          const staffUser = await resolveStaffUserFromAuth(tokenUser);
+          if (staffUser) return staffUser;
+        }
+      }
+    }
+
+    // 2. Fast path: check forwarded request headers from middleware
     try {
       const { headers } = await import('next/headers');
       const headerStore = headers();
@@ -49,56 +115,17 @@ export async function getCurrentUser(): Promise<StaffUser | null> {
       // In case next/headers is not available in current execution context
     }
 
-    const supabase = createServerSupabaseClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // 3. Supabase SSR cookies lookup
+    try {
+      const supabase = createServerSupabaseClient();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (authError || !user) {
-      return null;
-    }
+      if (user && !authError) {
+        return await resolveStaffUserFromAuth(user);
+      }
+    } catch {}
 
-    let profile: any = null;
-    const { data: pData } = await supabase
-      .from('profiles')
-      .select('id, email, name, role, avatar, plan, bio, is_active')
-      .eq('id', user.id)
-      .single();
-
-    if (pData) {
-      profile = pData;
-    } else {
-      // Direct service-role lookup to guarantee verified staff session is never falsely blocked
-      const { data: adminProfile } = await supabaseAdmin
-        .from('profiles')
-        .select('id, email, name, role, avatar, plan, bio, is_active')
-        .eq('id', user.id)
-        .single();
-      profile = adminProfile;
-    }
-
-    if (profile?.is_active === false) {
-      return null; // Deactivated account
-    }
-
-    // Ensure role is a legitimate staff or user role
-    const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as UserRole | undefined;
-    const isRootAdmin = user.email === 'admin@ventureatlas.in';
-    const role = (isRootAdmin ? 'SUPER_ADMIN' : (profile?.role || metaRole || 'WRITER')) as UserRole;
-
-    if (!role || role === 'READER') {
-      return null;
-    }
-
-    return {
-      id: profile?.id || user.id,
-      email: profile?.email || user.email || '',
-      name: profile?.name || user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Super Admin' : 'Staff Member'),
-      role,
-      avatar: profile?.avatar || null,
-      plan: profile?.plan || 'ENTERPRISE',
-      bio: profile?.bio || null,
-      is_active: profile?.is_active ?? true,
-      mfaEnabled: false,
-    };
+    return null;
   } catch {
     return null;
   }

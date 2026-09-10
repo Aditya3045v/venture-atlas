@@ -40,15 +40,42 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin', request.url));
   }
 
-  // Guard /admin routes (support both /admin/login and /admin/signin)
+  // 1.1 If user is authenticated via Supabase session, forward credentials across all admin and api routes
+  if (user) {
+    const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as string | undefined;
+    const isRootAdmin = user.email === 'admin@ventureatlas.in';
+    const resolvedRole = isRootAdmin ? 'SUPER_ADMIN' : (metaRole || 'WRITER');
+    const resolvedName = user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Super Admin' : 'Staff Member');
+
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-admin-id', user.id);
+    requestHeaders.set('x-admin-email', user.email ?? '');
+    requestHeaders.set('x-admin-role', resolvedRole);
+    requestHeaders.set('x-admin-name', resolvedName);
+
+    response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+
+    response.cookies.set('va_admin_session', '1', {
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60,
+      sameSite: 'lax',
+      httpOnly: false,
+    });
+  }
+
+  // 1.2 Guard /admin routes (support both /admin/login and /admin/signin)
   if (path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/signin' && path !== '/admin/signout') {
     const hasAdminSessionCookie = request.cookies.get('va_admin_session')?.value === '1';
     const hasSbAuthCookie = request.cookies.getAll().some(c => c.name.startsWith('sb-') && c.name.includes('auth-token'));
 
     // If no user detected on the server:
     if (!user) {
-      // If the client has an active admin cookie or Supabase auth cookie, do NOT bounce prematurely.
-      // Allow the request to pass through to the page where AdminAuthGuard restores the session via getSession().
+      // If the client has an active admin cookie or Supabase auth cookie, allow the page to load
+      // where AdminAuthGuard restores the session via getSession()
       if (hasAdminSessionCookie || hasSbAuthCookie) {
         return response;
       }
@@ -56,65 +83,6 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set('returnTo', path);
       return NextResponse.redirect(loginUrl);
     }
-
-    // User is verified: resolve role
-    const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as string | undefined;
-    const isRootAdmin = user.email === 'admin@ventureatlas.in';
-    let resolvedRole = isRootAdmin ? 'SUPER_ADMIN' : (metaRole || 'WRITER');
-    let resolvedName = user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Super Admin' : 'Staff Member');
-
-    if (!isRootAdmin && (!metaRole || !['SUPER_ADMIN', 'ADMIN', 'EDITOR', 'WRITER', 'REVIEWER', 'MEDIA_MANAGER'].includes(metaRole))) {
-      try {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role, name, is_active')
-          .eq('id', user.id)
-          .single();
-
-        if (profile?.is_active === false) {
-          const loginUrl = new URL('/admin/login', request.url);
-          return NextResponse.redirect(loginUrl);
-        }
-
-        if (profile?.role && profile.role !== 'READER') {
-          resolvedRole = profile.role;
-          if (profile.name) resolvedName = profile.name;
-        } else if (!hasAdminSessionCookie) {
-          const loginUrl = new URL('/admin/login', request.url);
-          return NextResponse.redirect(loginUrl);
-        }
-      } catch {
-        // In case of transient database error, keep session active
-      }
-    }
-
-    // Forward request headers so Server Components (layout, getCurrentUser) receive them directly
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-admin-id', user.id);
-    requestHeaders.set('x-admin-email', user.email ?? '');
-    requestHeaders.set('x-admin-role', resolvedRole);
-    requestHeaders.set('x-admin-name', resolvedName);
-
-    const forwardResponse = NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-
-    // Copy any cookies set by Supabase SSR
-    response.cookies.getAll().forEach(c => {
-      forwardResponse.cookies.set(c);
-    });
-
-    // Keep the admin session cookie synchronized
-    forwardResponse.cookies.set('va_admin_session', '1', {
-      path: '/',
-      maxAge: 30 * 24 * 60 * 60,
-      sameSite: 'lax',
-      httpOnly: false,
-    });
-
-    return forwardResponse;
   }
 
   // 1.5. Feed route: intentional visitor transition into the reader feed

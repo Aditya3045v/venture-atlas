@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/components/providers/ToastProvider';
+import { adminFetch } from '@/lib/api/adminClient';
 
 const PRESET_COLORS = ['#FF6B6B', '#10B981', '#6366F1', '#F59E0B', '#8B5CF6', '#EC4899', '#3B82F6', '#14B8A6'];
 
@@ -25,7 +26,7 @@ export default function AdminCategoriesPage() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('/api/categories');
+      const res = await adminFetch('/api/categories');
       const data = await res.json();
       setCategories(data.categories || []);
     } catch {
@@ -78,7 +79,7 @@ export default function AdminCategoriesPage() {
       const url = editingCat ? `/api/categories/${editingCat.id}` : '/api/categories';
       const method = editingCat ? 'PUT' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await adminFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -102,7 +103,7 @@ export default function AdminCategoriesPage() {
   const handleDelete = async (cat: CategoryItem) => {
     if (!confirm(`Are you sure you want to delete "${cat.name}"?`)) return;
     try {
-      const res = await fetch(`/api/categories/${cat.id}`, { method: 'DELETE' });
+      const res = await adminFetch(`/api/categories/${cat.id}`, { method: 'DELETE' });
       const data = await res.json();
       if (res.ok) {
         toast(`Category "${cat.name}" deleted`, 'success');

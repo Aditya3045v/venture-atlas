@@ -7,6 +7,7 @@ import { normalizeImageUrl } from '../../lib/validation';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
+import { adminFetch } from '@/lib/api/adminClient';
 import { ArrowLeft, Send, Image as ImageIcon, X, Sparkles, Trash2 } from 'lucide-react';
 
 interface BlogEditorFormProps {
@@ -98,7 +99,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
       const url = initialBlog ? `/api/blogs/${initialBlog.id}` : '/api/blogs';
       const method = initialBlog ? 'PUT' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await adminFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -125,7 +126,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
 
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/blogs/${initialBlog.id}`, { method: 'DELETE' });
+      const res = await adminFetch(`/api/blogs/${initialBlog.id}`, { method: 'DELETE' });
       if (res.ok) {
         toast('Essay deleted successfully', 'success');
         router.push('/admin/blogs');

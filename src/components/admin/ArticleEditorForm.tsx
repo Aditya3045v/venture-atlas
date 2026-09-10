@@ -8,6 +8,7 @@ import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
 import { countWords } from '../../lib/sanitize';
 import { normalizeImageUrl } from '../../lib/validation';
+import { adminFetch } from '@/lib/api/adminClient';
 import { CanvasBlockEditor } from './CanvasBlockEditor';
 import { StoryCard } from '../news/StoryCard';
 import { CanvasStoryView } from '../canvas/CanvasStoryView';
@@ -474,7 +475,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
       const url = initialArticle ? `/api/articles/${initialArticle.id}` : '/api/articles';
       const method = initialArticle ? 'PUT' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await adminFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -515,7 +516,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
 
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/articles/${initialArticle.id}`, { method: 'DELETE' });
+      const res = await adminFetch(`/api/articles/${initialArticle.id}`, { method: 'DELETE' });
       if (res.ok) {
         toast('Article deleted successfully', 'success');
         router.push('/admin/articles');

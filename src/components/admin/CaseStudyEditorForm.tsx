@@ -8,6 +8,7 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
 import { CanvasBlockEditor } from './CanvasBlockEditor';
+import { adminFetch } from '@/lib/api/adminClient';
 import { ArrowLeft, Send, Palette, FileText, Image as ImageIcon, X, Sparkles, Trash2 } from 'lucide-react';
 
 interface CaseStudyEditorFormProps {
@@ -199,7 +200,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       const url = initialCaseStudy ? `/api/case-studies/${initialCaseStudy.id}` : '/api/case-studies';
       const method = initialCaseStudy ? 'PUT' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await adminFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -226,7 +227,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
 
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/case-studies/${initialCaseStudy.id}`, { method: 'DELETE' });
+      const res = await adminFetch(`/api/case-studies/${initialCaseStudy.id}`, { method: 'DELETE' });
       if (res.ok) {
         toast('Case study deleted successfully', 'success');
         router.push('/admin/case-studies');

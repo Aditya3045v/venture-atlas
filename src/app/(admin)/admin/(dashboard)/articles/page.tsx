@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Plus, Search, Trash2, Edit3, CheckCircle2, XCircle, ArrowUpRight, Eye } from 'lucide-react';
 import { ArticleItem, ContentStatus } from '@/types';
 import { useToast } from '@/components/providers/ToastProvider';
+import { adminFetch } from '@/lib/api/adminClient';
 import { formatDistanceToNow } from 'date-fns';
 
 const STATUS_TABS = ['ALL', 'PUBLISHED', 'SCHEDULED', 'IN_REVIEW', 'DRAFT', 'ARCHIVED'];
@@ -18,7 +19,7 @@ export default function AdminArticlesPage() {
 
   const fetchArticles = async () => {
     try {
-      const res = await fetch('/api/articles?all=true');
+      const res = await adminFetch('/api/articles?all=true');
       const data = await res.json();
       setArticles(data.articles || []);
     } catch {
@@ -35,7 +36,7 @@ export default function AdminArticlesPage() {
   const handleTogglePublish = async (article: ArticleItem) => {
     const nextStatus: ContentStatus = article.status === 'PUBLISHED' ? 'DRAFT' : 'PUBLISHED';
     try {
-      const res = await fetch(`/api/articles/${article.id}/status`, {
+      const res = await adminFetch(`/api/articles/${article.id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: nextStatus }),
@@ -58,7 +59,7 @@ export default function AdminArticlesPage() {
     if (!confirm('Are you sure you want to permanently delete this story?')) return;
 
     try {
-      const res = await fetch(`/api/articles/${id}`, { method: 'DELETE' });
+      const res = await adminFetch(`/api/articles/${id}`, { method: 'DELETE' });
       if (res.ok) {
         toast('Article deleted successfully', 'success');
         setArticles(prev => prev.filter(a => a.id !== id));

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { NavigationItem } from '@/types';
+import { adminFetch } from '@/lib/api/adminClient';
 import {
   Compass,
   Plus,
@@ -65,7 +66,7 @@ export const AdminNavigationClient: React.FC<AdminNavigationClientProps> = ({ in
     setLoading(true);
 
     try {
-      const res = await fetch('/api/admin/navigation', {
+      const res = await adminFetch('/api/admin/navigation', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -87,7 +88,7 @@ export const AdminNavigationClient: React.FC<AdminNavigationClientProps> = ({ in
   const handleToggleActive = async (item: NavigationItem) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/navigation/${item.id}`, {
+      const res = await adminFetch(`/api/admin/navigation/${item.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !item.isActive }),
@@ -126,7 +127,7 @@ export const AdminNavigationClient: React.FC<AdminNavigationClientProps> = ({ in
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/navigation/${id}`, {
+      const res = await adminFetch(`/api/admin/navigation/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -158,7 +159,7 @@ export const AdminNavigationClient: React.FC<AdminNavigationClientProps> = ({ in
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/navigation/${item.id}`, {
+      const res = await adminFetch(`/api/admin/navigation/${item.id}`, {
         method: 'DELETE',
       });
 
@@ -182,7 +183,7 @@ export const AdminNavigationClient: React.FC<AdminNavigationClientProps> = ({ in
 
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/navigation', {
+      const res = await adminFetch('/api/admin/navigation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

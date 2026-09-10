@@ -17,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(req);
   if (!user || !canEdit(user.role)) {
     return NextResponse.json({ error: 'Unauthorized: Staff credentials required.' }, { status: 403 });
   }

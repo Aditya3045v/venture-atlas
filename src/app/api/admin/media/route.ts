@@ -6,8 +6,8 @@ import { normalizeImageUrl } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  const user = await getCurrentUser();
+export async function GET(req: NextRequest) {
+  const user = await getCurrentUser(req);
   if (!user || !canEdit(user.role)) {
     return NextResponse.json(
       { error: 'Unauthorized: Staff credentials required.' },
@@ -35,7 +35,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser(req);
   if (!user || !canEdit(user.role)) {
     return NextResponse.json(
       { error: 'Unauthorized: Staff credentials required.' },

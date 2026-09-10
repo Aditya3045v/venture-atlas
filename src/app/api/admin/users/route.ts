@@ -5,8 +5,8 @@ import { logAuditEvent } from '@/lib/audit';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  const currentUser = await getCurrentUser();
+export async function GET(req: NextRequest) {
+  const currentUser = await getCurrentUser(req);
   if (!currentUser) {
     return NextResponse.json({ error: 'Unauthorized: Staff clearance required.' }, { status: 401 });
   }
@@ -39,7 +39,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser(req);
   if (!currentUser || !isSuperAdmin(currentUser.role, currentUser.email)) {
     return NextResponse.json(
       { error: 'Forbidden: Exclusively the Super Admin / Owner can create new user accounts.' },
@@ -159,7 +159,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser(req);
   if (!currentUser || !isSuperAdmin(currentUser.role, currentUser.email)) {
     return NextResponse.json(
       { error: 'Forbidden: Exclusively the Super Admin / Owner can modify users and roles.' },
@@ -293,7 +293,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser(req);
   if (!currentUser || !isSuperAdmin(currentUser.role, currentUser.email)) {
     return NextResponse.json(
       { error: 'Forbidden: Exclusively the Super Admin / Owner can delete user accounts.' },
