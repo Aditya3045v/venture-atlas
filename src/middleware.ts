@@ -40,54 +40,76 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin', request.url));
   }
 
-  // Guard /admin routes
-  if (path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/signout') {
+  // Guard /admin routes (support both /admin/login and /admin/signin)
+  if (path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/signin' && path !== '/admin/signout') {
+    const hasAdminSessionCookie = request.cookies.get('va_admin_session')?.value === '1';
+    const hasSbAuthCookie = request.cookies.getAll().some(c => c.name.startsWith('sb-') && c.name.includes('auth-token'));
+
+    // If no user detected on the server:
     if (!user) {
+      // If the client has an active admin cookie or Supabase auth cookie, do NOT bounce prematurely.
+      // Allow the request to pass through to the page where AdminAuthGuard restores the session via getSession().
+      if (hasAdminSessionCookie || hasSbAuthCookie) {
+        return response;
+      }
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('returnTo', path);
       return NextResponse.redirect(loginUrl);
     }
 
-    // Resilient staff role resolution:
-    // Fast path: inspect metadata or root admin first to avoid network latency/timeouts on page switches
+    // User is verified: resolve role
     const metaRole = (user.user_metadata?.role || user.app_metadata?.role) as string | undefined;
     const isRootAdmin = user.email === 'admin@ventureatlas.in';
+    let resolvedRole = isRootAdmin ? 'ADMIN' : (metaRole || 'ADMIN');
+    let resolvedName = user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Root Admin' : 'Staff Member');
 
-    // Fast path: role is confirmed from metadata — inject headers and allow through
-    if (isRootAdmin || (metaRole && ['ADMIN', 'EDITOR', 'WRITER'].includes(metaRole))) {
-      const resolvedRole = isRootAdmin ? (metaRole || 'ADMIN') : metaRole!;
-      response.headers.set('x-admin-id', user.id);
-      response.headers.set('x-admin-email', user.email ?? '');
-      response.headers.set('x-admin-role', resolvedRole);
-      response.headers.set('x-admin-name', user.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Root Admin' : 'Staff Member'));
-      return response;
-    }
+    if (!isRootAdmin && (!metaRole || !['ADMIN', 'EDITOR', 'WRITER'].includes(metaRole))) {
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role, name')
+          .eq('id', user.id)
+          .single();
 
-    // Fallback: query profiles table if metadata wasn't cached
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, name')
-        .eq('id', user.id)
-        .single();
-
-      const role = profile?.role;
-      if (!role || !['ADMIN', 'EDITOR', 'WRITER'].includes(role)) {
-        const loginUrl = new URL('/admin/login', request.url);
-        return NextResponse.redirect(loginUrl);
+        if (profile?.role && ['ADMIN', 'EDITOR', 'WRITER'].includes(profile.role)) {
+          resolvedRole = profile.role;
+          if (profile.name) resolvedName = profile.name;
+        } else if (!hasAdminSessionCookie) {
+          const loginUrl = new URL('/admin/login', request.url);
+          return NextResponse.redirect(loginUrl);
+        }
+      } catch {
+        // In case of transient database error, keep session active
       }
-
-      // Inject headers so the layout can skip DB auth
-      response.headers.set('x-admin-id', user.id);
-      response.headers.set('x-admin-email', user.email ?? '');
-      response.headers.set('x-admin-role', role);
-      response.headers.set('x-admin-name', profile?.name || user.user_metadata?.name || 'Staff Member');
-    } catch {
-      // In case of transient database error, keep session active
     }
 
-    // Direct, frictionless access to admin dashboard
-    return response;
+    // Forward request headers so Server Components (layout, getCurrentUser) receive them directly
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-admin-id', user.id);
+    requestHeaders.set('x-admin-email', user.email ?? '');
+    requestHeaders.set('x-admin-role', resolvedRole);
+    requestHeaders.set('x-admin-name', resolvedName);
+
+    const forwardResponse = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+
+    // Copy any cookies set by Supabase SSR
+    response.cookies.getAll().forEach(c => {
+      forwardResponse.cookies.set(c);
+    });
+
+    // Keep the admin session cookie synchronized
+    forwardResponse.cookies.set('va_admin_session', '1', {
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60,
+      sameSite: 'lax',
+      httpOnly: false,
+    });
+
+    return forwardResponse;
   }
 
   // 1.5. Feed route: intentional visitor transition into the reader feed

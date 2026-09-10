@@ -760,38 +760,7 @@ export function LandingView() {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          7. EDITORIAL FOOTER
-      ────────────────────────────────────────────────────────────── */}
-      <footer className="w-full border-t border-slate-200/80 bg-white py-12 px-6 md:px-12 mt-16 text-xs text-slate-500 select-none">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
-              ✦
-            </div>
-            <div>
-              <span className="font-display font-medium text-slate-900 text-sm block">Venture Atlas</span>
-              <span className="text-[11px] text-slate-400">Startup, crypto & investment news — 60 words at a time</span>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-6 text-slate-600 font-medium">
-            <Link href="/feed" onClick={handleDirectEnter} className="hover:text-slate-900 transition-colors">Feed</Link>
-            <button onClick={() => setIsProductsOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Products</button>
-            <button onClick={() => setIsDocsOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Docs</button>
-            <button onClick={() => setIsContactOpen(true)} className="hover:text-slate-900 transition-colors cursor-pointer">Contact</button>
-            <Link href="/about" className="hover:text-slate-900 transition-colors">About</Link>
-            <Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-slate-900 transition-colors">Terms</Link>
-          </div>
-
-          <div className="font-mono text-slate-400 text-[11px]">
-            © {new Date().getFullYear()} Venture Atlas Intelligence Inc. All rights reserved.
-          </div>
-        </div>
-      </footer>
-
-      {/* ─────────────────────────────────────────────────────────────
-          8. INTERACTIVE MODALS (Contact Us, Products, Docs)
+          INTERACTIVE MODALS (Contact Us, Products, Docs)
       ────────────────────────────────────────────────────────────── */}
       {/* Contact Modal */}
       <AnimatePresence>

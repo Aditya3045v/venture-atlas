@@ -21,6 +21,31 @@ export interface StaffUser extends UserProfile {
  */
 export async function getCurrentUser(): Promise<StaffUser | null> {
   try {
+    // Fast path: check forwarded request headers from middleware
+    try {
+      const { headers } = await import('next/headers');
+      const headerStore = headers();
+      const adminId = headerStore.get('x-admin-id');
+      const adminEmail = headerStore.get('x-admin-email');
+      const adminRole = headerStore.get('x-admin-role') as UserRole | null;
+      const adminName = headerStore.get('x-admin-name');
+
+      if (adminId && adminRole && ['ADMIN', 'EDITOR', 'WRITER'].includes(adminRole)) {
+        return {
+          id: adminId,
+          email: adminEmail || '',
+          name: adminName || 'Staff Member',
+          role: adminRole,
+          avatar: null,
+          plan: 'ENTERPRISE',
+          bio: null,
+          mfaEnabled: false,
+        };
+      }
+    } catch {
+      // In case next/headers is not available in current execution context
+    }
+
     const supabase = createServerSupabaseClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 

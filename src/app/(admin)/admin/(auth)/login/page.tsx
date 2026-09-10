@@ -57,7 +57,10 @@ function AdminLoginForm() {
       }
 
       // 3. Successful login - ensure session cookies are synced and redirect
-      await new Promise(r => setTimeout(r, 100));
+      try {
+        document.cookie = 'va_admin_session=1; path=/; max-age=2592000; SameSite=Lax';
+      } catch {}
+      await new Promise(r => setTimeout(r, 150));
       window.location.href = returnTo;
     } catch {
       setErrorMsg('An authentication error occurred. Please try again.');

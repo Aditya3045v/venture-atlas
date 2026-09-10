@@ -29,6 +29,12 @@ async function performSignOut(request: Request) {
         });
       }
     });
+    response.cookies.set({
+      name: 'va_admin_session',
+      value: '',
+      path: '/',
+      maxAge: 0,
+    });
   } catch {
     // Ignore
   }

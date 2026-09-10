@@ -21,6 +21,8 @@ import {
 import { getCurrentUser, canEdit, type StaffUser } from '@/lib/auth/staff';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
+import { AdminAuthGuard } from '@/components/admin/AdminAuthGuard';
+import { AdminSidebarRoleBadge, AdminSidebarUserName } from '@/components/admin/AdminSidebarUser';
 import type { UserRole } from '@/types';
 
 export const revalidate = 0;
@@ -52,12 +54,12 @@ export default async function AdminDashboardLayout({
       mfaEnabled: false,
     };
   } else {
-    // Fallback: middleware headers not present (shouldn't happen normally)
-    user = await getCurrentUser();
-  }
-
-  if (!user || !canEdit(user.role)) {
-    redirect('/admin/login');
+    // Fallback: middleware headers not present or first request
+    try {
+      user = await getCurrentUser();
+    } catch {
+      user = null;
+    }
   }
 
   const navItems = [
@@ -75,7 +77,8 @@ export default async function AdminDashboardLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row">
+    <AdminAuthGuard initialUser={user}>
+      <div className="min-h-screen bg-background flex flex-col md:flex-row">
       {/* Sidebar (Desktop) */}
       <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-border bg-surface p-4 flex flex-col justify-between shrink-0 select-none">
         <div className="space-y-5">
@@ -97,9 +100,7 @@ export default async function AdminDashboardLayout({
               <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-text-tertiary">
                 ADMIN CONTROL
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase bg-surface-muted text-text-primary border border-border">
-                {user.role}
-              </span>
+              <AdminSidebarRoleBadge fallbackRole={user?.role} />
             </div>
           </div>
 
@@ -152,7 +153,7 @@ export default async function AdminDashboardLayout({
         {/* User Info, Direct Public Navigation & Sign Out */}
         <div className="pt-4 border-t border-border space-y-2 mt-4">
           <div className="text-xs font-mono text-text-tertiary truncate">
-            Logged as: <span className="font-bold text-text-primary">{user.name}</span>
+            Logged as: <AdminSidebarUserName fallbackName={user?.name} />
           </div>
 
           <div className="space-y-1.5">
@@ -186,5 +187,6 @@ export default async function AdminDashboardLayout({
         {children}
       </main>
     </div>
+    </AdminAuthGuard>
   );
 }
