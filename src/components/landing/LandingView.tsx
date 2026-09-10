@@ -411,64 +411,6 @@ export function LandingView() {
             </motion.div>
           </div>
 
-          {/* ─────────────────────────────────────────────────────────────
-              FLOATING BOTTOM NAVIGATION BAR
-          ────────────────────────────────────────────────────────────── */}
-          <motion.nav
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute bottom-4 sm:bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-30 w-auto max-w-[95%]"
-          >
-            <div className="flex items-center bg-white/90 backdrop-blur-2xl px-1.5 py-1.5 rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.08)] border border-slate-200/40">
-              {/* Sparkle Logo Mark */}
-              <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm select-none">
-                ✦
-              </div>
-
-              {/* Center Navigation Links */}
-              <div className="hidden sm:flex items-center gap-1 mx-2">
-                <button
-                  onClick={() => setIsProductsOpen(true)}
-                  className="text-slate-600 hover:text-slate-900 text-[13px] font-medium px-4 py-2 rounded-full hover:bg-slate-100/80 transition-colors cursor-pointer"
-                >
-                  Products
-                </button>
-                <button
-                  onClick={() => setIsDocsOpen(true)}
-                  className="text-slate-600 hover:text-slate-900 text-[13px] font-medium px-4 py-2 rounded-full hover:bg-slate-100/80 transition-colors cursor-pointer"
-                >
-                  Docs
-                </button>
-                <Link
-                  href="/feed" onClick={handleDirectEnter}
-                  className="text-slate-600 hover:text-slate-900 text-[13px] font-medium px-4 py-2 rounded-full hover:bg-slate-100/80 transition-colors"
-                >
-                  Feed
-                </Link>
-              </div>
-
-              {/* "Get in touch" Action Button (Marquee Card structure + animated hover gradient) */}
-              <button
-                onClick={() => setIsContactOpen(true)}
-                className="group relative flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-slate-200/60 shadow-sm text-slate-800 text-[13px] font-medium hover:border-slate-300 transition-all overflow-hidden cursor-pointer"
-              >
-                <div
-                  className="absolute inset-0 opacity-0 scale-150 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6)',
-                  }}
-                />
-                <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
-                  Get in touch
-                </span>
-                <ChevronRight
-                  size={14}
-                  className="relative z-10 transition-all duration-300 group-hover:text-white group-hover:translate-x-0.5"
-                />
-              </button>
-            </div>
-          </motion.nav>
         </section>
 
         {/* ─────────────────────────────────────────────────────────────
