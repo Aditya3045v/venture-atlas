@@ -12,18 +12,59 @@ export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {
   try {
     let token: string | undefined;
 
-    // 1. Try Supabase browser client session
+    // 1. Try Supabase browser client session (with auto-refresh if near expiry)
     try {
       const supabase = createClient();
       const { data: { session } } = await supabase.auth.getSession();
-      token = session?.access_token;
+      if (session?.access_token) {
+        token = session.access_token;
+        const now = Math.floor(Date.now() / 1000);
+        if (session.expires_at && session.expires_at - now < 300) {
+          try {
+            const { data: refreshed } = await supabase.auth.refreshSession();
+            if (refreshed.session?.access_token) {
+              token = refreshed.session.access_token;
+            }
+          } catch {}
+        }
+      }
     } catch {}
 
-    // 2. Fallback: check va_admin_token cookie
+    // 2. Fallback: check document.cookie for va_admin_token or sb-*-auth-token chunks
     if (!token && typeof document !== 'undefined') {
-      const match = document.cookie.match(/(?:^|;\s*)va_admin_token=([^;]+)/);
+      const cookieStr = document.cookie || '';
+
+      const match = cookieStr.match(/(?:^|;\s*)va_admin_token=([^;]+)/);
       if (match && match[1]) {
-        token = match[1];
+        token = decodeURIComponent(match[1]);
+      }
+
+      if (!token) {
+        const cookies: Record<string, string> = {};
+        cookieStr.split(';').forEach(c => {
+          const idx = c.indexOf('=');
+          if (idx > -1) {
+            cookies[c.slice(0, idx).trim()] = c.slice(idx + 1).trim();
+          }
+        });
+        const sbKeys = Object.keys(cookies).filter(k => k.startsWith('sb-') && k.includes('auth-token')).sort();
+        if (sbKeys.length > 0) {
+          let combined = sbKeys.map(k => cookies[k]).join('');
+          if (combined.startsWith('base64-')) {
+            try {
+              combined = atob(combined.slice(7));
+            } catch {}
+          }
+          try {
+            const parsed = JSON.parse(combined);
+            token = parsed.access_token;
+          } catch {
+            try {
+              const parsed = JSON.parse(decodeURIComponent(combined));
+              token = parsed.access_token;
+            } catch {}
+          }
+        }
       }
     }
 

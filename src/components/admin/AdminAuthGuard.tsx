@@ -69,7 +69,20 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
     const checkAndRestoreSession = async () => {
       try {
         // 1. Restore the existing Supabase session using getSession()
-        const { data: { session: currentSession }, error } = await supabase.auth.getSession();
+        let { data: { session: currentSession }, error } = await supabase.auth.getSession();
+
+        // If session is expiring soon or expired, refresh it
+        if (currentSession?.expires_at) {
+          const now = Math.floor(Date.now() / 1000);
+          if (currentSession.expires_at - now < 300) {
+            try {
+              const { data: refreshed } = await supabase.auth.refreshSession();
+              if (refreshed.session) {
+                currentSession = refreshed.session;
+              }
+            } catch {}
+          }
+        }
 
         if (error || !currentSession || !currentSession.user) {
           if (!initialUser) {
