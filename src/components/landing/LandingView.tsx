@@ -25,6 +25,7 @@ import {
   BarChart2,
   Cpu,
   Users,
+  Loader2,
 } from 'lucide-react';
 
 interface BrandLogo {
@@ -203,6 +204,11 @@ export function LandingView() {
   const [activeBriefIndex, setActiveBriefIndex] = useState(0);
   const activeBrief = SAMPLE_BRIEFS[activeBriefIndex];
 
+  // Hero email collection state
+  const [heroEmail, setHeroEmail] = useState('');
+  const [heroSubmitting, setHeroSubmitting] = useState(false);
+  const [heroSuccess, setHeroSuccess] = useState(false);
+
   // Quick access email capture form state
   const [captureEmail, setCaptureEmail] = useState('');
   const [captureDone, setCaptureDone] = useState(false);
@@ -252,6 +258,30 @@ export function LandingView() {
       document.cookie = 'va_reader_client=1; path=/; max-age=31536000';
       localStorage.setItem('va_reader_active', 'true');
     } catch {}
+  };
+
+  const handleHeroEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!heroEmail || heroSubmitting) return;
+    setHeroSubmitting(true);
+    handleDirectEnter();
+    try {
+      await fetch('/api/reader/enter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: heroEmail.trim().toLowerCase(),
+          source: 'HERO_EMAIL_BOX',
+        }),
+      });
+      setHeroSuccess(true);
+    } catch (err) {
+      console.warn('Hero email enter error:', err);
+    } finally {
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 300);
+    }
   };
 
   const handleCaptureSubmit = async (e: React.FormEvent) => {
@@ -326,20 +356,53 @@ export function LandingView() {
                 Designing products, powering ecosystems, and scaling platforms that shape the future. The real-time intelligence wire for tech founders, venture capitalists, and operators.
               </p>
 
-              <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3">
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setIsContactOpen(true)}
-                  className="px-6 py-3 rounded-full bg-white text-slate-950 hover:bg-slate-100 text-[14px] font-medium transition-all shadow-lg hover:shadow-xl cursor-pointer flex items-center gap-2"
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-xl">
+                <form
+                  onSubmit={handleHeroEmailSubmit}
+                  className="flex items-center gap-1.5 p-1.5 rounded-full bg-white/95 backdrop-blur-xl border border-white/60 shadow-xl w-full sm:w-auto flex-1 transition-all focus-within:ring-2 focus-within:ring-white/80"
                 >
-                  <span>Contact Us</span>
-                  <ArrowRight size={14} />
-                </motion.button>
+                  <div className="pl-3.5 pr-1 text-slate-400">
+                    <Mail size={16} />
+                  </div>
+                  <input
+                    type="email"
+                    required
+                    value={heroEmail}
+                    onChange={e => setHeroEmail(e.target.value)}
+                    placeholder="Enter your work email..."
+                    disabled={heroSubmitting || heroSuccess}
+                    className="flex-1 bg-transparent py-2 text-[14px] text-slate-900 placeholder:text-slate-400 font-sans focus:outline-none min-w-[160px]"
+                  />
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    type="submit"
+                    disabled={heroSubmitting || heroSuccess}
+                    className="px-5 py-2.5 rounded-full bg-slate-950 text-white hover:bg-slate-800 text-[13px] font-medium transition-all shadow-md flex items-center justify-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-75"
+                  >
+                    {heroSubmitting ? (
+                      <>
+                        <Loader2 size={13} className="animate-spin" />
+                        <span>Joining...</span>
+                      </>
+                    ) : heroSuccess ? (
+                      <>
+                        <Check size={13} className="text-emerald-400" />
+                        <span>Entering...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Get Access</span>
+                        <ArrowRight size={13} />
+                      </>
+                    )}
+                  </motion.button>
+                </form>
 
                 <Link
-                  href="/feed" onClick={handleDirectEnter}
-                  className="px-6 py-3 rounded-full bg-white/20 hover:bg-white/30 text-white text-[14px] font-medium border border-white/30 shadow-md transition-all flex items-center gap-2 backdrop-blur-md"
+                  href="/feed"
+                  onClick={handleDirectEnter}
+                  className="px-5 py-3 rounded-full bg-white/20 hover:bg-white/30 text-white text-[13px] font-medium border border-white/30 shadow-md transition-all flex items-center justify-center gap-1.5 backdrop-blur-md shrink-0"
                 >
                   <span>Enter Reader Feed</span>
                   <ChevronRight size={14} className="text-white/70" />
