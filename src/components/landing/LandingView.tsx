@@ -80,67 +80,67 @@ const BRAND_LOGOS: BrandLogo[] = [
 // Sample 60-word interactive live intelligence briefs
 const SAMPLE_BRIEFS = [
   {
-    id: 'ai-silicon',
-    category: 'AI SILICON',
-    categoryColor: 'bg-purple-50 text-purple-700 border-purple-200',
-    title: 'Groq Deploys 40MW LPU Inference Cluster to Rival Nvidia Blackwell Pricing',
-    time: '4m ago',
-    source: 'The Information',
-    sourceUrl: 'https://theinformation.com',
-    words: 60,
-    text: 'Groq has powered up a dedicated 40-megawatt deterministic inference datacenter in Texas, delivering sustained 520 tokens/second per user session on open weights. Enterprise customers report 70% cheaper API costs compared to H100 cloud instances. With OpenAI and Anthropic scaling reasoning models, high-speed single-batch throughput has become the primary bottleneck over sheer training compute.',
-    keyStats: [
-      { label: 'Token Speed', value: '520 T/s' },
-      { label: 'Cost Advantage', value: '-70%' },
-      { label: 'Cluster Scale', value: '40 MW' },
-    ],
-  },
-  {
-    id: 'unicorns',
-    category: 'UNICORNS & GROWTH',
+    id: 'startup-funding',
+    category: 'STARTUP FUNDING',
     categoryColor: 'bg-blue-50 text-blue-700 border-blue-200',
-    title: 'Mercor Closes $32M Series A at $250M Valuation Led by Benchmark',
-    time: '18m ago',
+    title: 'Zepto Raises $350M Series F, Valuation Hits $5B as Quick Commerce War Intensifies',
+    time: '6m ago',
     source: 'Bloomberg',
     sourceUrl: 'https://bloomberg.com',
-    words: 59,
-    text: 'Mercor, an automated engineer hiring platform evaluating developer code via proprietary LLM interviewers, has finalized a $32M Series A led by Benchmark partner Peter Fenton. The startup reached $10M ARR in twelve months with twenty employees. The round illustrates institutional appetite for AI-native workflow automation companies that replace legacy recruitment agencies with high-margin software platforms.',
-    keyStats: [
-      { label: 'Valuation', value: '$250M' },
-      { label: 'ARR Milestone', value: '$10M' },
-      { label: 'Lead Partner', value: 'Benchmark' },
-    ],
-  },
-  {
-    id: 'failures',
-    category: 'POST-MORTEM & TEARDOWN',
-    categoryColor: 'bg-rose-50 text-rose-700 border-rose-200',
-    title: 'Protean Dynamics Enters Receivership After $70M Autonomous Drone Burn',
-    time: '42m ago',
-    source: 'Reuters',
-    sourceUrl: 'https://reuters.com',
     words: 60,
-    text: 'Autonomous logistics startup Protean Dynamics has initiated creditor receivership after burning through $70M in Series B venture capital without securing commercial FAA waiver renewals. Hardware manufacturing scrap rates exceeded 42%, draining cash reserves to under six weeks runway. The teardown highlights the steep capital expenditure traps facing dual-use robotics hardware companies that underprice regulatory timelines.',
+    text: "Mumbai-based quick commerce startup Zepto has closed a $350M Series F led by General Catalyst, pushing its valuation to $5 billion. The round comes amid a brutal three-way battle with Blinkit and Swiggy Instamart for India's $45B grocery delivery market. Zepto plans to expand to 100 dark stores across Tier-2 cities within 18 months, targeting profitability by Q4 2025.",
     keyStats: [
-      { label: 'Total Invested', value: '$70M' },
-      { label: 'Scrap Rate', value: '42%' },
-      { label: 'Outcome', value: 'Receivership' },
+      { label: 'Valuation', value: '$5B' },
+      { label: 'Round Size', value: '$350M' },
+      { label: 'Dark Stores', value: '+100' },
     ],
   },
   {
-    id: 'seed-radar',
-    category: 'SEED & STEALTH',
-    categoryColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    title: 'Cognition Dynamics Raises $6.5M Pre-Seed at $40M Post from Founders Fund',
-    time: '1h ago',
-    source: 'TechCrunch',
-    sourceUrl: 'https://techcrunch.com',
-    words: 58,
-    text: 'Former DeepMind researchers have secured $6.5M in pre-seed funding for Cognition Dynamics, a startup designing verifiable reasoning agents for drug discovery. Founders Fund led the syndicate alongside angels from Recursion and Isomorphic Labs. The team is deploying self-supervised reinforcement learning over structural biology datasets, targeting candidate molecule validation in weeks rather than quarters.',
+    id: 'crypto-markets',
+    category: 'CRYPTO & WEB3',
+    categoryColor: 'bg-purple-50 text-purple-700 border-purple-200',
+    title: 'Bitcoin ETFs See $2.1B Net Inflows in Single Week as Institutional Demand Spikes',
+    time: '22m ago',
+    source: 'CoinDesk',
+    sourceUrl: 'https://coindesk.com',
+    words: 59,
+    text: "US spot Bitcoin ETFs recorded $2.1B in net inflows over five trading days, the largest weekly figure since January launch. BlackRock's IBIT alone absorbed $1.3B, pushing its total AUM past $22B. Analysts attribute the surge to pension fund rebalancing ahead of Q3 close and growing conviction among family offices that BTC is a permanent treasury asset.",
     keyStats: [
-      { label: 'Pre-Seed Size', value: '$6.5M' },
-      { label: 'Post Valuation', value: '$40M' },
-      { label: 'Lead Investor', value: 'Founders Fund' },
+      { label: 'Weekly Inflow', value: '$2.1B' },
+      { label: 'IBIT AUM', value: '$22B+' },
+      { label: 'Top Buyer', value: 'BlackRock' },
+    ],
+  },
+  {
+    id: 'investment-news',
+    category: 'INVESTMENT NEWS',
+    categoryColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    title: 'Sequoia India Closes $2.85B Fund VIII, Largest India-Dedicated VC Pool Ever Raised',
+    time: '38m ago',
+    source: 'Economic Times',
+    sourceUrl: 'https://economictimes.com',
+    words: 60,
+    text: "Sequoia Capital India has completed a final close on its eighth fund at $2.85B, surpassing its $2.2B target and setting the record for the largest India-focused venture fund. LPs include sovereign wealth funds from Singapore, Abu Dhabi, and Norway alongside US university endowments. The fund will back early and growth-stage startups across SaaS, fintech, consumer internet, and climate tech.",
+    keyStats: [
+      { label: 'Fund Size', value: '$2.85B' },
+      { label: 'Target Beat', value: '+$650M' },
+      { label: 'Stage Focus', value: 'Early + Growth' },
+    ],
+  },
+  {
+    id: 'unicorn-failure',
+    category: 'FAILURE TEARDOWN',
+    categoryColor: 'bg-rose-50 text-rose-700 border-rose-200',
+    title: "GoMechanic Collapses After $62M Raised — Founders Admit Fake Revenue Reporting",
+    time: '1h ago',
+    source: 'Inc42',
+    sourceUrl: 'https://inc42.com',
+    words: 58,
+    text: "GoMechanic, once valued at $100M and backed by Sequoia and Tiger Global, has admitted to systemic financial fraud after inflating revenue numbers by 2.5x across three fiscal years. Founders filed police complaints against each other as the company began liquidation proceedings. The collapse marks one of India's most public VC-backed startup failures with over $62M in total investor capital destroyed.",
+    keyStats: [
+      { label: 'Capital Lost', value: '$62M' },
+      { label: 'Revenue Faked', value: '2.5x' },
+      { label: 'Outcome', value: 'Liquidation' },
     ],
   },
 ];
@@ -155,40 +155,40 @@ const GLOBAL_HUBS = [
 
 const SPECIALIZED_DESKS = [
   {
-    icon: <Cpu className="w-5 h-5 text-indigo-600" />,
-    title: 'AI & DeepTech Silicon',
-    description: 'Datacenter compute capacity, inference tokens/sec, GPU clustering, and model weights pricing.',
-    tag: '42 Stories / Wk',
+    icon: <Zap className="w-5 h-5 text-blue-600" />,
+    title: 'Startup Funding Rounds',
+    description: 'Every seed, Series A through IPO — funding rounds, cap table changes, valuations, and runway signals across global startup ecosystems.',
+    tag: 'Daily Coverage',
   },
   {
-    icon: <Flame className="w-5 h-5 text-rose-600" />,
-    title: 'Unicorns & Late Stage',
-    description: 'Mega-rounds above $100M, private tender offers, secondary valuations, and IPO filing trackers.',
-    tag: 'Daily Telemetry',
+    icon: <BarChart2 className="w-5 h-5 text-purple-600" />,
+    title: 'Crypto & Web3 Markets',
+    description: 'Bitcoin, Ethereum, altcoins, DeFi protocols, ETF flows, on-chain data, and regulatory developments that move crypto markets.',
+    tag: 'Live Signals',
   },
   {
-    icon: <BarChart2 className="w-5 h-5 text-emerald-600" />,
-    title: 'Venture Capital & LPs',
-    description: 'Institutional LP fund closes, DPI distribution metrics, management fee benchmarks, and capital calls.',
+    icon: <TrendingUp className="w-5 h-5 text-emerald-600" />,
+    title: 'Investment & VC News',
+    description: 'Fund closes, LP commitments, partner moves, portfolio company updates, and institutional capital allocation shifts.',
     tag: 'Weekly Ledger',
   },
   {
-    icon: <Shield className="w-5 h-5 text-amber-600" />,
-    title: 'Failures & Teardowns',
-    description: 'Forensic post-mortems of venture-backed failures, runway burn spikes, and cap-table wipes.',
+    icon: <Flame className="w-5 h-5 text-rose-600" />,
+    title: 'Startup Failures & Teardowns',
+    description: 'Honest forensic post-mortems of VC-backed failures, burn spikes, cap-table wipes, and founder fallouts. Zero spin.',
     tag: 'Zero Sponsored PR',
   },
   {
-    icon: <Zap className="w-5 h-5 text-sky-600" />,
-    title: 'Seed & Early Radar',
-    description: 'Stealth founders, pre-seed round term sheets, incubator grads, and syndicate lead tracker.',
-    tag: 'First Look Wire',
+    icon: <Globe className="w-5 h-5 text-teal-600" />,
+    title: 'Global Deal Flow Tracker',
+    description: 'Track capital corridors from Silicon Valley to Bengaluru, London, Singapore, and Dubai — where the money moves next.',
+    tag: '5 Global Desks',
   },
   {
-    icon: <Globe className="w-5 h-5 text-teal-600" />,
-    title: 'Cross-Border Capital Rails',
-    description: 'Follow capital flows linking Silicon Valley, Bengaluru, London, Tokyo, and Singapore corridors.',
-    tag: '5 Global Desks',
+    icon: <Cpu className="w-5 h-5 text-indigo-600" />,
+    title: 'Unicorn & Growth Stage',
+    description: 'Late-stage rounds above $50M, IPO filings, secondary valuations, tender offers, and pre-IPO lock-up watch.',
+    tag: 'Unicorn Watch',
   },
 ];
 
@@ -349,11 +349,11 @@ export function LandingView() {
               className="max-w-3xl"
             >
               <h1 className="font-display text-[32px] sm:text-[44px] md:text-[56px] font-medium tracking-tight leading-[1.12] md:leading-[1.08] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
-                Foundation of the<br />new digital epoch
+                Startup, Crypto &<br />Investment News — in 60 Words
               </h1>
 
               <p className="font-sans text-[14px] md:text-[15px] text-slate-200/90 mt-3 sm:mt-4 max-w-xl font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
-                Designing products, powering ecosystems, and scaling platforms that shape the future. The real-time intelligence wire for tech founders, venture capitalists, and operators.
+                Venture Atlas delivers funding rounds, crypto market moves, and VC deal flow — distilled to 60 words. No fluff. No ads. Just the signal that matters to founders, investors, and operators.
               </p>
 
               <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-xl">
@@ -477,7 +477,7 @@ export function LandingView() {
         <section className="mt-10 w-full max-w-[1400px] mx-auto overflow-hidden">
           <div className="text-center mb-6">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 font-medium">
-              Ecosystem Backed & Researched Across Leading Tech Platforms
+              Trusted & Cited by Founders, VCs, and Operators Across the Globe
             </span>
           </div>
 
@@ -545,13 +545,13 @@ export function LandingView() {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-mono font-medium uppercase mb-3">
-                <Layers size={13} /> The 60-Word Engine
+                <Layers size={13} /> The 60-Word Format
               </div>
               <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33]">
-                Bloomberg rigor. Inshorts scanning speed.
+                Real news. Real fast. Real sources.
               </h2>
               <p className="text-slate-500 text-sm mt-2 max-w-xl">
-                Every story is algorithmically and editorially audited to strictly 60 words. No padding, no opinion fluff, verified source provenance.
+                Every story — startup funding, crypto move, or VC fund close — is compressed to exactly 60 words. Primary source linked. Zero opinion. Zero filler. Read in under 20 seconds.
               </p>
             </div>
 
@@ -645,7 +645,7 @@ export function LandingView() {
 
               <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 text-xs text-blue-900 leading-relaxed">
                 <span className="font-semibold block mb-1">Venture Atlas Standard</span>
-                Curated by algorithmic extraction and verified by tech analysts. No sponsored placement.
+                Every story is sourced, fact-checked, and written to exactly 60 words. No sponsored posts. No opinion. Just what happened.
               </div>
             </div>
           </div>
@@ -657,13 +657,13 @@ export function LandingView() {
         <section className="w-full max-w-[1400px] mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold block mb-2">
-              Coverage Scope
+              What We Cover
             </span>
             <h2 className="font-display text-3xl md:text-4xl font-medium text-[#0a1b33] tracking-tight">
-              Six Specialized Intelligence Desks
+              Startups. Crypto. Investments.<br />All in one feed.
             </h2>
             <p className="text-slate-500 text-sm mt-3">
-              Institutional rigor applied to the exact spaces where technology, venture financing, and market power converge.
+              From seed rounds to Bitcoin ETF flows — we track the money, the deals, and the collapses so you don't have to read 20 different sources.
             </p>
           </div>
 
@@ -708,13 +708,13 @@ export function LandingView() {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-mono font-medium uppercase mb-3">
-                <Activity size={13} /> Real-Time Dealflow
+                <Activity size={13} /> Live Deal Tracker
               </div>
               <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33]">
-                Global Capital Corridors
+                Where the money is moving right now
               </h2>
               <p className="text-slate-500 text-sm mt-2">
-                Live volume and deal telemetry aggregated across the five primary startup venture rails.
+                Real-time startup funding and investment volumes across the world's five biggest deal-flow hubs — updated every 24 hours.
               </p>
             </div>
 
@@ -760,17 +760,17 @@ export function LandingView() {
             </div>
 
             <h2 className="font-display text-3xl md:text-5xl font-medium tracking-tight text-[#0a1b33] leading-tight">
-              Unlock the Full 60-Word Venture Intelligence Wire
+              Get startup, crypto & investment<br />news — free, every morning
             </h2>
 
             <p className="text-slate-600 text-sm md:text-base mt-4 font-normal leading-relaxed">
-              Every critical funding round, AI compute milestone, failure post-mortem, and valuation shift — delivered every morning with zero sponsored fluff.
+              Join thousands of founders and investors who start their day with Venture Atlas. One email. 60-word stories. The funding rounds, crypto moves, and VC news that actually matter.
             </p>
 
             {captureDone ? (
               <div className="mt-8 p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center justify-center gap-2">
                 <Check size={18} />
-                <span>You're on the wire. We will dispatch the next morning briefing to your inbox.</span>
+                <span>You're in. Expect your first brief in the morning.</span>
               </div>
             ) : (
               <form onSubmit={handleCaptureSubmit} className="mt-8 max-w-md mx-auto flex flex-col sm:flex-row gap-2.5">
@@ -779,29 +779,29 @@ export function LandingView() {
                   required
                   value={captureEmail}
                   onChange={e => setCaptureEmail(e.target.value)}
-                  placeholder="founder@venture.com"
+                  placeholder="your@email.com"
                   className="flex-1 px-5 py-3.5 rounded-full bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all font-sans shadow-sm"
                 />
                 <button
                   type="submit"
                   className="px-7 py-3.5 rounded-full bg-[#0a152d] text-white text-sm font-medium hover:bg-slate-800 transition-all shadow-md cursor-pointer whitespace-nowrap"
                 >
-                  Get VIP Wire
+                  Send Me the News
                 </button>
               </form>
             )}
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 font-mono">
               <span className="flex items-center gap-1">
-                <Check size={13} className="text-emerald-500" /> Free Morning Wire
+                <Check size={13} className="text-emerald-500" /> Free Forever
               </span>
               <span>·</span>
               <span className="flex items-center gap-1">
-                <Check size={13} className="text-emerald-500" /> 60-Word Strict Constraint
+                <Check size={13} className="text-emerald-500" /> No Ads, No Spam
               </span>
               <span>·</span>
               <span className="flex items-center gap-1">
-                <Check size={13} className="text-emerald-500" /> Primary Source Links
+                <Check size={13} className="text-emerald-500" /> Unsubscribe Anytime
               </span>
             </div>
 
@@ -810,7 +810,7 @@ export function LandingView() {
                 href="/feed" onClick={handleDirectEnter}
                 className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:underline transition-colors"
               >
-                Or enter the live web app directly <ArrowRight size={14} />
+                <span>Or browse the live feed without signing up <ArrowRight size={14} /></span>
               </Link>
             </div>
           </div>
@@ -828,7 +828,7 @@ export function LandingView() {
             </div>
             <div>
               <span className="font-display font-medium text-slate-900 text-sm block">Venture Atlas</span>
-              <span className="text-[11px] text-slate-400">The 60-word tech & venture intelligence platform</span>
+              <span className="text-[11px] text-slate-400">Startup, crypto & investment news — 60 words at a time</span>
             </div>
           </div>
 
@@ -874,7 +874,7 @@ export function LandingView() {
                 </div>
                 <div>
                   <h3 className="text-xl font-display font-medium text-[#0a1b33]">Get in touch</h3>
-                  <p className="text-xs text-slate-500 font-sans">Direct access to the intelligence network</p>
+                  <p className="text-xs text-slate-500 font-sans">Partnerships, editorial tips, press & feedback</p>
                 </div>
               </div>
 
@@ -883,8 +883,8 @@ export function LandingView() {
                   <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-3">
                     <Check size={24} />
                   </div>
-                  <h4 className="text-lg font-medium text-slate-900">Message dispatched</h4>
-                  <p className="text-sm text-slate-500 mt-1">Our team will reach out within 24 hours.</p>
+                  <h4 className="text-lg font-medium text-slate-900">Message received</h4>
+                  <p className="text-sm text-slate-500 mt-1">We'll get back to you within 24 hours.</p>
                 </div>
               ) : (
                 <form onSubmit={handleContactSubmit} className="space-y-4 mt-6">
@@ -909,7 +909,7 @@ export function LandingView() {
                       rows={3}
                       value={contactMessage}
                       onChange={e => setContactMessage(e.target.value)}
-                      placeholder="Tell us what you are building or looking for..."
+                      placeholder="Tell us about a story tip, partnership idea, or feedback..."
                       className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all resize-none font-sans"
                     />
                   </div>
@@ -956,8 +956,8 @@ export function LandingView() {
                   ✦
                 </div>
                 <div>
-                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">Ecosystem Products</h3>
-                  <p className="text-xs text-slate-500 font-sans">Real-time venture telemetry & intelligence suite</p>
+                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">What Venture Atlas Covers</h3>
+                  <p className="text-xs text-slate-500 font-sans">Startup funding · Crypto markets · Investment & VC news</p>
                 </div>
               </div>
 
@@ -975,11 +975,11 @@ export function LandingView() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-display font-medium text-slate-900 text-sm">60-Word Dispatches</h4>
+                      <h4 className="font-display font-medium text-slate-900 text-sm">Startup & Investment News Feed</h4>
                       <ChevronRight size={16} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                     <p className="text-xs text-slate-500 mt-1">
-                      Distilled intelligence briefs across AI, Unicorns, Failures, and Seed rounds with 0 fluff.
+                      Funding rounds, VC fund closes, unicorn valuations, startup failures — in 60 words each. Curated daily.
                     </p>
                   </div>
                 </Link>
@@ -989,9 +989,9 @@ export function LandingView() {
                     <Terminal size={20} />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-display font-medium text-slate-900 text-sm">Global Telemetry Hub</h4>
+                    <h4 className="font-display font-medium text-slate-900 text-sm">Crypto & Web3 News</h4>
                     <p className="text-xs text-slate-500 mt-1">
-                      Live tracking across Bengaluru, SF, London, Singapore, and NYC deal flows.
+                      Bitcoin, ETF flows, DeFi protocol updates, on-chain data, and regulatory news that moves markets.
                     </p>
                   </div>
                 </div>
@@ -1032,19 +1032,19 @@ export function LandingView() {
                   <BookOpen size={20} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">Documentation & Architecture</h3>
-                  <p className="text-xs text-slate-500 font-sans">Venture Atlas System Specifications</p>
+                  <h3 className="text-xl font-display font-medium text-[#0a1b33]">About Venture Atlas</h3>
+                  <p className="text-xs text-slate-500 font-sans">What we are, what we cover, and how we work</p>
                 </div>
               </div>
 
               <div className="space-y-3 text-xs text-slate-600 font-sans leading-relaxed">
                 <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                  <p className="font-medium text-slate-900 mb-1">Architecture & Data Model</p>
-                  High-speed Next.js frontend with Supabase real-time telemetry, edge-cached ISR for ultra-low latency feeds.
+                  <p className="font-medium text-slate-900 mb-1">What is Venture Atlas?</p>
+                  Venture Atlas is a news platform covering startup funding, crypto markets, and investment news — condensed to exactly 60 words per story. Built for founders, investors, and operators who need to stay informed without wading through noise.
                 </div>
                 <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                  <p className="font-medium text-slate-900 mb-1">Editorial Precision</p>
-                  Every story is algorithmically and editorially audited to adhere to strict 60-word constraints with original source provenance.
+                  <p className="font-medium text-slate-900 mb-1">How We Work</p>
+                  Every story is sourced from primary publications, verified by our editorial team, and compressed to exactly 60 words. No sponsored content. No opinion pieces. Just facts, figures, and the source link.
                 </div>
               </div>
 
