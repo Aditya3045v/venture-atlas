@@ -32,7 +32,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const slug = slugify(json.title);
+    let slug = slugify(json.title);
+    const { data: existingSlug } = await supabaseAdmin
+      .from('case_studies')
+      .select('id')
+      .eq('slug', slug)
+      .maybeSingle();
+    if (existingSlug) {
+      slug = `${slug}-${Date.now().toString(36)}`;
+    }
 
     const csPayload = {
       title: json.title,

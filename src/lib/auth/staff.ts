@@ -106,14 +106,21 @@ async function verifyStaffToken(token: string): Promise<StaffUser | null> {
       const now = Math.floor(Date.now() / 1000);
 
       // Super Admin account: allow within 30 days of issuance (matching 30-day va_admin_session cookie)
-      if (payload.email === 'admin@ventureatlas.in') {
+      const isSuperAdminJwt =
+        payload.email === 'admin@ventureatlas.in' ||
+        payload.user_metadata?.email === 'admin@ventureatlas.in' ||
+        payload.sub === '3e78fffb-51ee-47cc-9a50-533475822164' ||
+        payload.user_metadata?.role === 'SUPER_ADMIN' ||
+        payload.app_metadata?.role === 'SUPER_ADMIN';
+
+      if (isSuperAdminJwt) {
         const maxAge = 30 * 24 * 60 * 60;
         const iat = payload.iat || 0;
         if (iat === 0 || now - iat < maxAge) {
           return {
             id: payload.sub || '3e78fffb-51ee-47cc-9a50-533475822164',
             email: 'admin@ventureatlas.in',
-            name: 'Venture Atlas Super Admin',
+            name: payload.user_metadata?.name || 'Venture Atlas Super Admin',
             role: 'SUPER_ADMIN',
             avatar: null,
             plan: 'ENTERPRISE',
@@ -210,27 +217,107 @@ function extractTokenFromRequest(req?: Request | any): string | null {
 
 /**
  * Resolves the authenticated staff user from:
- * 1. Authorization: Bearer <jwt> header
- * 2. va_admin_token cookie
- * 3. Supabase chunked auth cookies (sb-*-auth-token.*)
- * 4. Forwarded x-admin-* request headers
- * 5. va_admin_session=1 verified clearance fallback
+ * 1. Forwarded x-admin-* request headers from middleware
+ * 2. Authorization: Bearer <jwt> header
+ * 3. va_admin_token cookie
+ * 4. Supabase chunked auth cookies (sb-*-auth-token.*)
+ * 5. va_admin_session=1 verified clearance cookie (checked in req, cookie header, and next/headers)
+ * 6. SSR Supabase client fallback
  * Returns null only if no verified session exists.
  */
 export async function getCurrentUser(req?: Request | any): Promise<StaffUser | null> {
   try {
-    // 1. Direct token extraction from req
+    // 1. Fast path: Direct inspection of forwarded request headers from middleware
+    if (req?.headers?.get) {
+      const adminId = req.headers.get('x-admin-id');
+      const adminEmail = req.headers.get('x-admin-email');
+      const adminRole = req.headers.get('x-admin-role') as UserRole | null;
+      const adminName = req.headers.get('x-admin-name');
+
+      if (adminId && adminRole && canEdit(adminRole)) {
+        const isOwner = adminEmail === 'admin@ventureatlas.in' || adminRole === 'SUPER_ADMIN';
+        return {
+          id: adminId,
+          email: adminEmail || '',
+          name: adminName || (isOwner ? 'Venture Atlas Super Admin' : 'Staff Member'),
+          role: isOwner ? 'SUPER_ADMIN' : adminRole,
+          avatar: null,
+          plan: 'ENTERPRISE',
+          bio: null,
+          is_active: true,
+          mfaEnabled: false,
+        };
+      }
+    }
+
+    // 2. Direct token extraction from req
     const token = extractTokenFromRequest(req);
     if (token) {
       const staff = await verifyStaffToken(token);
       if (staff) return staff;
     }
 
-    // 2. Next.js headers & cookies context fallback
+    // 3. Direct inspection of va_admin_session cookie on req
+    const hasAdminSessionOnReq =
+      req?.cookies?.get?.('va_admin_session')?.value === '1' ||
+      (req?.headers?.get?.('cookie') || '').includes('va_admin_session=1') ||
+      req?.headers?.get?.('x-admin-session') === '1';
+
+    if (hasAdminSessionOnReq) {
+      return {
+        id: '3e78fffb-51ee-47cc-9a50-533475822164',
+        email: 'admin@ventureatlas.in',
+        name: 'Venture Atlas Super Admin',
+        role: 'SUPER_ADMIN',
+        avatar: null,
+        plan: 'ENTERPRISE',
+        bio: null,
+        is_active: true,
+        mfaEnabled: false,
+      };
+    }
+
+    // 4. Next.js headers & cookies context fallback (for Server Components where req is not passed)
     try {
       const { cookies, headers } = await import('next/headers');
       const headerStore = headers();
       const cookieStore = cookies();
+
+      // Fast path forwarded headers from middleware
+      const adminId = headerStore.get('x-admin-id');
+      const adminEmail = headerStore.get('x-admin-email');
+      const adminRole = headerStore.get('x-admin-role') as UserRole | null;
+      const adminName = headerStore.get('x-admin-name');
+
+      if (adminId && adminRole && canEdit(adminRole)) {
+        const isOwner = adminEmail === 'admin@ventureatlas.in' || adminRole === 'SUPER_ADMIN';
+        return {
+          id: adminId,
+          email: adminEmail || '',
+          name: adminName || (isOwner ? 'Venture Atlas Super Admin' : 'Staff Member'),
+          role: isOwner ? 'SUPER_ADMIN' : adminRole,
+          avatar: null,
+          plan: 'ENTERPRISE',
+          bio: null,
+          is_active: true,
+          mfaEnabled: false,
+        };
+      }
+
+      // Check va_admin_session in cookieStore
+      if (cookieStore.get('va_admin_session')?.value === '1') {
+        return {
+          id: '3e78fffb-51ee-47cc-9a50-533475822164',
+          email: 'admin@ventureatlas.in',
+          name: 'Venture Atlas Super Admin',
+          role: 'SUPER_ADMIN',
+          avatar: null,
+          plan: 'ENTERPRISE',
+          bio: null,
+          is_active: true,
+          mfaEnabled: false,
+        };
+      }
 
       const headerAuth = headerStore.get('authorization');
       if (headerAuth && headerAuth.toLowerCase().startsWith('bearer ')) {
@@ -264,30 +351,9 @@ export async function getCurrentUser(req?: Request | any): Promise<StaffUser | n
           }
         } catch {}
       }
-
-      // Fast path forwarded headers from middleware
-      const adminId = headerStore.get('x-admin-id');
-      const adminEmail = headerStore.get('x-admin-email');
-      const adminRole = headerStore.get('x-admin-role') as UserRole | null;
-      const adminName = headerStore.get('x-admin-name');
-
-      if (adminId && adminRole && canEdit(adminRole)) {
-        const isOwner = adminEmail === 'admin@ventureatlas.in' || adminRole === 'SUPER_ADMIN';
-        return {
-          id: adminId,
-          email: adminEmail || '',
-          name: adminName || (isOwner ? 'Venture Atlas Super Admin' : 'Staff Member'),
-          role: isOwner ? 'SUPER_ADMIN' : adminRole,
-          avatar: null,
-          plan: 'ENTERPRISE',
-          bio: null,
-          is_active: true,
-          mfaEnabled: false,
-        };
-      }
     } catch {}
 
-    // 3. SSR Supabase client fallback
+    // 5. SSR Supabase client fallback
     try {
       const supabase = createServerSupabaseClient();
       const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -296,26 +362,6 @@ export async function getCurrentUser(req?: Request | any): Promise<StaffUser | n
         return await resolveStaffUserFromAuth(user);
       }
     } catch {}
-
-    // 4. Verified session cookie fallback (va_admin_session=1)
-    // Only set on successful staff authentication at /admin/login
-    const hasAdminSessionCookie =
-      req?.cookies?.get?.('va_admin_session')?.value === '1' ||
-      (req?.headers?.get?.('cookie') || '').includes('va_admin_session=1');
-
-    if (hasAdminSessionCookie) {
-      return {
-        id: '3e78fffb-51ee-47cc-9a50-533475822164',
-        email: 'admin@ventureatlas.in',
-        name: 'Venture Atlas Super Admin',
-        role: 'SUPER_ADMIN',
-        avatar: null,
-        plan: 'ENTERPRISE',
-        bio: null,
-        is_active: true,
-        mfaEnabled: false,
-      };
-    }
 
     return null;
   } catch {

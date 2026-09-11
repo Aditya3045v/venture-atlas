@@ -42,7 +42,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const slug = slugify(validated.title);
+    let slug = slugify(validated.title);
+    const { data: existingSlug } = await supabaseAdmin
+      .from('blog_posts')
+      .select('id')
+      .eq('slug', slug)
+      .maybeSingle();
+    if (existingSlug) {
+      slug = `${slug}-${Date.now().toString(36)}`;
+    }
 
     const blogPayload = {
       title: validated.title,

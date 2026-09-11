@@ -448,14 +448,19 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
         }
       : null;
 
+    let cleanSourceUrl = sourceUrl.trim();
+    if (cleanSourceUrl && !cleanSourceUrl.startsWith('http://') && !cleanSourceUrl.startsWith('https://')) {
+      cleanSourceUrl = `https://${cleanSourceUrl}`;
+    }
+
     const payload = {
       title,
       slug: slug.trim() || generateSlug(title),
       summary,
       body: body.trim() || summary,
-      categoryId,
+      categoryId: categoryId || categories[0]?.id || '7bcb8022-93e9-4017-b269-0dba1cc8cc60',
       sourceName: sourceName.trim() || null,
-      sourceUrl: sourceUrl.trim() || null,
+      sourceUrl: cleanSourceUrl || null,
       sourceAuthor: sourceAuthor.trim() || null,
       authorName: authorName.trim() || 'Aditya Poddar',
       authorRole: authorRole.trim() || 'Staff Reporter',

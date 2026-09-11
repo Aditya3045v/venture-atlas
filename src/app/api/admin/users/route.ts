@@ -67,8 +67,8 @@ export async function POST(req: NextRequest) {
 
     const cleanEmail = email.trim().toLowerCase();
 
-    // Resolve role from database
-    let assignedRoleId = role_id;
+    // Resolve role from database safely
+    let assignedRoleId = typeof role_id === 'string' && role_id.trim() ? role_id.trim() : null;
     let assignedRoleName = (role || 'WRITER').toUpperCase();
 
     if (assignedRoleId) {
@@ -76,22 +76,27 @@ export async function POST(req: NextRequest) {
         .from('roles')
         .select('id, name')
         .eq('id', assignedRoleId)
-        .single();
+        .maybeSingle();
       if (roleRow) {
         assignedRoleName = roleRow.name;
+      } else {
+        assignedRoleId = null;
       }
-    } else {
+    }
+
+    if (!assignedRoleId) {
       const { data: roleRow } = await supabaseAdmin
         .from('roles')
         .select('id, name')
         .eq('name', assignedRoleName)
-        .single();
+        .maybeSingle();
       if (roleRow) {
         assignedRoleId = roleRow.id;
       }
     }
 
-    // 1. Create user in Supabase Auth
+    // 1. Create user in Supabase Auth (with graceful update if already registered)
+    let userId: string;
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email: cleanEmail,
       password,
@@ -100,16 +105,38 @@ export async function POST(req: NextRequest) {
       app_metadata: { role: assignedRoleName },
     });
 
-    if (authError || !authUser.user) {
-      return NextResponse.json(
-        { error: authError?.message || 'Failed to create user in authentication provider.' },
-        { status: 400 }
-      );
+    if (authError || !authUser?.user) {
+      if (
+        authError?.message?.toLowerCase().includes('already') ||
+        authError?.message?.toLowerCase().includes('registered')
+      ) {
+        const { data: userList } = await supabaseAdmin.auth.admin.listUsers();
+        const existingUser = userList?.users?.find(u => u.email?.toLowerCase() === cleanEmail);
+        if (existingUser) {
+          userId = existingUser.id;
+          await supabaseAdmin.auth.admin.updateUserById(userId, {
+            password,
+            user_metadata: { name: name.trim(), role: assignedRoleName },
+            app_metadata: { role: assignedRoleName },
+          });
+        } else {
+          return NextResponse.json(
+            { error: authError?.message || 'Failed to create user in authentication provider.' },
+            { status: 400 }
+          );
+        }
+      } else {
+        return NextResponse.json(
+          { error: authError?.message || 'Failed to create user in authentication provider.' },
+          { status: 400 }
+        );
+      }
+    } else {
+      userId = authUser.user.id;
     }
 
-    const userId = authUser.user.id;
-
     // 2. Upsert profile in public.profiles
+    let finalProfile: any = null;
     const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .upsert({
@@ -124,24 +151,50 @@ export async function POST(req: NextRequest) {
         updated_at: new Date().toISOString(),
       })
       .select('*, roles:custom_role_id(id, name, display_name)')
-      .single();
+      .maybeSingle();
 
-    if (profileError) {
-      return NextResponse.json(
-        { error: `User created but profile sync failed: ${profileError.message}` },
-        { status: 500 }
-      );
+    if (profileError || !profile) {
+      const { data: basicProfile, error: basicErr } = await supabaseAdmin
+        .from('profiles')
+        .upsert({
+          id: userId,
+          email: cleanEmail,
+          name: name.trim(),
+          role: assignedRoleName,
+          custom_role_id: assignedRoleId || null,
+          is_active: true,
+          plan: 'ENTERPRISE',
+        })
+        .select('*')
+        .single();
+
+      if (basicErr) {
+        return NextResponse.json(
+          { error: `User created but profile sync failed: ${basicErr.message}` },
+          { status: 500 }
+        );
+      }
+      finalProfile = basicProfile;
+    } else {
+      finalProfile = profile;
     }
 
     // 3. Assign role in public.user_roles
     if (assignedRoleId) {
-      await supabaseAdmin
-        .from('user_roles')
-        .upsert({
-          user_id: userId,
-          role_id: assignedRoleId,
-          assigned_by: currentUser.id,
-        });
+      try {
+        await supabaseAdmin
+          .from('user_roles')
+          .delete()
+          .eq('user_id', userId);
+
+        await supabaseAdmin
+          .from('user_roles')
+          .insert({
+            user_id: userId,
+            role_id: assignedRoleId,
+            assigned_by: currentUser.id,
+          });
+      } catch {}
     }
 
     await logAuditEvent({
@@ -337,7 +390,9 @@ export async function DELETE(req: NextRequest) {
     await supabaseAdmin.from('profiles').delete().eq('id', id);
 
     // Delete auth user
-    await supabaseAdmin.auth.admin.deleteUser(id).catch(() => null);
+    try {
+      await supabaseAdmin.auth.admin.deleteUser(id);
+    } catch {}
 
     await logAuditEvent({
       actor: currentUser,

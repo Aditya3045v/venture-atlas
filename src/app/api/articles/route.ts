@@ -157,6 +157,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Auto-sanitize sourceUrl to ensure valid protocol if domain was entered
+    if (json.sourceUrl && typeof json.sourceUrl === 'string' && json.sourceUrl.trim()) {
+      let trimmedUrl = json.sourceUrl.trim();
+      if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+        trimmedUrl = `https://${trimmedUrl}`;
+      }
+      json.sourceUrl = trimmedUrl;
+    }
+
     // Auto-generate fallbacks for SEO & Photo credit if omitted
     if (!json.seoTitle || !String(json.seoTitle).trim()) {
       json.seoTitle = (json.title || '').slice(0, 68);
@@ -170,8 +179,36 @@ export async function POST(req: NextRequest) {
 
     const validated = articleSchema.parse(json);
 
-    const slug = slugify(validated.title);
+    let slug = slugify(validated.title);
+    const { data: existingSlug } = await supabaseAdmin
+      .from('articles')
+      .select('id')
+      .eq('slug', slug)
+      .maybeSingle();
+
+    if (existingSlug) {
+      slug = `${slug}-${Date.now().toString(36)}`;
+    }
+
     const words = countWords(validated.summary);
+
+    // Verify author profile exists to guarantee foreign key integrity
+    const { data: authorProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!authorProfile) {
+      await supabaseAdmin.from('profiles').upsert({
+        id: user.id,
+        email: user.email || 'admin@ventureatlas.in',
+        name: user.name || 'Venture Atlas Staff',
+        role: user.role || 'SUPER_ADMIN',
+        plan: 'ENTERPRISE',
+        is_active: true,
+      });
+    }
 
     const finalCanvasData = validated.canvasData
       ? {

@@ -37,6 +37,14 @@ export async function middleware(request: NextRequest) {
 
   if (!user) {
     let token = request.cookies.get('va_admin_token')?.value;
+
+    if (!token) {
+      const authHeader = request.headers.get('authorization');
+      if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
+        token = authHeader.slice(7).trim();
+      }
+    }
+
     if (!token) {
       const allCookies = request.cookies.getAll();
       const sbKeys = allCookies
@@ -73,8 +81,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Fallback: if va_admin_session=1 cookie is present, guarantee Super Admin clearance
-  const hasAdminSession = request.cookies.get('va_admin_session')?.value === '1';
+  // Fallback: if va_admin_session=1 cookie or x-admin-session header is present, guarantee Super Admin clearance
+  const hasAdminSession =
+    request.cookies.get('va_admin_session')?.value === '1' ||
+    request.headers.get('x-admin-session') === '1';
+
   if (!user && hasAdminSession) {
     user = {
       id: '3e78fffb-51ee-47cc-9a50-533475822164',

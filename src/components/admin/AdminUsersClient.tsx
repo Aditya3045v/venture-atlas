@@ -132,15 +132,18 @@ export const AdminUsersClient: React.FC<AdminUsersClientProps> = ({
 
     setAddLoading(true);
     try {
-      const selectedRole = roles.find(r => r.id === addRoleId);
+      const selectedRole = roles.find(r => r.id === addRoleId) || roles.find(r => r.name === 'WRITER') || roles[0];
+      const effectiveRoleId = selectedRole?.id || (addRoleId && addRoleId.trim() ? addRoleId.trim() : undefined);
+      const effectiveRoleName = selectedRole?.name || 'WRITER';
+
       const res = await adminFetch('/api/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: addName.trim(),
           email: addEmail.trim().toLowerCase(),
-          role_id: addRoleId,
-          role: selectedRole?.name || 'WRITER',
+          role_id: effectiveRoleId,
+          role: effectiveRoleName,
           bio: addBio || null,
           password: addPassword,
         }),

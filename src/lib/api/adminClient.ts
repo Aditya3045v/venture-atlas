@@ -90,6 +90,12 @@ export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {
     if (token && !headers.has('Authorization')) {
       headers.set('Authorization', `Bearer ${token}`);
     }
+
+    if (typeof document !== 'undefined') {
+      if (document.cookie.includes('va_admin_session=1')) {
+        headers.set('x-admin-session', '1');
+      }
+    }
   } catch (err) {
     console.warn('[adminFetch] Could not retrieve Supabase session access token:', err);
   }

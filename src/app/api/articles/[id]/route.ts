@@ -48,8 +48,9 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
-    // Permission enforcement: WRITER can only edit own drafts
-    if (user.role === 'WRITER') {
+    // Permission enforcement: WRITER can only edit own drafts (Super Admin can edit all)
+    const isOwnerOrSuper = user.email === 'admin@ventureatlas.in' || user.role === 'SUPER_ADMIN';
+    if (!isOwnerOrSuper && user.role === 'WRITER') {
       if (existing.author_id !== user.id) {
         return NextResponse.json(
           { error: 'PERMISSION_DENIED: Writers can only edit their own stories.' },
@@ -59,6 +60,15 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     }
 
     const json = await req.json();
+
+    // Auto-sanitize sourceUrl to ensure valid protocol if domain was entered
+    if (json.sourceUrl && typeof json.sourceUrl === 'string' && json.sourceUrl.trim()) {
+      let trimmedUrl = json.sourceUrl.trim();
+      if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+        trimmedUrl = `https://${trimmedUrl}`;
+      }
+      json.sourceUrl = trimmedUrl;
+    }
 
     // Auto-generate fallbacks for SEO & Photo credit if omitted
     if (!json.seoTitle || !String(json.seoTitle).trim()) {
@@ -74,7 +84,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     const validated = articleSchema.parse(json);
 
     // Permission enforcement: WRITER cannot publish directly
-    if (user.role === 'WRITER' && validated.status === 'PUBLISHED') {
+    if (!isOwnerOrSuper && user.role === 'WRITER' && validated.status === 'PUBLISHED') {
       return NextResponse.json(
         { error: 'PERMISSION_DENIED: Writers cannot publish articles directly.' },
         { status: 403 }
