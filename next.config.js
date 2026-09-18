@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const dns = require('dns');
 
-// DNS Override: Resolve Supabase directly to Cloudflare Anycast IPs to bypass ISP DNS sinkholing (e.g. ACT Fibernet spoofing to 202.83.21.15)
-if (typeof dns.lookup === 'function' && !global.__supabaseDnsPatched) {
+// DNS Override: Only apply locally to bypass ISP DNS sinkholing (e.g. ACT Fibernet).
+// On Vercel/production, Supabase DNS resolves correctly — skip the patch.
+const isVercel = !!process.env.VERCEL;
+if (!isVercel && typeof dns.lookup === 'function' && !global.__supabaseDnsPatched) {
   global.__supabaseDnsPatched = true;
   const origLookup = dns.lookup;
   dns.lookup = function(hostname, options, callback) {

@@ -1,8 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import dns from 'dns';
 
-// DNS Override: Resolve Supabase directly to Cloudflare Anycast IPs to bypass ISP DNS sinkholing
-if (typeof dns.lookup === 'function' && !(global as any).__supabaseDnsPatched) {
+// DNS Override: Only apply locally to bypass ISP DNS sinkholing.
+// On Vercel, Supabase DNS resolves correctly — skip the patch.
+if (typeof dns.lookup === 'function' && !process.env.VERCEL && !(global as any).__supabaseDnsPatched) {
   (global as any).__supabaseDnsPatched = true;
   const origLookup = dns.lookup.bind(dns);
   (dns as any).lookup = function(hostname: string, options: any, callback: any) {
