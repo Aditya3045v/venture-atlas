@@ -94,12 +94,20 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
-    // Set reader cookies so user can seamlessly navigate the site
+    // Set reader cookies so middleware grants access to the feed
     response.cookies.set(READER_COOKIE_NAME, token, {
       path: '/',
       httpOnly: false,
       sameSite: 'lax',
       maxAge: 365 * 24 * 60 * 60, // 1 year
+    });
+
+    // va_reader is the primary cookie checked by middleware
+    response.cookies.set('va_reader', '1', {
+      path: '/',
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 365 * 24 * 60 * 60,
     });
 
     response.cookies.set('va_reader_client', '1', {

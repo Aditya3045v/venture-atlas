@@ -144,30 +144,21 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 1.5. Feed route: intentional visitor transition into the reader feed
-  if (path === '/feed') {
-    const feedResponse = NextResponse.redirect(new URL('/', request.url));
-    feedResponse.cookies.set('va_reader', '1', {
-      path: '/',
-      httpOnly: false,
-      sameSite: 'lax',
-      maxAge: 365 * 24 * 60 * 60,
-    });
-    feedResponse.cookies.set('va_reader_client', '1', {
-      path: '/',
-      httpOnly: false,
-      sameSite: 'lax',
-      maxAge: 365 * 24 * 60 * 60,
-    });
-    return feedResponse;
-  }
-
-  // 2. Cold visitor gate: users opening the website root '/' must reach the landing page first
+  // Reader cookie & staff check (used in both /feed and / gates below)
   const hasReaderCookie =
     Boolean(request.cookies.get('va_reader')?.value) ||
     Boolean(request.cookies.get('va_reader_client')?.value);
   const isStaff = !!user;
 
+  // 1.5. Feed route: redirect to / if unlocked, else to /landing
+  if (path === '/feed') {
+    if (hasReaderCookie || isStaff) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    return NextResponse.redirect(new URL('/landing', request.url));
+  }
+
+  // 2. Cold visitor gate: users opening the website root '/' must reach the landing page first
   if (path === '/') {
     if (!hasReaderCookie && !isStaff) {
       const landingUrl = new URL('/landing', request.url);
