@@ -350,10 +350,11 @@ export const StoryDetailSheet: React.FC<StoryDetailSheetProps> = ({ article, onC
               </button>
             </div>
 
-            {/* Main Editorial Text */}
+            {/* Main Editorial Text — Always show full content */}
             <div className="space-y-5 text-text-secondary leading-relaxed font-body text-sm sm:text-base">
-              {/* If both summary and body are present & distinct, show executive summary block */}
-              {hasDistinctBody && article.summary && (
+
+              {/* Executive Wire Brief — show summary if it exists */}
+              {article.summary?.trim() && (
                 <div className="p-4 sm:p-5 rounded-2xl bg-surface-muted/90 border border-border space-y-2">
                   <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
                     EXECUTIVE WIRE BRIEF
@@ -367,20 +368,30 @@ export const StoryDetailSheet: React.FC<StoryDetailSheetProps> = ({ article, onC
                 </div>
               )}
 
-              {/* Complete Written Content / Report Body */}
-              <div className="space-y-4">
-                {hasDistinctBody && (
+              {/* Full Body — show if body is distinct from summary OR if no summary */}
+              {article.body?.trim() && article.body.trim() !== article.summary?.trim() && (
+                <div className="space-y-4">
                   <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-text-tertiary">
                     FULL EDITORIAL REPORT & WIRE DETAILS
                   </h4>
-                )}
+                  <div
+                    className="prose dark:prose-invert max-w-none text-sm sm:text-base leading-relaxed text-text-secondary space-y-4"
+                    dangerouslySetInnerHTML={{
+                      __html: formatSimpleMarkdown(article.body),
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* If only body exists (no summary), show body directly */}
+              {!article.summary?.trim() && article.body?.trim() && (
                 <div
                   className="prose dark:prose-invert max-w-none text-sm sm:text-base leading-relaxed text-text-secondary space-y-4"
                   dangerouslySetInnerHTML={{
-                    __html: formatSimpleMarkdown(hasDistinctBody ? (article.body || '') : primaryText),
+                    __html: formatSimpleMarkdown(article.body),
                   }}
                 />
-              </div>
+              )}
 
               {/* Optional Real Analytical Quote Box if genuine data exists */}
               {realQuote && (

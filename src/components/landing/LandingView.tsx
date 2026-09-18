@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Globe, ArrowRight, Linkedin, Loader2, Check } from 'lucide-react';
 import { AboutSection } from './AboutSection';
 import { FeaturedVideoSection } from './FeaturedVideoSection';
@@ -9,6 +10,7 @@ import { PhilosophySection } from './PhilosophySection';
 import { ServicesSection } from './ServicesSection';
 
 export function LandingView() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -69,11 +71,14 @@ export function LandingView() {
         localStorage.setItem('va_email_unlocked', 'true');
         setIsSuccess(true);
         setStatusMessage({
-          text: '✓ Captured. Full intelligence access granted.',
+          text: '✓ Access granted. Taking you to the feed...',
           success: true,
         });
         setEmail('');
-        setTimeout(() => setIsSuccess(false), 4000);
+        // Redirect to feed after short success delay
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
       } else {
         setStatusMessage({
           text: data.error || 'Please enter a valid email address.',
@@ -87,7 +92,6 @@ export function LandingView() {
       });
     } finally {
       setSubmitting(false);
-      setTimeout(() => setStatusMessage(null), 6000);
     }
   };
 
