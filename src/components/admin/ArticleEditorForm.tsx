@@ -359,13 +359,8 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     }
 
     if (!summary.trim()) {
-      toast('Please provide a 60-word summary overview', 'error');
+      toast('Please provide an executive briefing summary', 'error');
       return;
-    }
-
-    if (isOverWordBudget) {
-      // Soft warning: notify the editor but do not block save/publish
-      toast(`Summary is ${wordCount} words (recommended: ≤60). Proceeding anyway.`, 'info');
     }
 
     if (targetStatus === 'SCHEDULED' && !scheduledFor) {
