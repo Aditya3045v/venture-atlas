@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchCaseStudies } from '@/lib/supabase-db';
+import { caseStudySchema } from '@/lib/validation';
 import { getCurrentUser, canEdit, canPublish } from '@/lib/auth/staff';
 import { logAuditEvent } from '@/lib/audit';
 import { slugify } from '@/lib/sanitize';
@@ -25,14 +26,23 @@ export async function POST(req: NextRequest) {
   try {
     const json = await req.json();
 
-    if (user.role === 'WRITER' && json.status === 'PUBLISHED') {
+    if (!json.seoTitle || !String(json.seoTitle).trim()) {
+      json.seoTitle = (json.title || '').slice(0, 68);
+    }
+    if (!json.seoDescription || !String(json.seoDescription).trim()) {
+      json.seoDescription = (json.summary || '').slice(0, 155);
+    }
+
+    const validated = caseStudySchema.parse(json);
+
+    if (user.role === 'WRITER' && validated.status === 'PUBLISHED') {
       return NextResponse.json(
         { error: 'PERMISSION_DENIED: Writers cannot publish case studies directly.' },
         { status: 403 }
       );
     }
 
-    let slug = slugify(json.title);
+    let slug = slugify(validated.title);
     const { data: existingSlug } = await supabaseAdmin
       .from('case_studies')
       .select('id')
@@ -42,25 +52,44 @@ export async function POST(req: NextRequest) {
       slug = `${slug}-${Date.now().toString(36)}`;
     }
 
+    // Verify author profile exists to guarantee foreign key integrity
+    const { data: authorProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!authorProfile) {
+      await supabaseAdmin.from('profiles').upsert({
+        id: user.id,
+        email: user.email || 'admin@ventureatlas.in',
+        name: user.name || 'Venture Atlas Staff',
+        role: user.role || 'SUPER_ADMIN',
+        plan: 'ENTERPRISE',
+        is_active: true,
+      });
+    }
+
     const csPayload = {
-      title: json.title,
+      title: validated.title,
       slug,
-      company: json.company,
+      company: validated.company,
       company_logo: json.companyLogo || null,
-      valuation: json.valuation || null,
-      stage: json.stage || null,
-      key_metric: json.keyMetric || null,
-      summary: json.summary,
-      challenge: json.challenge || null,
-      strategy: json.strategy || null,
-      outcome: json.outcome || null,
-      body: json.body,
-      cover_image: json.coverImage || null,
-      category_id: json.categoryId,
+      valuation: validated.valuation || null,
+      stage: validated.stage || null,
+      key_metric: validated.keyMetric || null,
+      summary: validated.summary,
+      challenge: validated.challenge || null,
+      strategy: validated.strategy || null,
+      outcome: validated.outcome || null,
+      body: validated.body,
+      cover_image: validated.coverImage || null,
+      category_id: validated.categoryId,
       author_id: user.id,
-      read_time_minutes: Number(json.readTimeMinutes) || 8,
-      status: (json.status || 'DRAFT') as any,
-      published_at: json.status === 'PUBLISHED' ? new Date().toISOString() : null,
+      read_time_minutes: validated.readTimeMinutes || 8,
+      status: validated.status as any,
+      published_at: validated.status === 'PUBLISHED' ? new Date().toISOString() : null,
+      canvas_data: validated.canvasData || null,
     };
 
     const { data, error } = await supabaseAdmin

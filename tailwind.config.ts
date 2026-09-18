@@ -45,6 +45,8 @@ const config: Config = {
         },
       },
       fontFamily: {
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+        instrument: ['"Instrument Serif"', 'Georgia', 'serif'],
         display: ['"Outfit"', 'var(--font-display)', 'sans-serif'],
         sans: ['"Inter"', 'var(--font-sans)', 'sans-serif'],
         fraunces: ['var(--font-fraunces)', 'Georgia', 'serif'],

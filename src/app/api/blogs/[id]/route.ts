@@ -49,7 +49,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
         excerpt: validated.excerpt,
         body: validated.body,
         category_id: validated.categoryId,
-        cover_image: validated.coverImage,
+        cover_image: validated.coverImage || null,
         read_time_minutes: validated.readTimeMinutes || 4,
         status: validated.status as any,
         published_at: publishedAt,

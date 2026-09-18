@@ -1,0 +1,425 @@
+[
+  {
+    "id": "c5309289-258c-4580-8009-718f9e0cfa23",
+    "email": "security-test-1788289425062@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-01T19:03:47.126728+00:00",
+    "reader_id": "01e76d11-12f0-467a-b0de-b9e50c05463e",
+    "consent_at": "2026-09-01T19:03:45.997+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "362addd6-192d-4416-91e4-c7abecead387",
+    "email": "security-test-1788289554102@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-01T19:05:56.630209+00:00",
+    "reader_id": "a6690d7d-dbc8-4857-97f6-589728dd6a6f",
+    "consent_at": "2026-09-01T19:05:55.746+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "0f147780-52e9-4d66-89b0-b2d5f7697270",
+    "email": "manual-test-12b@example.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-01T19:06:40.780287+00:00",
+    "reader_id": "b95e81c5-c52d-48cc-940d-324334d015e5",
+    "consent_at": "2026-09-01T19:06:39.923+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "28c36e41-9cdd-44a7-9b64-d789d3a4b3b5",
+    "email": "security-test-1788292081745@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-01T19:48:03.792178+00:00",
+    "reader_id": "884be0e2-a388-4877-91c7-4e6253ae2cde",
+    "consent_at": "2026-09-01T19:48:02.925+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "bc3a3e78-128e-4cef-85a9-f5e2180af683",
+    "email": "security-test-1788353769132@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T12:56:09.342793+00:00",
+    "reader_id": "e5ca49ed-269e-4555-a080-2b83e3625d62",
+    "consent_at": "2026-09-02T12:56:10.51+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "757a6c75-47f7-483a-8439-fe465b36f2e2",
+    "email": "security-test-1788356019085@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T13:33:38.316737+00:00",
+    "reader_id": "c2de9c97-ae45-4adf-bddc-0cc55b2cd6cc",
+    "consent_at": "2026-09-02T13:33:39.976+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "d8916fa1-b19d-4c55-b037-9ca8175b9899",
+    "email": "ratelimit-test-1-1788356386075@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T13:39:46.884526+00:00",
+    "reader_id": "8868c256-4dc3-43f3-adfe-227b9c8d828f",
+    "consent_at": "2026-09-02T13:39:48.528+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "26228cb6-14a8-49d3-8576-3a3b8f937876",
+    "email": "ratelimit-test-2-1788356388857@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T13:39:47.588425+00:00",
+    "reader_id": "f9b5d7c5-f9e6-4dab-8a36-81142ae2d916",
+    "consent_at": "2026-09-02T13:39:49.253+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "494e669f-584e-4043-a596-dbf74237bf62",
+    "email": "ratelimit-test-3-1788356389562@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T13:39:48.379229+00:00",
+    "reader_id": "f7d9304a-8117-47ac-81e9-28ea3d1cb471",
+    "consent_at": "2026-09-02T13:39:50.072+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "dabad08c-4a3a-478c-a8ef-760b6d646c4c",
+    "email": "ratelimit-test-4-1788356390354@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T13:39:49.010999+00:00",
+    "reader_id": "27e3b5d4-757c-4e88-8144-dabbf42539d4",
+    "consent_at": "2026-09-02T13:39:50.681+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "e247c555-2ce2-4d71-9af4-9dd2015a750f",
+    "email": "ratelimit-test-5-1788356390991@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T13:39:49.66036+00:00",
+    "reader_id": "07835ae4-857d-407f-a4fc-7c5a95c0aeb3",
+    "consent_at": "2026-09-02T13:39:51.334+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "c7b19217-9d08-4d6f-bd2b-bb78b13d74fc",
+    "email": "security-test-1788357804886@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T14:03:23.998246+00:00",
+    "reader_id": "7fbb1c2b-9f78-4ba3-a9b3-8317a01794c8",
+    "consent_at": "2026-09-02T14:03:25.673+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "4531fe46-b82c-4770-84de-278912a9e378",
+    "email": "security-test-1788357863826@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T14:04:24.10288+00:00",
+    "reader_id": "f8c8a496-d9f5-43d4-a664-1ce8e010aa1a",
+    "consent_at": "2026-09-02T14:04:25.761+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "6b30d8b6-3ca0-4192-91b5-34fd4ac45298",
+    "email": "security-test-1788357924742@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T14:05:23.327707+00:00",
+    "reader_id": "08994b19-22ee-4bf0-9c62-edd43679b134",
+    "consent_at": "2026-09-02T14:05:25.004+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "95f9be0e-3a01-4b0d-801a-54cd01b6a468",
+    "email": "security-test-1788357944127@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T14:05:42.734098+00:00",
+    "reader_id": "88e38d83-6165-4503-8c4d-7d016ce80565",
+    "consent_at": "2026-09-02T14:05:44.401+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "61cd15fd-e849-457b-88bf-fc76e4e05d78",
+    "email": "security-test-1788360263205@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T14:44:24.291962+00:00",
+    "reader_id": "439a88ad-f21b-4779-ae28-6611bef0d60b",
+    "consent_at": "2026-09-02T14:44:25.924+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "e18b5668-9f57-47d9-b063-58dbf851559a",
+    "email": "security-test-1788360319814@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T14:45:18.50258+00:00",
+    "reader_id": "4a3515fd-e446-4f65-a8c1-ff40312e1822",
+    "consent_at": "2026-09-02T14:45:20.132+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "cfd71e73-1035-4aa6-a4d2-83afb8be032b",
+    "email": "ratelimit-test-1-1788363389713@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T15:36:31.490383+00:00",
+    "reader_id": "de219533-4b19-4075-8ef4-5a3a868a0c11",
+    "consent_at": "2026-09-02T15:36:32.365+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "79adf553-1c82-406d-bed1-5713dfafeebb",
+    "email": "ratelimit-test-2-1788363392611@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T15:36:32.217844+00:00",
+    "reader_id": "7eb6e1ff-7035-4c27-842b-38c87fd1341b",
+    "consent_at": "2026-09-02T15:36:33.099+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "55962a98-f61d-4f3d-bafc-5a296f3d67ea",
+    "email": "ratelimit-test-3-1788363393327@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T15:36:32.953288+00:00",
+    "reader_id": "28298740-961e-43a6-bd3d-0de994d0714a",
+    "consent_at": "2026-09-02T15:36:33.833+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "18492b43-e8fa-4e18-b918-fee503123856",
+    "email": "ratelimit-test-4-1788363394051@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T15:36:33.662867+00:00",
+    "reader_id": "514547a3-86a5-4f15-b42f-96b37b989494",
+    "consent_at": "2026-09-02T15:36:34.536+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "4abd7dbb-c8cb-4b24-9944-c459b54f28de",
+    "email": "ratelimit-test-5-1788363394759@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T15:36:34.33736+00:00",
+    "reader_id": "7b76ea55-5585-4248-9fe0-8a9bd31b2278",
+    "consent_at": "2026-09-02T15:36:35.215+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "e0201e5a-dcfe-46d0-9d9c-190189da19e5",
+    "email": "security-test-1788363564274@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T15:39:24.281662+00:00",
+    "reader_id": "b58e3ce1-12ab-41fb-97bf-b60efee88593",
+    "consent_at": "2026-09-02T15:39:25.14+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "9e8c0245-5e67-4951-ad8c-d0947493c349",
+    "email": "security-test-1788363617776@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T15:40:17.803646+00:00",
+    "reader_id": "faa07cff-8edc-4e24-af57-8b85868f8499",
+    "consent_at": "2026-09-02T15:40:18.655+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "47c7e43e-565f-4aa7-ac35-590b42c39f1e",
+    "email": "security-test-1788365813617@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T16:16:53.678242+00:00",
+    "reader_id": "ae2de117-6f91-4078-b943-aac9170fad23",
+    "consent_at": "2026-09-02T16:16:54.519+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "232a8669-47ef-4f28-964d-60a45ca38822",
+    "email": "perweennajmeen834@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-06T06:39:20.832333+00:00",
+    "reader_id": "05c1f20d-c749-4ec5-b135-0f7acadbb08f",
+    "consent_at": "2026-09-06T06:39:20.261+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "0aeef15d-dd78-4ab6-bbae-aed0254a1af5",
+    "email": "aagamer0786@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-07T18:32:15.766501+00:00",
+    "reader_id": "4d892e7e-2681-46f4-8717-ecb11df5ec9b",
+    "consent_at": "2026-09-07T18:32:15.206+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "26fc9d32-f217-43e3-98f8-8d5d9df34ee6",
+    "email": "sahilalampkl786@gmail.com",
+    "source": "HERO_EMAIL_BOX",
+    "created_at": "2026-09-18T09:53:07.399414+00:00",
+    "reader_id": "5a78f927-6749-49a5-ba78-bfa43fc0daad",
+    "consent_at": "2026-09-18T09:53:07.283+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "bdda3c09-5630-45c0-becc-b83ce37ff36f",
+    "email": "testuser@ventureatlas.io",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T18:05:21.777732+00:00",
+    "reader_id": "bb371644-a638-4d83-9e0b-743ad80fdbd3",
+    "consent_at": "2026-09-02T18:05:21.99+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "46ac1ca4-989a-48b0-8e22-9e56f1e86b58",
+    "email": "mdrajatrahi1@gmail.com",
+    "source": "HERO_EMAIL_BOX",
+    "created_at": "2026-09-10T14:53:14.101105+00:00",
+    "reader_id": "514cf2b0-ba01-4c7d-ab6b-0ec28bde7a42",
+    "consent_at": "2026-09-10T14:53:13.539+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "c1aab375-e595-45b9-8870-4a767a1bb0d9",
+    "email": "aditya.investor@ventureatlas.io",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T18:06:09.570666+00:00",
+    "reader_id": "75f7e17c-91f2-4056-b7c3-e4d2c21cebde",
+    "consent_at": "2026-09-02T18:06:09.655+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "2f0182ae-c56d-4e74-92ee-c0388bfc5e71",
+    "email": "www.umeshpoddar1234@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T18:07:06.242316+00:00",
+    "reader_id": "377667d4-b4ac-4efa-96cd-71fc7cba0c9f",
+    "consent_at": "2026-09-02T18:17:27.221+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "e943085e-06a0-4651-ad39-f58a7e0f1153",
+    "email": "za2820158@gmail.com",
+    "source": "HERO_EMAIL_BOX",
+    "created_at": "2026-09-11T15:03:43.122236+00:00",
+    "reader_id": "2540df7f-73a4-4cc2-bef2-b43c3601936a",
+    "consent_at": "2026-09-11T15:03:42.551+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "8ab57f22-a349-455a-9550-e3767438c65c",
+    "email": "ia7888391@gmail.com",
+    "source": "LANDING_PAGE_GATE",
+    "created_at": "2026-09-02T14:33:38.965578+00:00",
+    "reader_id": "ed12c821-2582-48d9-bc9f-983d8bf66cd8",
+    "consent_at": "2026-09-18T14:15:00.923+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "2e0d6ad6-2ad1-47ab-a81f-f91e59108119",
+    "email": "rezazishanzishan786@gmail.com",
+    "source": "HERO_EMAIL_BOX",
+    "created_at": "2026-09-14T15:51:29.103238+00:00",
+    "reader_id": "347a1784-3ca3-4ff0-b1d5-c39b95d55032",
+    "consent_at": "2026-09-14T15:51:28.566+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "750c486f-62e9-4f07-a111-d43f9c33eee0",
+    "email": "aditya.reader@ventureatlas.io",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-03T06:48:41.400004+00:00",
+    "reader_id": "f2358e55-ccaf-4dfc-85a5-1e470097a2ea",
+    "consent_at": "2026-09-03T06:48:43.04+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "5968f755-1206-4101-a8a9-31a75e4c3924",
+    "email": "adityapoddarmain@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T18:06:05.435023+00:00",
+    "reader_id": "b0ad0d8f-436f-4a0c-85de-98aff1d2248e",
+    "consent_at": "2026-09-11T17:19:46.892+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "7d76f6ce-1a0a-4c25-a7a2-1f5ddffe2b2e",
+    "email": "onenawaz.901@gmail.com",
+    "source": "HERO_EMAIL_BOX",
+    "created_at": "2026-09-14T17:58:27.87139+00:00",
+    "reader_id": "7abafea3-f890-40de-a14b-bc60332845d8",
+    "consent_at": "2026-09-14T17:58:27.307+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "50af816d-397f-49bc-9d9d-ace484c0f5cb",
+    "email": "security-test-1788424170882@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-03T08:29:30.205082+00:00",
+    "reader_id": "861edc82-1b20-4772-812a-539727fd81e3",
+    "consent_at": "2026-09-03T08:29:31.858+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "473c449a-65e9-4659-bf37-2506cfd3b6b8",
+    "email": "security-test-1788425893225@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-03T08:58:12.249641+00:00",
+    "reader_id": "559bf8e1-5956-4189-bf2b-1304ab72c39d",
+    "consent_at": "2026-09-03T08:58:13.849+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "cb512b3f-59dd-42ac-bbd6-d9ff16ac8ef0",
+    "email": "security-test-1788426567393@domain.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-03T09:09:26.377108+00:00",
+    "reader_id": "cc1304ba-1626-4e3d-b09d-5e4c2807048f",
+    "consent_at": "2026-09-03T09:09:28.001+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "90869256-c86e-4333-880c-7d31e1edb5cc",
+    "email": "kingvsqueenkingvsqueen53@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-03T15:26:39.299204+00:00",
+    "reader_id": "594a58d8-501c-419f-9791-6a72aea3f584",
+    "consent_at": "2026-09-03T15:26:38.76+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "2591c80d-79ce-42b5-9e10-25fb61a9becb",
+    "email": "adityaforgpay@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T13:27:35.066987+00:00",
+    "reader_id": "03a6de14-ce84-4e11-b235-b92026a3564d",
+    "consent_at": "2026-09-03T15:49:20.246+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "2c4ae9ea-8d94-4cd4-babd-cf1ea667927a",
+    "email": "itsmeatoz123@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-04T05:08:57.901382+00:00",
+    "reader_id": "2069434e-bade-46e0-934b-20b108201146",
+    "consent_at": "2026-09-05T18:32:45.761+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "4e396d67-143c-49e4-8d42-77bdddffd1d1",
+    "email": "manawarh027@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-03T10:02:31.827319+00:00",
+    "reader_id": "1f424211-4d46-4df5-81b3-916da3db4d32",
+    "consent_at": "2026-09-15T17:41:49.012+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "569b1cac-a754-44a4-aaed-040e3e09be30",
+    "email": "tariqueaziz048@gmail.com",
+    "source": "HERO_EMAIL_BOX",
+    "created_at": "2026-09-13T15:01:50.735328+00:00",
+    "reader_id": "6291b9c8-f43b-4897-966d-5e0912144906",
+    "consent_at": "2026-09-13T15:01:50.317+00:00",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "db96f3fd-a0f5-4cb5-a663-7ade9795a13e",
+    "email": "mdimranreza465@gmail.com",
+    "source": "LANDING_PAGE",
+    "created_at": "2026-09-02T17:30:54.206314+00:00",
+    "reader_id": "2ed7135f-3903-44e4-ac33-4e4f9b420774",
+    "consent_at": "2026-09-17T09:40:13.316+00:00",
+    "status": "ACTIVE"
+  }
+]

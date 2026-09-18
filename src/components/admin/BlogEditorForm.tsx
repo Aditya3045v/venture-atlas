@@ -1,52 +1,20 @@
-'use client';
+﻿"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { BlogItem, CategoryItem, ContentStatus } from '../../types';
-import { normalizeImageUrl } from '../../lib/validation';
-import { Input } from '../ui/Input';
-import { Button } from '../ui/Button';
-import { useToast } from '../providers/ToastProvider';
-import { adminFetch } from '@/lib/api/adminClient';
-import { ArrowLeft, Send, Image as ImageIcon, X, Sparkles, Trash2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { BlogItem, CategoryItem, ContentStatus } from "../../types";
+import { normalizeImageUrl } from "../../lib/validation";
+import { Input } from "../ui/Input";
+import { Button } from "../ui/Button";
+import { useToast } from "../providers/ToastProvider";
+import { adminFetch } from "@/lib/api/adminClient";
+import { COVER_PRESETS } from "@/lib/constants/cover-presets";
+import { ArrowLeft, Send, Image as ImageIcon, X, Sparkles, Trash2 } from "lucide-react";
 
 interface BlogEditorFormProps {
   initialBlog?: BlogItem | null;
   categories: CategoryItem[];
 }
-
-const COVER_PRESETS = [
-  {
-    label: '🦄 Unicorn Scale',
-    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Enterprise Lens',
-  },
-  {
-    label: '📈 Capital Markets',
-    url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Capital Markets',
-  },
-  {
-    label: '⚡ AI & Compute',
-    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Compute Lab',
-  },
-  {
-    label: '🌐 Crypto Web3',
-    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Web3 Protocol',
-  },
-  {
-    label: '👤 Founder Leadership',
-    url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Founder Archive',
-  },
-  {
-    label: '🏢 Modern Enterprise',
-    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Architecture',
-  },
-];
 
 export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
   initialBlog,
@@ -54,39 +22,97 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
 }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const isSubmittingRef = useRef(false);
 
-  const [title, setTitle] = useState(initialBlog?.title || '');
-  const [excerpt, setExcerpt] = useState(initialBlog?.excerpt || '');
-  const [body, setBody] = useState(initialBlog?.body || '');
+  const [title, setTitle] = useState(initialBlog?.title || "");
+  const [excerpt, setExcerpt] = useState(initialBlog?.excerpt || "");
+  const [body, setBody] = useState(initialBlog?.body || "");
+  const [authorName, setAuthorName] = useState(initialBlog?.authorName || "");
+  const [authorRole, setAuthorRole] = useState(initialBlog?.authorRole || "");
   const [categoryId, setCategoryId] = useState(
-    initialBlog?.categoryId || categories[0]?.id || ''
+    initialBlog?.categoryId || categories[0]?.id || ""
   );
-  const [coverImage, setCoverImage] = useState(initialBlog?.coverImage || '');
-  const [photoCredit, setPhotoCredit] = useState(initialBlog?.photoCredit || '');
-  const [seoTitle, setSeoTitle] = useState(initialBlog?.seoTitle || '');
-  const [seoDescription, setSeoDescription] = useState(initialBlog?.seoDescription || '');
-  const [coverPreviewDevice, setCoverPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
+  const [coverImage, setCoverImage] = useState(initialBlog?.coverImage || "");
+  const [photoCredit, setPhotoCredit] = useState(initialBlog?.photoCredit || "");
+  const [seoTitle, setSeoTitle] = useState(initialBlog?.seoTitle || "");
+  const [seoDescription, setSeoDescription] = useState(initialBlog?.seoDescription || "");
+  const [coverPreviewDevice, setCoverPreviewDevice] = useState<"desktop" | "mobile">("desktop");
   const [readTimeMinutes, setReadTimeMinutes] = useState(initialBlog?.readTimeMinutes || 4);
-  const [status, setStatus] = useState<ContentStatus>(initialBlog?.status || 'DRAFT');
+  const [status, setStatus] = useState<ContentStatus>(initialBlog?.status || "DRAFT");
   const [submitting, setSubmitting] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
+
+  const AUTOSAVE_KEY = `va_autosave_blog_${initialBlog?.id || "new"}`;
+
+  // Autosave to localStorage every 10s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (title || excerpt || body) {
+        const draft = { title, excerpt, body, authorName, authorRole, categoryId, coverImage, photoCredit, seoTitle, seoDescription };
+        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(draft));
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [title, excerpt, body, authorName, authorRole, categoryId, coverImage, photoCredit, seoTitle, seoDescription]);
+
+  // Check for restorable draft on mount (only for new posts)
+  useEffect(() => {
+    if (!initialBlog) {
+      try {
+        const saved = localStorage.getItem(AUTOSAVE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.title || parsed.excerpt || parsed.body) {
+            setHasDraft(true);
+          }
+        }
+      } catch {}
+    }
+  }, []);
+
+  const restoreDraft = () => {
+    try {
+      const saved = localStorage.getItem(AUTOSAVE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.title) setTitle(parsed.title);
+        if (parsed.excerpt) setExcerpt(parsed.excerpt);
+        if (parsed.body) setBody(parsed.body);
+        if (parsed.authorName) setAuthorName(parsed.authorName);
+        if (parsed.authorRole) setAuthorRole(parsed.authorRole);
+        if (parsed.categoryId) setCategoryId(parsed.categoryId);
+        if (parsed.coverImage) setCoverImage(parsed.coverImage);
+        if (parsed.photoCredit) setPhotoCredit(parsed.photoCredit);
+        if (parsed.seoTitle) setSeoTitle(parsed.seoTitle);
+        if (parsed.seoDescription) setSeoDescription(parsed.seoDescription);
+        setHasDraft(false);
+        toast("Draft restored from autosave", "success");
+      }
+    } catch {}
+  };
 
   const handleSubmit = async (targetStatus: ContentStatus) => {
+    if (isSubmittingRef.current) return;
     if (!title.trim() || !excerpt.trim() || !body.trim()) {
-      toast('Please fill in title, excerpt, and body', 'error');
+      toast("Please fill in title, excerpt, and body", "error");
       return;
     }
+
+    isSubmittingRef.current = true;
+    setSubmitting(true);
 
     const effectiveSeoTitle = seoTitle.trim() || title.trim().slice(0, 68);
     const effectiveSeoDescription = seoDescription.trim() || excerpt.trim().slice(0, 155);
     const normalizedCover = normalizeImageUrl(coverImage);
-    const effectivePhotoCredit = photoCredit.trim() || (normalizedCover ? 'Editorial Archive' : '');
+    const effectivePhotoCredit = photoCredit.trim() || (normalizedCover ? "Editorial Archive" : "");
 
-    setSubmitting(true);
     const payload = {
       title,
       excerpt,
       body,
-      categoryId,
+      authorName: authorName.trim() || null,
+      authorRole: authorRole.trim() || null,
+      categoryId: categoryId || categories[0]?.id || "",
       coverImage: normalizedCover || null,
       photoCredit: effectivePhotoCredit || null,
       readTimeMinutes: Number(readTimeMinutes),
@@ -96,47 +122,50 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
     };
 
     try {
-      const url = initialBlog ? `/api/blogs/${initialBlog.id}` : '/api/blogs';
-      const method = initialBlog ? 'PUT' : 'POST';
+      const url = initialBlog ? `/api/blogs/${initialBlog.id}` : "/api/blogs";
+      const method = initialBlog ? "PUT" : "POST";
 
       const res = await adminFetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
-        toast('Blog essay saved successfully', 'success');
-        router.push('/admin/blogs');
+        localStorage.removeItem(AUTOSAVE_KEY);
+        toast("Blog essay saved successfully", "success");
+        router.push("/admin/blogs");
         router.refresh();
       } else {
         const data = await res.json();
-        toast(data.error || 'Failed to save blog', 'error');
+        toast(data.error || "Failed to save blog", "error");
       }
     } catch {
-      toast('Network error saving blog', 'error');
+      toast("Network error saving blog", "error");
     } finally {
+      isSubmittingRef.current = false;
       setSubmitting(false);
     }
   };
 
   const handleDeleteBlog = async () => {
     if (!initialBlog) return;
-    if (!confirm('Are you sure you want to permanently delete this essay? This action cannot be undone.')) return;
+    if (!confirm("Are you sure you want to permanently delete this essay? This action cannot be undone.")) return;
 
     setSubmitting(true);
     try {
-      const res = await adminFetch(`/api/blogs/${initialBlog.id}`, { method: 'DELETE' });
+      const res = await adminFetch(`/api/blogs/${initialBlog.id}`, { method: "DELETE" });
       if (res.ok) {
-        toast('Essay deleted successfully', 'success');
-        router.push('/admin/blogs');
+        localStorage.removeItem(AUTOSAVE_KEY);
+        toast("Essay deleted successfully", "success");
+        router.push("/admin/blogs");
         router.refresh();
       } else {
         const data = await res.json();
-        toast(data.error || 'Failed to delete essay', 'error');
+        toast(data.error || "Failed to delete essay", "error");
       }
     } catch {
-      toast('Error deleting essay', 'error');
+      toast("Error deleting essay", "error");
     } finally {
       setSubmitting(false);
     }
@@ -144,6 +173,31 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
+      {/* Draft restore banner */}
+      {hasDraft && (
+        <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 flex items-center justify-between gap-3">
+          <span className="text-xs font-mono text-amber-800 dark:text-amber-200">
+            An unsaved draft was found. Restore it?
+          </span>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={restoreDraft}
+              className="text-xs font-mono font-bold text-amber-700 dark:text-amber-300 underline cursor-pointer"
+            >
+              Restore
+            </button>
+            <button
+              type="button"
+              onClick={() => { localStorage.removeItem(AUTOSAVE_KEY); setHasDraft(false); }}
+              className="text-xs font-mono text-amber-600 dark:text-amber-400 cursor-pointer"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between pb-4 border-b border-border">
         <div className="flex items-center gap-3">
           <button
@@ -155,10 +209,10 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
           </button>
           <div>
             <div className="text-xs font-mono font-bold uppercase text-text-tertiary">
-              {initialBlog ? 'EDITING ESSAY' : 'CREATE LONG-FORM ESSAY'}
+              {initialBlog ? "EDITING ESSAY" : "CREATE LONG-FORM ESSAY"}
             </div>
             <h1 className="text-2xl font-black font-display uppercase tracking-tight text-text-primary">
-              {initialBlog ? 'Update Blog Post' : 'New Editorial Essay'}
+              {initialBlog ? "Update Blog Post" : "New Editorial Essay"}
             </h1>
           </div>
         </div>
@@ -168,7 +222,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => handleSubmit('DRAFT')}
+            onClick={() => handleSubmit("DRAFT")}
             isLoading={submitting}
           >
             Save Draft
@@ -177,7 +231,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
             type="button"
             variant="primary"
             size="sm"
-            onClick={() => handleSubmit('PUBLISHED')}
+            onClick={() => handleSubmit("PUBLISHED")}
             isLoading={submitting}
           >
             Publish Now
@@ -208,6 +262,22 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
             />
           </div>
 
+          {/* Author Attribution */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="Writer / Author Name"
+              value={authorName}
+              onChange={e => setAuthorName(e.target.value)}
+              placeholder="e.g. Aditya Poddar"
+            />
+            <Input
+              label="Writer Editorial Title"
+              value={authorRole}
+              onChange={e => setAuthorRole(e.target.value)}
+              placeholder="e.g. Senior Venture Analyst"
+            />
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary font-mono mb-1.5">
@@ -235,7 +305,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
             />
           </div>
 
-          {/* Rich Cover Photo Card */}
+          {/* Cover Photo Card */}
           <div className="p-4 sm:p-5 rounded-2xl border border-border bg-surface shadow-card space-y-4">
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <div className="flex items-center gap-1.5">
@@ -247,7 +317,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
               {coverImage && (
                 <button
                   type="button"
-                  onClick={() => setCoverImage('')}
+                  onClick={() => setCoverImage("")}
                   className="text-[10px] font-mono text-red-500 hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <X size={11} /> Clear Photo
@@ -255,7 +325,6 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
               )}
             </div>
 
-            {/* Recommended Dimensions Guide */}
             <div className="p-3 rounded-xl bg-surface-muted/70 border border-border space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <span className="text-[11px] font-mono font-bold uppercase text-text-primary flex items-center gap-1.5">
@@ -265,51 +334,26 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                 <div className="flex items-center gap-1 bg-surface p-0.5 rounded-lg border border-border text-[10px] font-mono font-bold">
                   <button
                     type="button"
-                    onClick={() => setCoverPreviewDevice('desktop')}
+                    onClick={() => setCoverPreviewDevice("desktop")}
                     className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
-                      coverPreviewDevice === 'desktop'
-                        ? 'bg-brand text-white shadow-xs'
-                        : 'text-text-secondary hover:text-text-primary'
+                      coverPreviewDevice === "desktop"
+                        ? "bg-brand text-white shadow-xs"
+                        : "text-text-secondary hover:text-text-primary"
                     }`}
                   >
-                    🖥️ Desktop (16:9)
+                    Desktop (16:9)
                   </button>
                   <button
                     type="button"
-                    onClick={() => setCoverPreviewDevice('mobile')}
+                    onClick={() => setCoverPreviewDevice("mobile")}
                     className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
-                      coverPreviewDevice === 'mobile'
-                        ? 'bg-brand text-white shadow-xs'
-                        : 'text-text-secondary hover:text-text-primary'
+                      coverPreviewDevice === "mobile"
+                        ? "bg-brand text-white shadow-xs"
+                        : "text-text-secondary hover:text-text-primary"
                     }`}
                   >
-                    📱 Mobile (4:5)
+                    Mobile (4:5)
                   </button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] font-mono">
-                <div
-                  onClick={() => setCoverPreviewDevice('desktop')}
-                  className={`p-2 rounded-lg border transition-all cursor-pointer ${
-                    coverPreviewDevice === 'desktop'
-                      ? 'border-brand/60 bg-brand/10 text-text-primary ring-1 ring-brand/30'
-                      : 'border-border/60 bg-surface/50 text-text-secondary'
-                  }`}
-                >
-                  <span className="font-bold block text-text-primary">🖥️ Desktop Hero: 1200 × 675 px (16:9)</span>
-                  <span className="text-text-tertiary">Landscape banner for widescreen desktop reading</span>
-                </div>
-                <div
-                  onClick={() => setCoverPreviewDevice('mobile')}
-                  className={`p-2 rounded-lg border transition-all cursor-pointer ${
-                    coverPreviewDevice === 'mobile'
-                      ? 'border-brand/60 bg-brand/10 text-text-primary ring-1 ring-brand/30'
-                      : 'border-border/60 bg-surface/50 text-text-secondary'
-                  }`}
-                >
-                  <span className="font-bold block text-text-primary">📱 Mobile Feed: 1080 × 1350 px (4:5)</span>
-                  <span className="text-text-tertiary">Portrait card for smartphone feeds & carousels</span>
                 </div>
               </div>
             </div>
@@ -331,7 +375,8 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                       type="button"
                       onClick={() => {
                         setCoverImage(preset.url);
-                        toast(`Applied ${preset.label} photo`, 'info');
+                        if (!photoCredit) setPhotoCredit(preset.credit);
+                        toast(`Applied ${preset.label} photo`, "info");
                       }}
                       className="px-2 py-0.5 rounded-lg border border-border bg-surface hover:bg-border/60 text-[10px] font-mono text-text-secondary hover:text-text-primary transition-all active:scale-95 cursor-pointer"
                     >
@@ -339,9 +384,10 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
                     </button>
                   ))}
                 </div>
+
                 <div className="pt-2">
                   <label className="block text-[10px] font-mono font-bold uppercase text-text-secondary mb-1">
-                    Image Alt Text / Photo Credit (Required for Publishing)
+                    Image Alt Text / Photo Credit
                   </label>
                   <input
                     type="text"
@@ -356,18 +402,18 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
               <div className="md:col-span-5 flex flex-col justify-center">
                 <div
                   className={`relative w-full rounded-xl overflow-hidden bg-surface border border-border flex items-center justify-center transition-all duration-300 ${
-                    coverPreviewDevice === 'desktop' ? 'h-32 sm:h-36 aspect-video' : 'h-40 sm:h-44 aspect-[4/5] max-w-[160px] mx-auto'
+                    coverPreviewDevice === "desktop" ? "h-32 sm:h-36 aspect-video" : "h-40 sm:h-44 aspect-[4/5] max-w-[160px] mx-auto"
                   }`}
                 >
                   {coverImage ? (
                     <img
                       src={normalizeImageUrl(coverImage) || coverImage}
-                      alt={photoCredit || 'Cover Preview'}
+                      alt={photoCredit || "Cover Preview"}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"
                       onError={e => {
                         (e.target as HTMLImageElement).src =
-                          'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80';
+                          "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80";
                       }}
                     />
                   ) : (
@@ -387,18 +433,13 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
               <span className="text-xs font-mono font-bold uppercase text-text-primary">
                 Search Engine & AI Discoverability Metadata
               </span>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                Required for Publish
-              </span>
             </div>
 
             <div className="space-y-3">
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <label className="text-xs font-mono font-semibold text-text-secondary">
-                    SEO Meta Title
-                  </label>
-                  <span className={`text-[10px] font-mono ${seoTitle.length > 60 ? 'text-amber-500 font-bold' : 'text-text-tertiary'}`}>
+                  <label className="text-xs font-mono font-semibold text-text-secondary">SEO Meta Title</label>
+                  <span className={`text-[10px] font-mono ${seoTitle.length > 60 ? "text-amber-500 font-bold" : "text-text-tertiary"}`}>
                     {seoTitle.length}/60 chars
                   </span>
                 </div>
@@ -414,10 +455,8 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
 
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <label className="text-xs font-mono font-semibold text-text-secondary">
-                    SEO Meta Description
-                  </label>
-                  <span className={`text-[10px] font-mono ${seoDescription.length > 155 ? 'text-amber-500 font-bold' : 'text-text-tertiary'}`}>
+                  <label className="text-xs font-mono font-semibold text-text-secondary">SEO Meta Description</label>
+                  <span className={`text-[10px] font-mono ${seoDescription.length > 155 ? "text-amber-500 font-bold" : "text-text-tertiary"}`}>
                     {seoDescription.length}/155 chars
                   </span>
                 </div>
@@ -438,11 +477,11 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
               Full Essay Body (Markdown)
             </label>
             <textarea
-              rows={12}
+              rows={14}
               value={body}
               onChange={e => setBody(e.target.value)}
-              placeholder="### The Core Thesis&#10;&#10;Write the complete analysis using markdown headers and bullet points..."
-              className="w-full text-sm font-mono p-3.5 rounded-xl border border-border bg-surface-muted focus:outline-none focus:ring-2 focus:ring-brand"
+              placeholder={"### The Core Thesis&#10;&#10;Write the complete analysis using markdown headers and bullet points..."}
+              className="w-full text-sm font-mono p-3.5 rounded-xl border border-border bg-surface-muted focus:outline-none focus:ring-2 focus:ring-brand resize-y"
             />
           </div>
         </div>
@@ -467,7 +506,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => handleSubmit('DRAFT')}
+          onClick={() => handleSubmit("DRAFT")}
           isLoading={submitting}
         >
           Save Draft
@@ -476,7 +515,7 @@ export const BlogEditorForm: React.FC<BlogEditorFormProps> = ({
           type="button"
           variant="primary"
           size="sm"
-          onClick={() => handleSubmit('PUBLISHED')}
+          onClick={() => handleSubmit("PUBLISHED")}
           isLoading={submitting}
         >
           Publish Now

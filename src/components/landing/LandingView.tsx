@@ -1,982 +1,330 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ChevronRight,
-  X,
-  Sparkles,
-  Mail,
-  ExternalLink,
-  Check,
-  ArrowRight,
-  BookOpen,
-  Layers,
-  Terminal,
-  Zap,
-  TrendingUp,
-  Globe,
-  Clock,
-  Shield,
-  Activity,
-  Bookmark,
-  Flame,
-  BarChart2,
-  Cpu,
-  Users,
-  Loader2,
-} from 'lucide-react';
-
-interface BrandLogo {
-  name: string;
-  src: string;
-  gradient: string;
-}
-
-const BRAND_LOGOS: BrandLogo[] = [
-  {
-    name: 'Procure',
-    src: 'https://svgl.app/library/procure.svg',
-    gradient: 'linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa)',
-  },
-  {
-    name: 'Shopify',
-    src: 'https://svgl.app/library/shopify.svg',
-    gradient: 'linear-gradient(135deg, #ca8a04, #eab308, #84cc16)',
-  },
-  {
-    name: 'Blender',
-    src: 'https://svgl.app/library/blender.svg',
-    gradient: 'linear-gradient(135deg, #0284c7, #38bdf8, #f97316)',
-  },
-  {
-    name: 'Figma',
-    src: 'https://svgl.app/library/figma.svg',
-    gradient: 'linear-gradient(135deg, #7c3aed, #a855f7, #ec4899)',
-  },
-  {
-    name: 'Spotify',
-    src: 'https://svgl.app/library/spotify.svg',
-    gradient: 'linear-gradient(135deg, #db2777, #ec4899, #ef4444)',
-  },
-  {
-    name: 'Lottielab',
-    src: 'https://svgl.app/library/lottielab.svg',
-    gradient: 'linear-gradient(135deg, #eab308, #facc15, #22c55e)',
-  },
-  {
-    name: 'Google Cloud',
-    src: 'https://svgl.app/library/google-cloud.svg',
-    gradient: 'linear-gradient(135deg, #38bdf8, #60a5fa, #818cf8)',
-  },
-  {
-    name: 'Bing',
-    src: 'https://svgl.app/library/bing.svg',
-    gradient: 'linear-gradient(135deg, #06b6d4, #0891b2, #14b8a6)',
-  },
-];
-
-// Sample 60-word interactive live intelligence briefs
-const SAMPLE_BRIEFS = [
-  {
-    id: 'startup-funding',
-    category: 'STARTUP FUNDING',
-    categoryColor: 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/50',
-    title: 'Zepto Raises $350M Series F, Valuation Hits $5B as Quick Commerce War Intensifies',
-    time: '6m ago',
-    source: 'Bloomberg',
-    sourceUrl: 'https://bloomberg.com',
-    words: 60,
-    text: "Mumbai-based quick commerce startup Zepto has closed a $350M Series F led by General Catalyst, pushing its valuation to $5 billion. The round comes amid a brutal three-way battle with Blinkit and Swiggy Instamart for India's $45B grocery delivery market. Zepto plans to expand to 100 dark stores across Tier-2 cities within 18 months, targeting profitability by Q4 2025.",
-    keyStats: [
-      { label: 'Valuation', value: '$5B' },
-      { label: 'Round Size', value: '$350M' },
-      { label: 'Dark Stores', value: '+100' },
-    ],
-  },
-  {
-    id: 'crypto-markets',
-    category: 'CRYPTO & WEB3',
-    categoryColor: 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/50',
-    title: 'Bitcoin ETFs See $2.1B Net Inflows in Single Week as Institutional Demand Spikes',
-    time: '22m ago',
-    source: 'CoinDesk',
-    sourceUrl: 'https://coindesk.com',
-    words: 59,
-    text: "US spot Bitcoin ETFs recorded $2.1B in net inflows over five trading days, the largest weekly figure since January launch. BlackRock's IBIT alone absorbed $1.3B, pushing its total AUM past $22B. Analysts attribute the surge to pension fund rebalancing ahead of Q3 close and growing conviction among family offices that BTC is a permanent treasury asset.",
-    keyStats: [
-      { label: 'Weekly Inflow', value: '$2.1B' },
-      { label: 'IBIT AUM', value: '$22B+' },
-      { label: 'Top Buyer', value: 'BlackRock' },
-    ],
-  },
-  {
-    id: 'investment-news',
-    category: 'INVESTMENT NEWS',
-    categoryColor: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/50',
-    title: 'Sequoia India Closes $2.85B Fund VIII, Largest India-Dedicated VC Pool Ever Raised',
-    time: '38m ago',
-    source: 'Economic Times',
-    sourceUrl: 'https://economictimes.com',
-    words: 60,
-    text: "Sequoia Capital India has completed a final close on its eighth fund at $2.85B, surpassing its $2.2B target and setting the record for the largest India-focused venture fund. LPs include sovereign wealth funds from Singapore, Abu Dhabi, and Norway alongside US university endowments. The fund will back early and growth-stage startups across SaaS, fintech, consumer internet, and climate tech.",
-    keyStats: [
-      { label: 'Fund Size', value: '$2.85B' },
-      { label: 'Target Beat', value: '+$650M' },
-      { label: 'Stage Focus', value: 'Early + Growth' },
-    ],
-  },
-  {
-    id: 'unicorn-failure',
-    category: 'FAILURE TEARDOWN',
-    categoryColor: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800/50',
-    title: "GoMechanic Collapses After $62M Raised — Founders Admit Fake Revenue Reporting",
-    time: '1h ago',
-    source: 'Inc42',
-    sourceUrl: 'https://inc42.com',
-    words: 58,
-    text: "GoMechanic, once valued at $100M and backed by Sequoia and Tiger Global, has admitted to systemic financial fraud after inflating revenue numbers by 2.5x across three fiscal years. Founders filed police complaints against each other as the company began liquidation proceedings. The collapse marks one of India's most public VC-backed startup failures with over $62M in total investor capital destroyed.",
-    keyStats: [
-      { label: 'Capital Lost', value: '$62M' },
-      { label: 'Revenue Faked', value: '2.5x' },
-      { label: 'Outcome', value: 'Liquidation' },
-    ],
-  },
-];
-
-const GLOBAL_HUBS = [
-  { city: 'SAN FRANCISCO', region: 'North America', volume24h: '$14.2B', deals: 42, pace: '+18%' },
-  { city: 'BENGALURU', region: 'India / SEA', volume24h: '$4.8B', deals: 14, pace: '+34%' },
-  { city: 'LONDON', region: 'Europe', volume24h: '$6.1B', deals: 19, pace: '+8%' },
-  { city: 'SINGAPORE', region: 'APAC Rails', volume24h: '$3.2B', deals: 11, pace: '+22%' },
-  { city: 'NEW YORK', region: 'North America', volume24h: '$9.4B', deals: 28, pace: '+12%' },
-];
-
-const SPECIALIZED_DESKS = [
-  {
-    icon: <Zap className="w-5 h-5 text-blue-600" />,
-    title: 'Startup Funding Rounds',
-    description: 'Every seed, Series A through IPO — funding rounds, cap table changes, valuations, and runway signals across global startup ecosystems.',
-    tag: 'Daily Coverage',
-  },
-  {
-    icon: <BarChart2 className="w-5 h-5 text-purple-600" />,
-    title: 'Crypto & Web3 Markets',
-    description: 'Bitcoin, Ethereum, altcoins, DeFi protocols, ETF flows, on-chain data, and regulatory developments that move crypto markets.',
-    tag: 'Live Signals',
-  },
-  {
-    icon: <TrendingUp className="w-5 h-5 text-emerald-600" />,
-    title: 'Investment & VC News',
-    description: 'Fund closes, LP commitments, partner moves, portfolio company updates, and institutional capital allocation shifts.',
-    tag: 'Weekly Ledger',
-  },
-  {
-    icon: <Flame className="w-5 h-5 text-rose-600" />,
-    title: 'Startup Failures & Teardowns',
-    description: 'Honest forensic post-mortems of VC-backed failures, burn spikes, cap-table wipes, and founder fallouts. Zero spin.',
-    tag: 'Zero Sponsored PR',
-  },
-  {
-    icon: <Globe className="w-5 h-5 text-teal-600" />,
-    title: 'Global Deal Flow Tracker',
-    description: 'Track capital corridors from Silicon Valley to Bengaluru, London, Singapore, and Dubai — where the money moves next.',
-    tag: '5 Global Desks',
-  },
-  {
-    icon: <Cpu className="w-5 h-5 text-indigo-600" />,
-    title: 'Unicorn & Growth Stage',
-    description: 'Late-stage rounds above $50M, IPO filings, secondary valuations, tender offers, and pre-IPO lock-up watch.',
-    tag: 'Unicorn Watch',
-  },
-];
+import { Globe, ArrowRight, Linkedin, Loader2, Check } from 'lucide-react';
+import { AboutSection } from './AboutSection';
+import { FeaturedVideoSection } from './FeaturedVideoSection';
+import { PhilosophySection } from './PhilosophySection';
+import { ServicesSection } from './ServicesSection';
 
 export function LandingView() {
-  const [isContactOpen, setIsContactOpen] = useState(false);
-  const [isProductsOpen, setIsProductsOpen] = useState(false);
-  const [isDocsOpen, setIsDocsOpen] = useState(false);
-  const [contactEmail, setContactEmail] = useState('');
-  const [contactMessage, setContactMessage] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [email, setEmail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; success: boolean } | null>(null);
 
-  // Active brief tab in interactive reader demo
-  const [activeBriefIndex, setActiveBriefIndex] = useState(0);
-  const activeBrief = SAMPLE_BRIEFS[activeBriefIndex];
-
-  // Hero email collection state
-  const [heroEmail, setHeroEmail] = useState('');
-  const [heroSubmitting, setHeroSubmitting] = useState(false);
-  const [heroSuccess, setHeroSuccess] = useState(false);
-
-  // Quick access email capture form state
-  const [captureEmail, setCaptureEmail] = useState('');
-  const [captureDone, setCaptureDone] = useState(false);
-
-  // Video Ref & Autoplay Guarantee (fixes React muted autoplay DOM property issue)
-  const videoRef = useRef<HTMLVideoElement>(null);
+  // Video playback ref & state
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
-    video.defaultMuted = true;
     video.muted = true;
 
     const playVideo = () => {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(err => {
-          console.log('Video autoplay deferred by browser:', err);
-        });
-      }
+      video.play().catch(() => {
+        // Autoplay policy fallback: unlock on first interaction
+        const unlock = () => {
+          video.play().catch(() => {});
+          window.removeEventListener('click', unlock);
+          window.removeEventListener('touchstart', unlock);
+        };
+        window.addEventListener('click', unlock, { once: true });
+        window.addEventListener('touchstart', unlock, { once: true });
+      });
     };
 
     if (video.readyState >= 2) {
+      setVideoLoaded(true);
       playVideo();
     } else {
-      video.addEventListener('loadeddata', playVideo, { once: true });
-      video.addEventListener('canplay', playVideo, { once: true });
+      const handleLoadedData = () => {
+        setVideoLoaded(true);
+        playVideo();
+      };
+      video.addEventListener('loadeddata', handleLoadedData, { once: true });
+      return () => video.removeEventListener('loadeddata', handleLoadedData);
     }
   }, []);
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!contactEmail) return;
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setContactEmail('');
-      setContactMessage('');
-      setIsContactOpen(false);
-    }, 2000);
-  };
+    if (!email || submitting) return;
+    setSubmitting(true);
+    setStatusMessage(null);
 
-  const handleDirectEnter = () => {
     try {
-      document.cookie = 'va_reader=1; path=/; max-age=31536000';
-      document.cookie = 'va_reader_client=1; path=/; max-age=31536000';
-      localStorage.setItem('va_reader_active', 'true');
-    } catch {}
-  };
-
-  const handleHeroEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!heroEmail || heroSubmitting) return;
-    setHeroSubmitting(true);
-    handleDirectEnter();
-    try {
-      await fetch('/api/reader/enter', {
+      const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: heroEmail.trim().toLowerCase(),
-          source: 'HERO_EMAIL_BOX',
-        }),
+        body: JSON.stringify({ email: email.trim().toLowerCase(), source: 'HERO_LANDING' }),
       });
-      setHeroSuccess(true);
-    } catch (err) {
-      console.warn('Hero email enter error:', err);
+      const data = await res.json();
+      if (res.ok && data.success) {
+        // Mark user as having submitted email — unlocks feed access
+        localStorage.setItem('va_reader_verified', 'true');
+        localStorage.setItem('va_reader_active', 'true');
+        localStorage.setItem('va_email_unlocked', 'true');
+        setIsSuccess(true);
+        setStatusMessage({
+          text: '✓ Captured. Full intelligence access granted.',
+          success: true,
+        });
+        setEmail('');
+        setTimeout(() => setIsSuccess(false), 4000);
+      } else {
+        setStatusMessage({
+          text: data.error || 'Please enter a valid email address.',
+          success: false,
+        });
+      }
+    } catch {
+      setStatusMessage({
+        text: 'Network issue. Please try again.',
+        success: false,
+      });
     } finally {
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 300);
+      setSubmitting(false);
+      setTimeout(() => setStatusMessage(null), 6000);
     }
   };
 
-  const handleCaptureSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!captureEmail) return;
-    setCaptureDone(true);
-    handleDirectEnter();
-    try {
-      await fetch('/api/reader/enter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: captureEmail.trim().toLowerCase(),
-          source: 'LANDING_PAGE_HERO',
-        }),
-      });
-    } catch (err) {
-      console.warn('Reader enter fetch error:', err);
-    }
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 500);
-  };
 
   return (
-    <div className="min-h-screen w-full bg-background text-text-primary flex flex-col select-none font-sans transition-colors duration-200">
-      {/* ─────────────────────────────────────────────────────────────
-          MAIN CONTENT WRAPPER (Tightened top spacing on mobile)
-      ────────────────────────────────────────────────────────────── */}
-      <div className="flex-1 pt-1 sm:pt-4 pb-8 sm:pb-12 px-2 sm:px-6 md:px-8 space-y-10 sm:space-y-16 max-w-[1440px] mx-auto w-full">
-        {/* ─────────────────────────────────────────────────────────────
-            1. MAIN HERO CONTAINER & VIDEO BACKGROUND (Pronounced Curved Radius)
-        ────────────────────────────────────────────────────────────── */}
-        <section className="relative w-full max-w-[1400px] mx-auto rounded-[44px] sm:rounded-[60px] md:rounded-[76px] lg:rounded-[88px] bg-slate-950 border border-slate-800/80 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden min-h-[500px] sm:min-h-[540px] md:h-[600px] flex flex-col">
-          {/* Absolutely positioned underlying video layer - NO overlays */}
-          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none">
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              poster="/hero-poster.jpg"
-              className="w-full h-full object-cover scale-105 transition-transform duration-1000"
-            >
-              {/* Local high-speed source (no CORS/network failure) */}
-              <source src="/hero-video.mp4" type="video/mp4" />
-              {/* CloudFront remote source */}
-              <source
-                src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260613_180732_a54afbf6-b30d-470e-861f-669871f09f67.mp4"
-                type="video/mp4"
-              />
-            </video>
-          </div>
+    <div className="bg-black text-white min-h-screen selection:bg-white selection:text-black overflow-x-hidden font-sans">
+      {/* SECTION 1 — HERO */}
+      <div className="h-screen min-h-[660px] max-h-[1050px] overflow-hidden relative flex flex-col justify-between">
+        {/* Absolute full-screen background video with poster fallback */}
+        <video
+          ref={videoRef}
+          className={`absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none transition-opacity duration-700 ${
+            videoLoaded ? 'opacity-90' : 'opacity-80'
+          }`}
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/hero-poster.jpg"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+          <source
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_074625_a81f018a-956b-43fb-9aee-4d1508e30e6a.mp4"
+            type="video/mp4"
+          />
+        </video>
 
-          {/* ─────────────────────────────────────────────────────────────
-              HERO CONTENT LAYOUT
-          ────────────────────────────────────────────────────────────── */}
-          <div className="z-20 flex-1 px-5 sm:px-10 md:px-16 pt-6 sm:pt-10 md:pt-16 flex flex-col items-start">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="max-w-3xl"
-            >
-              <h1 className="font-display text-[32px] sm:text-[44px] md:text-[56px] font-medium tracking-tight leading-[1.12] md:leading-[1.08] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
-                Startup, Crypto &<br />Investment News — in 60 Words
-              </h1>
+        {/* Cinematic dark subtle gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 pointer-events-none" />
 
-              <p className="font-sans text-[14px] md:text-[15px] text-slate-200/90 mt-3 sm:mt-4 max-w-xl font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
-                Venture Atlas delivers funding rounds, crypto market moves, and VC deal flow — distilled to 60 words. No fluff. No ads. Just the signal that matters to founders, investors, and operators.
-              </p>
-
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-xl">
-                <form
-                  onSubmit={handleHeroEmailSubmit}
-                  className="flex items-center gap-1.5 p-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl border border-white/60 dark:border-white/20 shadow-xl w-full sm:w-auto flex-1 transition-all focus-within:ring-2 focus-within:ring-white/80"
-                >
-                  <div className="pl-3.5 pr-1 text-slate-400">
-                    <Mail size={16} />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    value={heroEmail}
-                    onChange={e => setHeroEmail(e.target.value)}
-                    placeholder="Enter your work email..."
-                    disabled={heroSubmitting || heroSuccess}
-                    className="flex-1 bg-transparent py-2 text-[14px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-400 font-sans focus:outline-none min-w-[160px]"
-                  />
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    disabled={heroSubmitting || heroSuccess}
-                    className="px-5 py-2.5 rounded-full bg-slate-950 dark:bg-amber-400 text-white dark:text-black hover:bg-slate-800 dark:hover:bg-amber-300 text-[13px] font-medium transition-all shadow-md flex items-center justify-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-75"
-                  >
-                    {heroSubmitting ? (
-                      <>
-                        <Loader2 size={13} className="animate-spin" />
-                        <span>Joining...</span>
-                      </>
-                    ) : heroSuccess ? (
-                      <>
-                        <Check size={13} className="text-emerald-400" />
-                        <span>Entering...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Get Access</span>
-                        <ArrowRight size={13} />
-                      </>
-                    )}
-                  </motion.button>
-                </form>
-
-                <Link
-                  href="/feed"
-                  onClick={handleDirectEnter}
-                  className="px-5 py-3 rounded-full bg-white/20 hover:bg-white/30 text-white text-[13px] font-medium border border-white/30 shadow-md transition-all flex items-center justify-center gap-1.5 backdrop-blur-md shrink-0"
-                >
-                  <span>Enter Reader Feed</span>
-                  <ChevronRight size={14} className="text-white/70" />
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-
-        </section>
-
-        {/* ─────────────────────────────────────────────────────────────
-            2. SEAMLESS MARQUEE LOGO SCROLLER
-        ────────────────────────────────────────────────────────────── */}
-        <section className="mt-10 w-full max-w-[1400px] mx-auto overflow-hidden">
-          <div className="text-center mb-6">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-medium">
-              Trusted & Cited by Founders, VCs, and Operators Across the Globe
-            </span>
-          </div>
-
-          <div
-            className="w-full overflow-hidden"
-            style={{
-              maskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
-            }}
-          >
-            <div className="flex w-max animate-marquee">
-              {/* First Sequence of 8 Logos */}
-              <div className="flex items-center gap-5 pr-5 shrink-0">
-                {BRAND_LOGOS.map((logo, index) => (
-                  <div
-                    key={`logo-seq1-${index}`}
-                    className="group relative h-24 w-40 shrink-0 flex items-center justify-center rounded-full bg-white dark:bg-[#111113] border border-slate-200/60 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all overflow-hidden cursor-pointer"
-                  >
-                    {/* Card Hover Background: Vibrant Linear Gradient */}
-                    <div
-                      className="absolute inset-0 opacity-0 scale-150 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
-                      style={{ background: logo.gradient }}
-                    />
-                    {/* Logo Icon */}
-                    <img
-                      src={logo.src}
-                      alt={logo.name}
-                      loading="lazy"
-                      className="w-8 h-8 object-contain relative z-10 transition-all duration-300 group-hover:brightness-0 group-hover:invert"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {/* Second Identical Sequence of 8 Logos for Seamless 100% Looping */}
-              <div className="flex items-center gap-5 pr-5 shrink-0" aria-hidden="true">
-                {BRAND_LOGOS.map((logo, index) => (
-                  <div
-                    key={`logo-seq2-${index}`}
-                    className="group relative h-24 w-40 shrink-0 flex items-center justify-center rounded-full bg-white dark:bg-[#111113] border border-slate-200/60 dark:border-white/10 shadow-sm hover:border-slate-300 dark:hover:border-white/20 transition-all overflow-hidden cursor-pointer"
-                  >
-                    {/* Card Hover Background: Vibrant Linear Gradient */}
-                    <div
-                      className="absolute inset-0 opacity-0 scale-150 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
-                      style={{ background: logo.gradient }}
-                    />
-                    {/* Logo Icon */}
-                    <img
-                      src={logo.src}
-                      alt={logo.name}
-                      loading="lazy"
-                      className="w-8 h-8 object-contain relative z-10 transition-all duration-300 group-hover:brightness-0 group-hover:invert"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ─────────────────────────────────────────────────────────────
-            3. INTERACTIVE 60-WORD DISPATCH SIMULATOR
-        ────────────────────────────────────────────────────────────── */}
-        <section className="w-full max-w-[1400px] mx-auto bg-white dark:bg-[#0a0a0c] rounded-[40px] border border-slate-200/70 dark:border-white/10 p-8 md:p-14 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] transition-colors">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/50 text-blue-700 dark:text-blue-400 text-xs font-mono font-medium uppercase mb-3">
-                <Layers size={13} /> The 60-Word Format
-              </div>
-              <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33] dark:text-white">
-                Real news. Real fast. Real sources.
-              </h2>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-xl">
-                Every story — startup funding, crypto move, or VC fund close — is compressed to exactly 60 words. Primary source linked. Zero opinion. Zero filler. Read in under 20 seconds.
-              </p>
-            </div>
-
-            {/* Category selection tabs */}
-            <div className="flex flex-wrap gap-2">
-              {SAMPLE_BRIEFS.map((b, idx) => (
-                <button
-                  key={b.id}
-                  onClick={() => setActiveBriefIndex(idx)}
-                  className={`px-4 py-2 rounded-full text-xs font-medium transition-all cursor-pointer ${
-                    activeBriefIndex === idx
-                      ? 'bg-[#0a152d] dark:bg-amber-400 text-white dark:text-black font-semibold shadow-sm'
-                      : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10'
-                  }`}
-                >
-                  {b.category}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Interactive Card Preview */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Left: 60-Word Card */}
-            <div className="lg:col-span-8 bg-slate-50/70 dark:bg-[#111113] rounded-3xl p-6 md:p-8 border border-slate-200/80 dark:border-white/10 flex flex-col justify-between transition-colors">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className={`px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold border ${activeBrief.categoryColor}`}>
-                      {activeBrief.category}
-                    </span>
-                    <span className="text-xs text-slate-400 font-mono">·</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1">
-                      <Clock size={12} /> {activeBrief.time}
-                    </span>
-                  </div>
-
-                  <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
-                    {activeBrief.words} WORDS
-                  </span>
-                </div>
-
-                <h3 className="font-display text-xl md:text-2xl font-medium text-[#0a1b33] dark:text-white leading-snug mb-4">
-                  {activeBrief.title}
-                </h3>
-
-                <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed font-normal">
-                  {activeBrief.text}
-                </p>
-              </div>
-
-              <div className="pt-6 mt-6 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-                  <span>Source Verification:</span>
-                  <a
-                    href={activeBrief.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 transition-colors"
-                  >
-                    {activeBrief.source} <ExternalLink size={11} />
-                  </a>
-                </div>
-
-                <Link
-                  href="/feed" onClick={handleDirectEnter}
-                  className="px-4 py-2 rounded-full bg-white dark:bg-white/10 hover:bg-slate-100 dark:hover:bg-white/15 text-slate-800 dark:text-white border border-slate-200 dark:border-white/10 font-medium transition-colors flex items-center gap-1.5 shadow-sm"
-                >
-                  Read Full Dispatch in Feed <ArrowRight size={12} />
-                </Link>
-              </div>
-            </div>
-
-            {/* Right: Key Institutional Metrics */}
-            <div className="lg:col-span-4 bg-white dark:bg-[#111113] rounded-3xl p-6 md:p-8 border border-slate-200/80 dark:border-white/10 shadow-sm flex flex-col justify-between space-y-6 transition-colors">
-              <div>
-                <span className="text-xs font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-4">
-                  Telemetry Analysis
-                </span>
-                <div className="space-y-4">
-                  {activeBrief.keyStats.map((stat, i) => (
-                    <div key={i} className="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
-                      <span className="text-xs text-slate-500 dark:text-slate-400 font-medium block">{stat.label}</span>
-                      <span className="text-2xl font-display font-medium text-[#0a1b33] dark:text-white mt-1 block">
-                        {stat.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 text-xs text-blue-900 dark:text-blue-200 leading-relaxed">
-                <span className="font-semibold block mb-1">Venture Atlas Standard</span>
-                Every story is sourced, fact-checked, and written to exactly 60 words. No sponsored posts. No opinion. Just what happened.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ─────────────────────────────────────────────────────────────
-            4. SPECIALIZED INTELLIGENCE DESKS (BENTO GRID)
-        ────────────────────────────────────────────────────────────── */}
-        <section className="w-full max-w-[1400px] mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-semibold block mb-2">
-              What We Cover
-            </span>
-            <h2 className="font-display text-3xl md:text-4xl font-medium text-[#0a1b33] dark:text-white tracking-tight">
-              Startups. Crypto. Investments.<br />All in one feed.
-            </h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-3">
-              From seed rounds to Bitcoin ETF flows — we track the money, the deals, and the collapses so you don't have to read 20 different sources.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SPECIALIZED_DESKS.map((desk, idx) => (
-              <div
-                key={idx}
-                className="group relative bg-white dark:bg-[#0a0a0c] rounded-3xl p-8 border border-slate-200/70 dark:border-white/10 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-white/20 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-11 h-11 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 flex items-center justify-center">
-                      {desk.icon}
-                    </div>
-                    <span className="text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">
-                      {desk.tag}
-                    </span>
-                  </div>
-
-                  <h3 className="font-display text-lg font-medium text-[#0a1b33] dark:text-white mb-2">
-                    {desk.title}
-                  </h3>
-
-                  <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed font-normal">
-                    {desk.description}
-                  </p>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 font-medium">
-                  <span>Explore desk</span>
-                  <ChevronRight size={14} className="text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ─────────────────────────────────────────────────────────────
-            5. GLOBAL TELEMETRY HUBS RADAR
-        ────────────────────────────────────────────────────────────── */}
-        <section className="w-full max-w-[1400px] mx-auto bg-white dark:bg-[#0a0a0c] rounded-[40px] border border-slate-200/70 dark:border-white/10 p-8 md:p-14 shadow-sm transition-colors">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 text-emerald-700 dark:text-emerald-400 text-xs font-mono font-medium uppercase mb-3">
-                <Activity size={13} /> Live Deal Tracker
-              </div>
-              <h2 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[#0a1b33] dark:text-white">
-                Where the money is moving right now
-              </h2>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">
-                Real-time startup funding and investment volumes across the world's five biggest deal-flow hubs — updated every 24 hours.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-white/5 px-4 py-2 rounded-full border border-slate-200 dark:border-white/10">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span>LIVE 24H SYNCHRONIZED FEED</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {GLOBAL_HUBS.map((hub, i) => (
-              <div
-                key={i}
-                className="p-5 rounded-2xl bg-slate-50/70 dark:bg-[#111113] border border-slate-200/70 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-[#161618] hover:border-slate-300 dark:hover:border-white/20 transition-all"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500">{hub.region}</span>
-                  <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">{hub.pace}</span>
-                </div>
-                <h4 className="font-display text-base font-semibold text-[#0a1b33] dark:text-white">{hub.city}</h4>
-                <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-white/10 flex items-center justify-between text-xs">
-                  <div>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 block font-mono">24H VOLUME</span>
-                    <span className="font-display font-medium text-slate-900 dark:text-white text-sm">{hub.volume24h}</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 block font-mono">DEALS</span>
-                    <span className="font-display font-medium text-slate-900 dark:text-white text-sm">{hub.deals}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ─────────────────────────────────────────────────────────────
-            6. EXECUTIVE ACCESS & NEWSLETTER CAPTURE TERMINAL
-        ────────────────────────────────────────────────────────────── */}
-        <section className="w-full max-w-[1400px] mx-auto bg-gradient-to-b from-white to-slate-50/80 dark:from-[#0a0a0c] dark:to-[#050505] rounded-[40px] border border-slate-200/80 dark:border-white/10 p-8 md:p-16 text-center shadow-sm transition-colors">
-          <div className="max-w-2xl mx-auto">
-            <div className="w-12 h-12 rounded-2xl bg-slate-900 dark:bg-amber-400 text-white dark:text-black flex items-center justify-center font-bold text-lg mx-auto mb-6 shadow-md">
-              ✦
-            </div>
-
-            <h2 className="font-display text-3xl md:text-5xl font-medium tracking-tight text-[#0a1b33] dark:text-white leading-tight">
-              Get startup, crypto & investment<br />news — free, every morning
-            </h2>
-
-            <p className="text-slate-600 dark:text-slate-300 text-sm md:text-base mt-4 font-normal leading-relaxed">
-              Join thousands of founders and investors who start their day with Venture Atlas. One email. 60-word stories. The funding rounds, crypto moves, and VC news that actually matter.
-            </p>
-
-            {captureDone ? (
-              <div className="mt-8 p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/50 text-emerald-800 dark:text-emerald-300 text-sm font-medium flex items-center justify-center gap-2">
-                <Check size={18} />
-                <span>You're in. Expect your first brief in the morning.</span>
-              </div>
-            ) : (
-              <form onSubmit={handleCaptureSubmit} className="mt-8 max-w-md mx-auto flex flex-col sm:flex-row gap-2.5">
-                <input
-                  type="email"
-                  required
-                  value={captureEmail}
-                  onChange={e => setCaptureEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="flex-1 px-5 py-3.5 rounded-full bg-white dark:bg-[#111113] border border-slate-300 dark:border-white/20 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10 focus:border-slate-400 dark:focus:border-white/30 transition-all font-sans shadow-sm"
+        {/* NAVBAR */}
+        <header className="relative z-20 px-6 pt-5 sm:pt-6 pb-2">
+          <nav className="liquid-glass max-w-5xl mx-auto px-5 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between rounded-full shadow-lg">
+            {/* Left Side: Brand Logo + Nav Links */}
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center group py-0.5" title="Venture Atlas">
+                <img
+                  src="/logo-dark.png"
+                  alt="Venture Atlas"
+                  className="h-8 sm:h-9 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
-                <button
-                  type="submit"
-                  className="px-7 py-3.5 rounded-full bg-[#0a152d] dark:bg-amber-400 text-white dark:text-black font-semibold hover:bg-slate-800 dark:hover:bg-amber-300 transition-all shadow-md cursor-pointer whitespace-nowrap"
-                >
-                  Send Me the News
-                </button>
-              </form>
-            )}
+              </Link>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 dark:text-slate-400 font-mono">
-              <span className="flex items-center gap-1">
-                <Check size={13} className="text-emerald-500" /> Free Forever
-              </span>
-              <span>·</span>
-              <span className="flex items-center gap-1">
-                <Check size={13} className="text-emerald-500" /> No Ads, No Spam
-              </span>
-              <span>·</span>
-              <span className="flex items-center gap-1">
-                <Check size={13} className="text-emerald-500" /> Unsubscribe Anytime
-              </span>
+              {/* Desktop Navigation Links */}
+              <div className="hidden md:flex items-center gap-7 lg:gap-8 ml-8">
+                <a
+                  href="#about"
+                  className="text-white/80 hover:text-white text-sm font-medium transition-colors"
+                >
+                  Discover
+                </a>
+                <a
+                  href="#cover"
+                  className="text-white/80 hover:text-white text-sm font-medium transition-colors"
+                >
+                  Startups
+                </a>
+                <a
+                  href="#cover"
+                  className="text-white/80 hover:text-white text-sm font-medium transition-colors"
+                >
+                  Funding
+                </a>
+                <a
+                  href="#philosophy"
+                  className="text-white/80 hover:text-white text-sm font-medium transition-colors"
+                >
+                  Markets
+                </a>
+              </div>
             </div>
 
-            <div className="mt-8">
+            {/* Right Side: Sign In + Explore Primary Button */}
+            <div className="flex items-center gap-3 sm:gap-4">
               <Link
-                href="/feed" onClick={handleDirectEnter}
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:underline transition-colors"
+                href="/admin/login"
+                className="text-white text-xs sm:text-sm font-medium hover:text-white/80 transition-colors px-2 py-1"
               >
-                <span>Or browse the live feed without signing up <ArrowRight size={14} /></span>
+                Sign In
+              </Link>
+
+              <Link
+                href="/"
+                className="liquid-glass rounded-full px-5 sm:px-6 py-2 text-white text-xs sm:text-sm font-medium hover:bg-white/10 transition-colors cursor-pointer inline-flex items-center justify-center"
+              >
+                Explore
               </Link>
             </div>
-          </div>
-        </section>
+          </nav>
+        </header>
+
+        {/* HERO CONTENT: Vertically centered with optical balance (no negative translate collision) */}
+        <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-4 text-center max-w-4xl mx-auto w-full my-auto">
+          {/* Main Headline */}
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white tracking-tight font-serif font-normal select-none leading-[0.98]">
+            <span className="block">The world of</span>
+            <span className="block font-serif italic font-normal tracking-tight mt-1">ventures</span>
+          </h1>
+
+          {/* Email Input */}
+          <form onSubmit={handleEmailSubmit} className="max-w-lg w-full mt-6 sm:mt-7 mb-3">
+            <div className="liquid-glass rounded-full pl-5 sm:pl-6 pr-2 py-1.5 sm:py-2 flex items-center gap-3 w-full shadow-2xl transition-all duration-300 focus-within:ring-1 focus-within:ring-white/30">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                disabled={submitting}
+                className="w-full bg-transparent text-white placeholder:text-white/40 text-xs sm:text-sm md:text-base focus:outline-none font-sans"
+                required
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                aria-label="Submit email"
+                className={`rounded-full p-2.5 sm:p-3 text-black transition-all active:scale-95 flex-shrink-0 cursor-pointer shadow-md ${
+                  isSuccess ? 'bg-emerald-400 text-black' : 'bg-white hover:bg-white/90'
+                }`}
+              >
+                {submitting ? (
+                  <Loader2 size={18} className="animate-spin text-black" />
+                ) : isSuccess ? (
+                  <Check size={18} className="text-black" />
+                ) : (
+                  <ArrowRight size={18} className="sm:w-5 sm:h-5" />
+                )}
+              </button>
+            </div>
+            {statusMessage && (
+              <p
+                className={`text-xs mt-2.5 font-mono tracking-wide ${
+                  statusMessage.success ? 'text-emerald-300' : 'text-rose-400'
+                }`}
+              >
+                {statusMessage.text}
+              </p>
+            )}
+          </form>
+
+          {/* Hero Subtitle */}
+          <p className="text-white/75 text-xs sm:text-sm leading-relaxed px-4 max-w-md mx-auto font-sans mb-5">
+            Discover the startups, funding, founders, and business moves shaping what comes next.
+          </p>
+
+          {/* Secondary CTA */}
+          <Link
+            href="/"
+            className="liquid-glass rounded-full px-7 sm:px-8 py-2.5 sm:py-3 text-white text-xs sm:text-sm font-medium hover:bg-white/10 transition-all cursor-pointer inline-flex items-center justify-center shadow-lg"
+          >
+            Explore Venture Atlas
+          </Link>
+        </main>
+
+        {/* SOCIAL / PLATFORM ICONS */}
+        <div className="relative z-10 flex justify-center gap-3.5 sm:gap-4 pb-6 sm:pb-8 pt-2">
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Venture Atlas on LinkedIn"
+            className="liquid-glass rounded-full p-3 sm:p-3.5 text-white/80 hover:text-white hover:bg-white/10 transition-all shadow-md"
+          >
+            <Linkedin size={18} className="sm:w-5 sm:h-5" />
+          </a>
+          <a
+            href="https://x.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Venture Atlas on X"
+            className="liquid-glass rounded-full p-3 sm:p-3.5 text-white/80 hover:text-white hover:bg-white/10 transition-all shadow-md flex items-center justify-center"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="sm:w-5 sm:h-5">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <a
+            href="#about"
+            aria-label="Venture Atlas Global Directory"
+            className="liquid-glass rounded-full p-3 sm:p-3.5 text-white/80 hover:text-white hover:bg-white/10 transition-all shadow-md"
+          >
+            <Globe size={18} className="sm:w-5 sm:h-5" />
+          </a>
+        </div>
       </div>
 
-      {/* ─────────────────────────────────────────────────────────────
-          INTERACTIVE MODALS (Contact Us, Products, Docs)
-      ────────────────────────────────────────────────────────────── */}
-      {/* Contact Modal */}
-      <AnimatePresence>
-        {isContactOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/70 backdrop-blur-md">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="relative w-full max-w-lg bg-white dark:bg-[#0f0f12] rounded-3xl p-8 border border-slate-200 dark:border-white/15 shadow-2xl overflow-hidden"
-            >
-              <button
-                onClick={() => setIsContactOpen(false)}
-                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 flex items-center justify-center text-slate-500 dark:text-slate-300 transition-colors cursor-pointer"
-              >
-                <X size={18} />
-              </button>
+      {/* SECTION 2 — ABOUT VENTURE ATLAS */}
+      <AboutSection />
 
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-2xl bg-slate-900 dark:bg-amber-400 text-white dark:text-black flex items-center justify-center text-base font-bold">
-                  ✦
-                </div>
-                <div>
-                  <h3 className="text-xl font-display font-medium text-[#0a1b33] dark:text-white">Get in touch</h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans">Partnerships, editorial tips, press & feedback</p>
-                </div>
-              </div>
+      {/* SECTION 3 — FEATURED VIDEO / THE ATLAS */}
+      <FeaturedVideoSection />
 
-              {isSubmitted ? (
-                <div className="py-10 text-center flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
-                    <Check size={24} />
-                  </div>
-                  <h4 className="text-lg font-medium text-slate-900 dark:text-white">Message received</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">We'll get back to you within 24 hours.</p>
-                </div>
-              ) : (
-                <form onSubmit={handleContactSubmit} className="space-y-4 mt-6">
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-sans">
-                      Work Email
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={contactEmail}
-                      onChange={e => setContactEmail(e.target.value)}
-                      placeholder="founder@venture.com"
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/15 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10 focus:border-slate-400 dark:focus:border-white/30 transition-all font-sans"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-sans">
-                      Note or Inquiry (Optional)
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={contactMessage}
-                      onChange={e => setContactMessage(e.target.value)}
-                      placeholder="Tell us about a story tip, partnership idea, or feedback..."
-                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/15 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10 focus:border-slate-400 dark:focus:border-white/30 transition-all resize-none font-sans"
-                    />
-                  </div>
-                  <div className="pt-2 flex items-center justify-between gap-3">
-                    <Link
-                      href="/feed" onClick={handleDirectEnter}
-                      className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors flex items-center gap-1"
-                    >
-                      Enter Feed Directly <ArrowRight size={12} />
-                    </Link>
-                    <button
-                      type="submit"
-                      className="px-6 py-2.5 rounded-full bg-[#0a152d] dark:bg-amber-400 text-white dark:text-black font-semibold text-sm hover:bg-slate-800 dark:hover:bg-amber-300 transition-all shadow-sm cursor-pointer"
-                    >
-                      Send Message
-                    </button>
-                  </div>
-                </form>
-              )}
-            </motion.div>
+      {/* SECTION 4 — INTELLIGENCE × CONTEXT */}
+      <PhilosophySection />
+
+      {/* SECTION 5 — WHAT WE COVER */}
+      <ServicesSection />
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/10 bg-black py-12 sm:py-16 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+          <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+            <Link href="/" className="flex items-center group" title="Venture Atlas">
+              <img
+                src="/logo-dark.png"
+                alt="Venture Atlas"
+                className="h-7 sm:h-8 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity"
+              />
+            </Link>
+            <span className="hidden sm:inline text-white/20">·</span>
+            <span className="text-white/40 text-xs font-mono">
+              Intelligence for the modern venture ecosystem
+            </span>
           </div>
-        )}
-      </AnimatePresence>
 
-      {/* Products Modal */}
-      <AnimatePresence>
-        {isProductsOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/70 backdrop-blur-md">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="relative w-full max-w-xl bg-white dark:bg-[#0f0f12] rounded-3xl p-8 border border-slate-200 dark:border-white/15 shadow-2xl"
-            >
-              <button
-                onClick={() => setIsProductsOpen(false)}
-                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 flex items-center justify-center text-slate-500 dark:text-slate-300 transition-colors cursor-pointer"
-              >
-                <X size={18} />
-              </button>
-
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-2xl bg-slate-900 dark:bg-amber-400 text-white dark:text-black flex items-center justify-center text-base font-bold">
-                  ✦
-                </div>
-                <div>
-                  <h3 className="text-xl font-display font-medium text-[#0a1b33] dark:text-white">What Venture Atlas Covers</h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans">Startup funding · Crypto markets · Investment & VC news</p>
-                </div>
-              </div>
-
-              <div className="grid gap-3">
-                <Link
-                  href="/feed"
-                  onClick={() => {
-                    handleDirectEnter();
-                    setIsProductsOpen(false);
-                  }}
-                  className="p-4 rounded-2xl border border-slate-200/80 dark:border-white/10 hover:border-slate-400 dark:hover:border-white/20 bg-slate-50/50 dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 transition-all group flex items-start gap-4"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                    <Layers size={20} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-display font-medium text-slate-900 dark:text-white text-sm">Startup & Investment News Feed</h4>
-                      <ChevronRight size={16} className="text-slate-400 dark:text-slate-500 group-hover:translate-x-0.5 transition-transform" />
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      Funding rounds, VC fund closes, unicorn valuations, startup failures — in 60 words each. Curated daily.
-                    </p>
-                  </div>
-                </Link>
-
-                <div className="p-4 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                    <Terminal size={20} />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-display font-medium text-slate-900 dark:text-white text-sm">Crypto & Web3 News</h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      Bitcoin, ETF flows, DeFi protocol updates, on-chain data, and regulatory news that moves markets.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex justify-end">
-                <Link
-                  href="/feed" onClick={handleDirectEnter}
-                  className="px-6 py-2.5 rounded-full bg-[#0a152d] dark:bg-amber-400 text-white dark:text-black font-semibold text-sm hover:bg-slate-800 dark:hover:bg-amber-300 transition-all shadow-sm flex items-center gap-2"
-                >
-                  Open Reader Feed <ArrowRight size={14} />
-                </Link>
-              </div>
-            </motion.div>
+          <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-6 text-xs text-white/50 font-sans">
+            <Link href="/" className="hover:text-white transition-colors">
+              Live Feed
+            </Link>
+            <a href="#about" className="hover:text-white transition-colors">
+              About
+            </a>
+            <a href="#cover" className="hover:text-white transition-colors">
+              Startups
+            </a>
+            <a href="#philosophy" className="hover:text-white transition-colors">
+              Signals
+            </a>
+            <Link href="/admin/login" className="hover:text-white transition-colors">
+              Editorial Login
+            </Link>
+            <span className="text-white/20 hidden sm:inline">|</span>
+            <span>© {new Date().getFullYear()} Venture Atlas</span>
           </div>
-        )}
-      </AnimatePresence>
-
-      {/* Docs Modal */}
-      <AnimatePresence>
-        {isDocsOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/70 backdrop-blur-md">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="relative w-full max-w-lg bg-white dark:bg-[#0f0f12] rounded-3xl p-8 border border-slate-200 dark:border-white/15 shadow-2xl"
-            >
-              <button
-                onClick={() => setIsDocsOpen(false)}
-                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 flex items-center justify-center text-slate-500 dark:text-slate-300 transition-colors cursor-pointer"
-              >
-                <X size={18} />
-              </button>
-
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-2xl bg-slate-900 dark:bg-amber-400 text-white dark:text-black flex items-center justify-center text-base font-bold">
-                  <BookOpen size={20} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-display font-medium text-[#0a1b33] dark:text-white">About Venture Atlas</h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans">What we are, what we cover, and how we work</p>
-                </div>
-              </div>
-
-              <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300 font-sans leading-relaxed">
-                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
-                  <p className="font-medium text-slate-900 dark:text-white mb-1">What is Venture Atlas?</p>
-                  Venture Atlas is a news platform covering startup funding, crypto markets, and investment news — condensed to exactly 60 words per story. Built for founders, investors, and operators who need to stay informed without wading through noise.
-                </div>
-                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
-                  <p className="font-medium text-slate-900 dark:text-white mb-1">How We Work</p>
-                  Every story is sourced from primary publications, verified by our editorial team, and compressed to exactly 60 words. No sponsored content. No opinion pieces. Just facts, figures, and the source link.
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex justify-between items-center">
-                <Link
-                  href="/about"
-                  className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium flex items-center gap-1"
-                >
-                  Read full about page <ExternalLink size={12} />
-                </Link>
-                <button
-                  onClick={() => setIsDocsOpen(false)}
-                  className="px-5 py-2 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/15 text-slate-700 dark:text-slate-300 text-xs font-medium transition-colors cursor-pointer"
-                >
-                  Close
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+        </div>
+      </footer>
     </div>
   );
 }
+
+export default LandingView;

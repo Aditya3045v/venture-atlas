@@ -1,10 +1,47 @@
 /** @type {import('next').NextConfig} */
+const dns = require('dns');
+
+// DNS Override: Resolve Supabase directly to Cloudflare Anycast IPs to bypass ISP DNS sinkholing (e.g. ACT Fibernet spoofing to 202.83.21.15)
+if (typeof dns.lookup === 'function' && !global.__supabaseDnsPatched) {
+  global.__supabaseDnsPatched = true;
+  const origLookup = dns.lookup;
+  dns.lookup = function(hostname, options, callback) {
+    let cb = callback;
+    let opts = options;
+    if (typeof opts === 'function') {
+      cb = opts;
+      opts = {};
+    }
+    if (hostname === 'fckmhqyhglfnqhpjzrvu.supabase.co') {
+      if (opts && opts.all) {
+        return cb(null, [
+          { address: '104.18.38.10', family: 4 },
+          { address: '172.64.149.246', family: 4 },
+        ]);
+      }
+      return cb(null, '104.18.38.10', 4);
+    }
+    if (hostname === 'fonts.gstatic.com') {
+      if (opts && opts.all) {
+        return cb(null, [{ address: '142.251.221.163', family: 4 }]);
+      }
+      return cb(null, '142.251.221.163', 4);
+    }
+    if (hostname === 'fonts.googleapis.com') {
+      if (opts && opts.all) {
+        return cb(null, [{ address: '142.250.193.202', family: 4 }]);
+      }
+      return cb(null, '142.250.193.202', 4);
+    }
+    return origLookup(hostname, options, callback);
+  };
+}
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline';
-  style-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline' https:;
   img-src 'self' blob: data: https:;
-  font-src 'self' data: https:;
+  font-src 'self' data: https: https://fonts.gstatic.com;
   connect-src 'self' https: wss:;
   media-src 'self' blob: data: https:;
   frame-ancestors 'none';

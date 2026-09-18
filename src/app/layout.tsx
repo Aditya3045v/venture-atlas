@@ -1,53 +1,18 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { Space_Grotesk, Plus_Jakarta_Sans, JetBrains_Mono, Inter, Fraunces, IBM_Plex_Mono } from 'next/font/google';
 import { ThemeProvider } from '../components/providers/ThemeProvider';
 import { ToastProvider } from '../components/providers/ToastProvider';
 import { AccessibilityProvider } from '../components/providers/AccessibilityProvider';
 import { AudioPlayerProvider } from '../components/providers/AudioPlayerProvider';
+import { WelcomeOverlay } from '../components/home/WelcomeOverlay';
 import { SITE_URL } from '../lib/site-url';
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-display',
-  weight: ['600', '700'],
-});
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-body',
-  weight: ['400', '500', '600', '700', '800'],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-mono',
-  weight: ['500', '700'],
-});
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-  weight: ['400', '500', '600', '700'],
-});
-
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-fraunces',
-  axes: ['opsz'],
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-plex-mono',
-  weight: ['400', '500', '600', '700'],
-});
+const spaceGrotesk = { variable: '--font-display' };
+const plusJakartaSans = { variable: '--font-body' };
+const jetbrainsMono = { variable: '--font-mono' };
+const inter = { variable: '--font-inter' };
+const fraunces = { variable: '--font-fraunces' };
+const ibmPlexMono = { variable: '--font-plex-mono' };
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -118,6 +83,7 @@ export default function RootLayout({
           <AccessibilityProvider>
             <ToastProvider>
               <AudioPlayerProvider>
+                <WelcomeOverlay />
                 {children}
               </AudioPlayerProvider>
             </ToastProvider>

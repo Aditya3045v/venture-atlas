@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { CanvasData, CanvasMetric, CanvasCalloutBox, ArticleItem, CaseStudyItem } from '@/types';
 import { useToast } from '@/components/providers/ToastProvider';
+import { formatSimpleMarkdown } from '@/lib/sanitize';
 
 interface CanvasStoryViewProps {
   story?: ArticleItem | CaseStudyItem | null;
@@ -173,7 +174,7 @@ export const CanvasStoryView: React.FC<CanvasStoryViewProps> = ({
     header: {
       founderPhoto: story?.coverImage || (story as any)?.author?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
       companyLogo: (story as any)?.companyLogo || '',
-      tagline: (story as any)?.keyMetric || (story as any)?.company ? `${storyCompany.toUpperCase()} · MOAT BREAKDOWN` : `${story?.category?.name?.toUpperCase() || 'VENTURE'} · 60-WORD BRIEF`,
+      tagline: (story as any)?.keyMetric || (story as any)?.company ? `${storyCompany.toUpperCase()} · MOAT BREAKDOWN` : `${story?.category?.name?.toUpperCase() || 'VENTURE'} · WIRE BRIEF`,
       bannerBg: '#09090b',
     },
     metrics: [
@@ -437,9 +438,12 @@ export const CanvasStoryView: React.FC<CanvasStoryViewProps> = ({
             {story?.title || 'Executive Wire Brief'}
           </h1>
 
-          <p className="text-sm sm:text-base font-body text-neutral-700 dark:text-neutral-300 leading-relaxed">
-            {story?.summary}
-          </p>
+          <div
+            className="text-sm sm:text-base font-body text-neutral-700 dark:text-neutral-300 leading-relaxed space-y-3"
+            dangerouslySetInnerHTML={{
+              __html: formatSimpleMarkdown(story?.summary || story?.body || ''),
+            }}
+          />
         </div>
 
         {/* 3. 4-Column Stat / Metric Badges */}
@@ -543,14 +547,17 @@ export const CanvasStoryView: React.FC<CanvasStoryViewProps> = ({
         )}
 
         {/* Full Long-Form Editorial Body */}
-        {story?.body && story.body !== story.summary && (
-          <div className="pt-5 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+        {story?.body && story?.summary && story.body.trim() !== story.summary.trim() && (
+          <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
             <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               FULL EDITORIAL REPORT & WIRE DETAILS
             </h4>
-            <div className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-              {story.body}
-            </div>
+            <div
+              className="prose dark:prose-invert max-w-none text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed space-y-4"
+              dangerouslySetInnerHTML={{
+                __html: formatSimpleMarkdown(story.body),
+              }}
+            />
           </div>
         )}
 

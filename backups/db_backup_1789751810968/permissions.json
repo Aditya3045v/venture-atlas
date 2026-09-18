@@ -1,0 +1,226 @@
+[
+  {
+    "id": "96605fcf-6354-4c1e-94ff-4be3bc84dd68",
+    "code": "users.view",
+    "name": "View Users",
+    "module": "users",
+    "description": "View user accounts and their assigned roles",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "05d15ba2-d7fd-4368-aa98-05862930d16c",
+    "code": "users.create",
+    "name": "Create Users",
+    "module": "users",
+    "description": "Create new staff accounts with credentials",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "e9cb390a-9c48-4a8d-9597-bf8351198e78",
+    "code": "users.edit",
+    "name": "Edit Users",
+    "module": "users",
+    "description": "Update user profiles, passwords, and role assignments",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "1abb50d2-90b2-4207-afe2-39cfd9f09545",
+    "code": "users.delete",
+    "name": "Deactivate/Delete Users",
+    "module": "users",
+    "description": "Deactivate or permanently remove staff accounts",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "0d44f14e-8a22-4e84-842a-990c2d99dc3a",
+    "code": "roles.manage",
+    "name": "Manage Roles & RBAC",
+    "module": "roles",
+    "description": "Create, modify, and delete custom roles and permissions",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "6e148b1e-1e1c-46e4-b08d-93e0e4d4399d",
+    "code": "articles.view",
+    "name": "View News Briefs",
+    "module": "articles",
+    "description": "Read all published and draft 60-word briefs",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "4f812efd-74aa-4139-bdae-029cc14aaa2f",
+    "code": "articles.create",
+    "name": "Create News Briefs",
+    "module": "articles",
+    "description": "Create new draft news briefs",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "f99bd9b5-65ce-4c37-aa92-f6d4103000e7",
+    "code": "articles.edit",
+    "name": "Edit News Briefs",
+    "module": "articles",
+    "description": "Edit existing news briefs",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d75dbcce-0b90-47ec-baef-baa0799cf5af",
+    "code": "articles.publish",
+    "name": "Publish News Briefs",
+    "module": "articles",
+    "description": "Publish, schedule, and unpublish news briefs",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3eeea031-8219-4919-9462-8db0c94081e2",
+    "code": "articles.delete",
+    "name": "Delete News Briefs",
+    "module": "articles",
+    "description": "Permanently delete news briefs",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "2c347d28-bf0b-4a09-ac1c-db7c8ea725b2",
+    "code": "case_studies.view",
+    "name": "View Case Studies",
+    "module": "case_studies",
+    "description": "Read all published and draft startup case studies",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d489b42b-caa6-4aff-bb21-653c497a2537",
+    "code": "case_studies.create",
+    "name": "Create Case Studies",
+    "module": "case_studies",
+    "description": "Create new deep teardowns and case studies",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "cbf81995-5f22-437a-a4de-ee4fedfb3488",
+    "code": "case_studies.edit",
+    "name": "Edit Case Studies",
+    "module": "case_studies",
+    "description": "Edit existing case studies and teardowns",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "5b8f584d-c3ef-4b12-bad0-96977916afa1",
+    "code": "case_studies.publish",
+    "name": "Publish Case Studies",
+    "module": "case_studies",
+    "description": "Publish and schedule case studies",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d3a0ef86-0e60-47c9-ad96-669da05db1d0",
+    "code": "case_studies.delete",
+    "name": "Delete Case Studies",
+    "module": "case_studies",
+    "description": "Permanently delete case studies",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3777ed81-c60a-473a-aa13-5043ced60c3c",
+    "code": "blogs.view",
+    "name": "View Essays",
+    "module": "blogs",
+    "description": "Read all long-form essays and blogs",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "f4189c92-c5ea-49ed-b099-88a694d006fb",
+    "code": "blogs.create",
+    "name": "Create Essays",
+    "module": "blogs",
+    "description": "Draft new long-form essays",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "dd517657-ea39-472f-8bf2-e6ef722a81e1",
+    "code": "blogs.edit",
+    "name": "Edit Essays",
+    "module": "blogs",
+    "description": "Edit existing essays and blog posts",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "ca9e2387-6827-465e-90ee-1b7094a35870",
+    "code": "blogs.publish",
+    "name": "Publish Essays",
+    "module": "blogs",
+    "description": "Publish, schedule, and unpublish essays",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "124a38d3-c74a-48e1-99bd-9780e82e080b",
+    "code": "blogs.delete",
+    "name": "Delete Essays",
+    "module": "blogs",
+    "description": "Permanently delete essays",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "999c3cdc-339b-4ded-8320-1c2036cac7db",
+    "code": "categories.manage",
+    "name": "Manage Categories & Desks",
+    "module": "categories",
+    "description": "Create, edit, and delete editorial desks and tags",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "09dc85ec-1212-4319-acd4-e4d4d724f1c1",
+    "code": "media.view",
+    "name": "View Media Library",
+    "module": "media",
+    "description": "Browse and search uploaded images and media",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "a11134b5-ee55-4db6-b85b-7c017909c887",
+    "code": "media.upload",
+    "name": "Upload Media",
+    "module": "media",
+    "description": "Upload new photos, logos, and banners",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3690ff40-5872-43eb-bd90-42012e2a2a9f",
+    "code": "media.delete",
+    "name": "Delete Media",
+    "module": "media",
+    "description": "Delete media files from Supabase storage",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "64027cb4-4b86-4ff6-8645-53cc21942d04",
+    "code": "comments.moderate",
+    "name": "Moderate Comments",
+    "module": "comments",
+    "description": "Approve, reject, and delete reader discussion comments",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "1ef38afd-a09e-4fe4-8f03-ca5256ace85e",
+    "code": "navigation.manage",
+    "name": "Manage Navigation",
+    "module": "navigation",
+    "description": "Add, reorder, and configure public menu bars",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "bb8baae8-e399-4f76-b8e7-99cdfd0ecc71",
+    "code": "analytics.view",
+    "name": "View Analytics",
+    "module": "analytics",
+    "description": "Access readership metrics and telemetry dashboards",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "f32649a2-f8ea-4e80-b634-5896334e086f",
+    "code": "audit.view",
+    "name": "View Audit Logs",
+    "module": "audit",
+    "description": "Inspect system security and administrative audit logs",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  }
+]

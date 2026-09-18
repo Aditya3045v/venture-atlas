@@ -25,8 +25,8 @@ const optionalImageUrl = z.preprocess(
 );
 
 export const articleSchema = z.object({
-  title: z.string().min(5, 'Title must be at least 5 characters').max(150, 'Title cannot exceed 150 characters'),
-  summary: z.string().min(10, 'Summary must be at least 10 characters').max(500, 'Summary cannot exceed 500 characters'),
+  title: z.string().min(5, 'Title must be at least 5 characters').max(300, 'Title cannot exceed 300 characters'),
+  summary: z.string().min(10, 'Summary must be at least 10 characters').max(2000, 'Summary cannot exceed 2000 characters'),
   body: z.string().min(20, 'Body content must be at least 20 characters'),
   categoryId: z.string().min(1, 'Category is required'),
   sourceName: z.string().optional().nullable(),
@@ -48,12 +48,12 @@ export const articleSchema = z.object({
 });
 
 export const caseStudySchema = z.object({
-  title: z.string().min(5, 'Title must be at least 5 characters').max(150),
+  title: z.string().min(5, 'Title must be at least 5 characters').max(300),
   company: z.string().min(2, 'Company name is required').max(100),
   valuation: z.string().optional().nullable(),
   stage: z.string().optional().nullable(),
   keyMetric: z.string().optional().nullable(),
-  summary: z.string().min(10, 'Summary must be at least 10 characters').max(500),
+  summary: z.string().min(10, 'Summary must be at least 10 characters').max(2000),
   challenge: z.string().optional().nullable(),
   strategy: z.string().optional().nullable(),
   outcome: z.string().optional().nullable(),
@@ -71,9 +71,9 @@ export const caseStudySchema = z.object({
 });
 
 export const blogSchema = z.object({
-  title: z.string().min(5, 'Title must be at least 5 characters').max(150),
-  excerpt: z.string().min(10, 'Excerpt must be at least 10 characters').max(300),
-  body: z.string().min(50, 'Body content must be at least 50 characters'),
+  title: z.string().min(5, 'Title must be at least 5 characters').max(300),
+  excerpt: z.string().min(10, 'Excerpt must be at least 10 characters').max(1000),
+  body: z.string().min(20, 'Body content must be at least 20 characters'),
   categoryId: z.string().min(1, 'Category is required'),
   authorName: z.string().optional().nullable(),
   authorRole: z.string().optional().nullable(),

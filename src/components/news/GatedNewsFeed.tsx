@@ -98,7 +98,7 @@ export const GatedNewsFeed: React.FC<GatedNewsFeedProps> = ({
             </h2>
           </div>
           <div className="text-xs font-mono text-text-tertiary">
-            {isUnlocked ? 'LIVE · 60-WORD BRIEFS' : '🔒 EMAIL REQUIRED TO UNLOCK'}
+            {isUnlocked ? 'LIVE · INTELLIGENCE BRIEFS' : '🔒 EMAIL REQUIRED TO UNLOCK'}
           </div>
         </div>
 

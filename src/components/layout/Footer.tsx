@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
             />
           </Link>
           <p className="text-xs text-text-secondary leading-relaxed font-body">
-            Venture Atlas is an independent editorial intelligence publication reporting on technology, venture capital, and startups in 60-word briefs, long-form essays, and architectural case studies.
+            Venture Atlas is an independent editorial intelligence publication reporting on technology, venture capital, and startups with high-density intelligence briefings, long-form essays, and architectural case studies.
           </p>
           <div className="text-[11px] font-mono text-text-tertiary">
             © {new Date().getFullYear()} Venture Atlas Media Inc. All rights reserved.

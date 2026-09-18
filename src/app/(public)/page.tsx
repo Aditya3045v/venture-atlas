@@ -27,7 +27,9 @@ export default async function CoreHomePage() {
     fetchCategories(),
   ]);
 
-  const featuredArticle = articles.find(a => a.isFeatured) || articles[0];
+  // Top running news articles for the Hero Carousel (up to 5 published stories)
+  const heroArticles = articles.slice(0, 5);
+  const featuredArticle = heroArticles[0] || articles[0];
   const feedArticles = articles.filter(a => a.id !== featuredArticle?.id);
 
   const orgJsonLd = generateOrganizationJsonLd();
@@ -64,14 +66,20 @@ export default async function CoreHomePage() {
 
       {/* 2. Desktop High-Density View */}
       <div className="hidden lg:block space-y-12 pt-2">
-        {/* Featured Lead Story */}
-        {featuredArticle && <FeaturedStory article={featuredArticle} />}
+        {/* Featured Running News Hero Carousel */}
+        {heroArticles.length > 0 && (
+          <FeaturedStory
+            articles={heroArticles}
+            article={featuredArticle}
+            autoPlayInterval={3000}
+          />
+        )}
 
         {/* Breaking News Briefs Stream (Infinite Scroll + Cursor Pagination) */}
         <section className="space-y-4">
           <div className="flex items-center justify-between border-b border-border/80 pb-2">
             <h2 className="text-lg font-black font-display uppercase tracking-tight text-text-primary">
-              Latest 60-Word Briefings
+              Latest Intelligence Briefings
             </h2>
             <span className="text-xs font-mono font-medium text-emerald-500 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -204,7 +212,7 @@ export default async function CoreHomePage() {
               Independent Venture Intelligence
             </h4>
             <p className="text-xs font-body text-text-secondary leading-relaxed">
-              Every brief is constrained to 60 words and verified against regulatory filings and primary term sheets. Learn more about our <Link href="/about" className="text-brand font-bold hover:underline">Editorial Charter</Link> or discover subscriber-exclusive features on the <Link href="/landing" className="text-brand font-bold hover:underline">Executive Portal</Link>.
+              Every brief is verified against regulatory filings and primary term sheets. Learn more about our <Link href="/about" className="text-brand font-bold hover:underline">Editorial Charter</Link> or discover subscriber-exclusive features on the <Link href="/landing" className="text-brand font-bold hover:underline">Executive Portal</Link>.
             </p>
           </div>
           <div className="flex items-center gap-3 shrink-0 text-xs font-mono font-bold">

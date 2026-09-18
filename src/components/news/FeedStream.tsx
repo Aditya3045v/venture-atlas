@@ -196,7 +196,7 @@ export const FeedStream: React.FC<FeedStreamProps> = ({
             onClick={loadMore}
             className="px-6 py-2.5 rounded-full border border-border hover:border-blue-500/50 bg-surface hover:bg-surface-muted text-xs font-mono font-bold text-text-secondary hover:text-text-primary transition-all flex items-center gap-2 shadow-xs active:scale-95"
           >
-            <span>Load More Briefs</span>
+            <span>Load More Briefings</span>
             <ChevronDown size={14} />
           </button>
         )}
@@ -205,7 +205,7 @@ export const FeedStream: React.FC<FeedStreamProps> = ({
         {!hasMore && articles.length > 0 && (
           <div className="flex items-center gap-2 text-xs font-mono text-text-tertiary py-6">
             <CheckCircle2 size={16} className="text-emerald-500" />
-            <span>You have caught up with all live intelligence briefs</span>
+            <span>You have caught up with all live intelligence briefings</span>
           </div>
         )}
       </div>

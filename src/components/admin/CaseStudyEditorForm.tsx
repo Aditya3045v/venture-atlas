@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { CaseStudyItem, CategoryItem, ContentStatus, CanvasData } from '../../types';
 import { normalizeImageUrl } from '../../lib/validation';
@@ -9,45 +9,14 @@ import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
 import { CanvasBlockEditor } from './CanvasBlockEditor';
 import { adminFetch } from '@/lib/api/adminClient';
+import { COVER_PRESETS } from '@/lib/constants/cover-presets';
 import { ArrowLeft, Send, Palette, FileText, Image as ImageIcon, X, Sparkles, Trash2 } from 'lucide-react';
+
 
 interface CaseStudyEditorFormProps {
   initialCaseStudy?: CaseStudyItem | null;
   categories: CategoryItem[];
 }
-
-const COVER_PRESETS = [
-  {
-    label: '🦄 Unicorn Scale',
-    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Enterprise Lens',
-  },
-  {
-    label: '📈 Capital Markets',
-    url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Capital Markets',
-  },
-  {
-    label: '⚡ AI & Compute',
-    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Compute Lab',
-  },
-  {
-    label: '🌐 Crypto Protocol',
-    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Web3 Protocol',
-  },
-  {
-    label: '👤 Founder Leadership',
-    url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Founder Archive',
-  },
-  {
-    label: '🏢 Modern Enterprise',
-    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Architecture',
-  },
-];
 
 export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
   initialCaseStudy,
@@ -55,50 +24,87 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
 }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const isSubmittingRef = useRef(false);
 
   const [editorMode, setEditorMode] = useState<'canvas' | 'standard'>('canvas');
-  const [title, setTitle] = useState(
-    initialCaseStudy?.title || 'CRED — Jab "Exclusive" Hi Business Model Ban Gaya'
-  );
-  const [company, setCompany] = useState(initialCaseStudy?.company || 'CRED');
-  const [valuation, setValuation] = useState(initialCaseStudy?.valuation || '$6.4B');
-  const [stage, setStage] = useState(initialCaseStudy?.stage || 'Series F');
-  const [keyMetric, setKeyMetric] = useState(
-    initialCaseStudy?.keyMetric || '$800M+ Raised'
-  );
-  const [summary, setSummary] = useState(
-    initialCaseStudy?.summary ||
-      'CRED ne India ke top credit card holders ko ek platform par lakar high-trust consumer network banaya.'
-  );
-  const [challenge, setChallenge] = useState(
-    initialCaseStudy?.challenge ||
-      'High-trust user base build karna aur unhe daily active rakhna.'
-  );
-  const [strategy, setStrategy] = useState(
-    initialCaseStudy?.strategy ||
-      'CRED Coins, reward drops, IPL campaigns aur exclusivity factor.'
-  );
-  const [outcome, setOutcome] = useState(
-    initialCaseStudy?.outcome ||
-      '6.4B valuation, millions of premium users, lending & merchant monetization.'
-  );
-  const [authorName, setAuthorName] = useState(initialCaseStudy?.authorName || 'Aditya Poddar');
-  const [authorRole, setAuthorRole] = useState(initialCaseStudy?.authorRole || 'Senior Venture Analyst');
+  const [title, setTitle] = useState(initialCaseStudy?.title || '');
+  const [company, setCompany] = useState(initialCaseStudy?.company || '');
+  const [valuation, setValuation] = useState(initialCaseStudy?.valuation || '');
+  const [stage, setStage] = useState(initialCaseStudy?.stage || '');
+  const [keyMetric, setKeyMetric] = useState(initialCaseStudy?.keyMetric || '');
+  const [summary, setSummary] = useState(initialCaseStudy?.summary || '');
+  const [challenge, setChallenge] = useState(initialCaseStudy?.challenge || '');
+  const [strategy, setStrategy] = useState(initialCaseStudy?.strategy || '');
+  const [outcome, setOutcome] = useState(initialCaseStudy?.outcome || '');
+  const [authorName, setAuthorName] = useState(initialCaseStudy?.authorName || '');
+  const [authorRole, setAuthorRole] = useState(initialCaseStudy?.authorRole || '');
   const [body, setBody] = useState(initialCaseStudy?.body || '');
   const [categoryId, setCategoryId] = useState(
     initialCaseStudy?.categoryId || categories[0]?.id || ''
   );
-  const [coverImage, setCoverImage] = useState(
-    initialCaseStudy?.coverImage ||
-      'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80'
-  );
+  const [coverImage, setCoverImage] = useState(initialCaseStudy?.coverImage || '');
   const [photoCredit, setPhotoCredit] = useState(initialCaseStudy?.photoCredit || '');
   const [seoTitle, setSeoTitle] = useState(initialCaseStudy?.seoTitle || '');
   const [seoDescription, setSeoDescription] = useState(initialCaseStudy?.seoDescription || '');
   const [coverPreviewDevice, setCoverPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [readTimeMinutes, setReadTimeMinutes] = useState(initialCaseStudy?.readTimeMinutes || 4);
-  const [status, setStatus] = useState<ContentStatus>(initialCaseStudy?.status || 'PUBLISHED');
+  const [status, setStatus] = useState<ContentStatus>(initialCaseStudy?.status || 'DRAFT');
   const [submitting, setSubmitting] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
+
+  const AUTOSAVE_KEY = `va_autosave_cs_${initialCaseStudy?.id || 'new'}`;
+
+  // Autosave to localStorage every 10s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (title || company || summary) {
+        const draft = { title, company, valuation, stage, keyMetric, summary, challenge, strategy, outcome, authorName, authorRole, body, categoryId, coverImage, photoCredit };
+        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(draft));
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [title, company, valuation, stage, keyMetric, summary, challenge, strategy, outcome, authorName, authorRole, body, categoryId, coverImage, photoCredit]);
+
+  // Check for restorable draft on mount (only for new case studies)
+  useEffect(() => {
+    if (!initialCaseStudy) {
+      try {
+        const saved = localStorage.getItem(AUTOSAVE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.title || parsed.company || parsed.summary) {
+            setHasDraft(true);
+          }
+        }
+      } catch {}
+    }
+  }, []);
+
+  const restoreDraft = () => {
+    try {
+      const saved = localStorage.getItem(AUTOSAVE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.title) setTitle(parsed.title);
+        if (parsed.company) setCompany(parsed.company);
+        if (parsed.valuation) setValuation(parsed.valuation);
+        if (parsed.stage) setStage(parsed.stage);
+        if (parsed.keyMetric) setKeyMetric(parsed.keyMetric);
+        if (parsed.summary) setSummary(parsed.summary);
+        if (parsed.challenge) setChallenge(parsed.challenge);
+        if (parsed.strategy) setStrategy(parsed.strategy);
+        if (parsed.outcome) setOutcome(parsed.outcome);
+        if (parsed.authorName) setAuthorName(parsed.authorName);
+        if (parsed.authorRole) setAuthorRole(parsed.authorRole);
+        if (parsed.body) setBody(parsed.body);
+        if (parsed.categoryId) setCategoryId(parsed.categoryId);
+        if (parsed.coverImage) setCoverImage(parsed.coverImage);
+        if (parsed.photoCredit) setPhotoCredit(parsed.photoCredit);
+        setHasDraft(false);
+        toast('Draft restored from autosave', 'success');
+      }
+    } catch {}
+  };
 
   // Canvas visual blocks state
   const [canvasData, setCanvasData] = useState<CanvasData | null>(
@@ -152,10 +158,13 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
   );
 
   const handleSubmit = async (targetStatus: ContentStatus) => {
+    if (isSubmittingRef.current) return;
     if (!title.trim() || !company.trim() || !summary.trim()) {
       toast('Please fill in title, company, and summary', 'error');
       return;
     }
+
+    isSubmittingRef.current = true;
 
     const normalizedCover = normalizeImageUrl(coverImage);
     const effectivePhotoCredit = photoCredit.trim() || (normalizedCover ? 'Editorial Archive' : '');
@@ -207,6 +216,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
       });
 
       if (res.ok) {
+        localStorage.removeItem(AUTOSAVE_KEY);
         toast('Case study teardown saved successfully', 'success');
         router.push('/admin/case-studies');
         router.refresh();
@@ -217,6 +227,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
     } catch {
       toast('Network error saving case study', 'error');
     } finally {
+      isSubmittingRef.current = false;
       setSubmitting(false);
     }
   };
@@ -229,6 +240,7 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
     try {
       const res = await adminFetch(`/api/case-studies/${initialCaseStudy.id}`, { method: 'DELETE' });
       if (res.ok) {
+        localStorage.removeItem(AUTOSAVE_KEY);
         toast('Case study deleted successfully', 'success');
         router.push('/admin/case-studies');
         router.refresh();
@@ -393,6 +405,30 @@ export const CaseStudyEditorForm: React.FC<CaseStudyEditorFormProps> = ({
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
+      {/* Draft restore banner */}
+      {hasDraft && (
+        <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 flex items-center justify-between gap-3">
+          <span className="text-xs font-mono text-amber-800 dark:text-amber-200">
+            An unsaved draft was found. Restore it?
+          </span>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={restoreDraft}
+              className="text-xs font-mono font-bold text-amber-700 dark:text-amber-300 underline cursor-pointer"
+            >
+              Restore
+            </button>
+            <button
+              type="button"
+              onClick={() => { localStorage.removeItem(AUTOSAVE_KEY); setHasDraft(false); }}
+              className="text-xs font-mono text-amber-600 dark:text-amber-400 cursor-pointer"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
       <div className="flex items-center justify-between pb-4 border-b border-border">
         <div className="flex items-center gap-3">
           <button

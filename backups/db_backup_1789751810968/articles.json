@@ -1,0 +1,689 @@
+[
+  {
+    "id": "2ea28358-755a-4cab-807d-7f1b4c422541",
+    "type": "NEWS",
+    "title": "Stability AI's Near-Death: Governance Crisis and Talent Exodus",
+    "slug": "stability-ai-governance-crisis",
+    "summary": "Stability AI narrowly avoided insolvency after founder Emad Mostaque's abrupt resignation triggered a $75 million Series B withdrawal and a mass departure of key researchers. The board installed Intel's Sean Evans as interim CEO. Three competing image generation models launched by former staff threaten its open-source positioning.",
+    "body": "Stability AI narrowly avoided insolvency after founder Emad Mostaque's abrupt resignation triggered a $75 million Series B withdrawal and a mass departure of key researchers. The board installed Intel's Sean Evans as interim CEO. Three competing image generation models launched by former staff threaten its open-source positioning.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": null,
+    "category_id": "c8567a3e-da06-4f5d-8d7b-90811f4a4050",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": null,
+    "photo_credit": null,
+    "read_time_minutes": 1,
+    "word_count": 47,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-08-24T08:50:56.437+00:00",
+    "view_count": 3,
+    "like_count": 4,
+    "seo_title": null,
+    "seo_description": null,
+    "created_at": "2026-09-03T08:50:55.834823+00:00",
+    "updated_at": "2026-09-15T17:43:14.791541+00:00",
+    "canvas_data": null,
+    "company": null
+  },
+  {
+    "id": "edac7f1e-87c2-40ac-a783-7c2b679e6bca",
+    "type": "NEWS",
+    "title": "Brian Chesky's Obsession with Product: Inside Airbnb's Comeback",
+    "slug": "brian-chesky-airbnb-comeback-story",
+    "summary": "When the pandemic erased 80% of Airbnb's revenue overnight, Brian Chesky slept on the platform he built. He personally called 1,000 hosts and cut $800 million in costs within eight weeks. The decision to stay private longer and invest in experience quality—not growth—produced the most profitable IPO of 2020 and a $75 billion market cap.",
+    "body": "When the pandemic erased 80% of Airbnb's revenue overnight, Brian Chesky slept on the platform he built. He personally called 1,000 hosts and cut $800 million in costs within eight weeks. The decision to stay private longer and invest in experience quality—not growth—produced the most profitable IPO of 2020 and a $75 billion market cap.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": null,
+    "category_id": "80e59ca7-3a1c-45e2-aefb-d00850cfdb6c",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
+    "photo_credit": "Unsplash / Founder Archive",
+    "read_time_minutes": 1,
+    "word_count": 55,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-08-28T08:50:56.437+00:00",
+    "view_count": 8,
+    "like_count": 3,
+    "seo_title": null,
+    "seo_description": null,
+    "created_at": "2026-09-01T19:23:19.447674+00:00",
+    "updated_at": "2026-09-15T17:44:18.732405+00:00",
+    "canvas_data": null,
+    "company": null
+  },
+  {
+    "id": "a15859cb-0150-458e-b2d0-89891c238857",
+    "type": "NEWS",
+    "title": "How Figma Captured Design Tooling Before Adobe Could React",
+    "slug": "figma-captured-design-adobe-react",
+    "summary": "Figma's $20 billion acquisition offer from Adobe validated a product built on one insight: design is collaboration, not creation. Dylan Field launched in a browser when Electron didn't exist, refused enterprise deals that would slow the PLG flywheel, and held multiplayer at the core before Notion or Linear made collaboration a category. Adobe was too slow.",
+    "body": "Figma's $20 billion acquisition offer from Adobe validated a product built on one insight: design is collaboration, not creation. Dylan Field launched in a browser when Electron didn't exist, refused enterprise deals that would slow the PLG flywheel, and held multiplayer at the core before Notion or Linear made collaboration a category. Adobe was too slow.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": null,
+    "category_id": "7860f04f-3030-4a44-aed3-5c607ffb9284",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
+    "photo_credit": "Unsplash / Teardown Lab",
+    "read_time_minutes": 1,
+    "word_count": 56,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-08-23T08:50:56.437+00:00",
+    "view_count": 3,
+    "like_count": 4,
+    "seo_title": null,
+    "seo_description": null,
+    "created_at": "2026-09-01T19:23:20.095039+00:00",
+    "updated_at": "2026-09-17T09:41:14.931241+00:00",
+    "canvas_data": null,
+    "company": null
+  },
+  {
+    "id": "9bff9ade-f055-4923-8b56-f09cbc0af3bf",
+    "type": "NEWS",
+    "title": "Mercury Bank Launches $5M Credit Lines for Seed-Stage Startups",
+    "slug": "mercury-5m-credit-seed-startups",
+    "summary": "Mercury Bank has rolled out venture debt lines up to $5 million for seed-stage companies with at least six months of runway. The product targets founders who want to extend their runway without dilution. Lines are secured against ARR and require a Mercury checking account. Pricing starts at Prime plus 2.5%, with no warrants.",
+    "body": "Mercury Bank has rolled out venture debt lines up to $5 million for seed-stage companies with at least six months of runway. The product targets founders who want to extend their runway without dilution. Lines are secured against ARR and require a Mercury checking account. Pricing starts at Prime plus 2.5%, with no warrants.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": null,
+    "category_id": "a5e4cfdd-aabc-4985-9448-4fe24ad18930",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": null,
+    "photo_credit": null,
+    "read_time_minutes": 1,
+    "word_count": 54,
+    "status": "PUBLISHED",
+    "is_featured": true,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-09-01T08:50:56.437+00:00",
+    "view_count": 4,
+    "like_count": 2,
+    "seo_title": null,
+    "seo_description": null,
+    "created_at": "2026-09-03T08:50:56.067602+00:00",
+    "updated_at": "2026-09-15T17:45:11.361056+00:00",
+    "canvas_data": null,
+    "company": null
+  },
+  {
+    "id": "b9e29a53-af8e-4696-a0fd-5777d0e9e4de",
+    "type": "NEWS",
+    "title": "BYJU’S: How India’s Biggest EdTech Dream Turned Into a Startup Crisis",
+    "slug": "byjus-how-indias-biggest-edtech-dream-turned-into-a-startup-crisis",
+    "summary": "BYJU’S transformed online education in India and became one of the world’s most valuable edtech companies. Its rapid expansion, acquisitions and enormous fundraising created a global education giant. But mounting losses, debt, governance disputes and an aggressive growth strategy eventually pushed the company into a severe financial crisis. The story offers important lessons about valuation, growth and startup discipline.",
+    "body": "BYJU’S transformed online education in India and became one of the world’s most valuable edtech companies. Its rapid expansion, acquisitions and enormous fundraising created a global education giant. But mounting losses, debt, governance disputes and an aggressive growth strategy eventually pushed the company into a severe financial crisis. The story offers important lessons about valuation, growth and startup discipline.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": "imran ahmad",
+    "category_id": "7bcb8022-93e9-4017-b269-0dba1cc8cc60",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmGKMbdhQBTG_B6JyZzadUWU0G7-ytCz4lUalVQwqm_Q&s=10",
+    "photo_credit": "FORBES",
+    "read_time_minutes": 2,
+    "word_count": 59,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-09-13T15:59:33.078+00:00",
+    "view_count": 8,
+    "like_count": 2,
+    "seo_title": "BYJU’S: Rise and Fall of India’s EdTech Giant",
+    "seo_description": "How BYJU’S became India’s biggest edtech company and how rapid expansion, debt, losses and governance issues led to a major startup crisis.",
+    "created_at": "2026-09-13T15:59:33.519803+00:00",
+    "updated_at": "2026-09-18T13:56:22.581884+00:00",
+    "canvas_data": {
+      "header": {
+        "tagline": "EXECUTIVE NEWS WIRE BRIEF",
+        "bannerBg": "#09090b",
+        "companyLogo": "",
+        "founderPhoto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmGKMbdhQBTG_B6JyZzadUWU0G7-ytCz4lUalVQwqm_Q&s=10"
+      },
+      "metrics": [
+        {
+          "id": "m1",
+          "icon": "calendar",
+          "label": "Founded",
+          "value": "2011"
+        },
+        {
+          "id": "m2",
+          "icon": "funding",
+          "label": "Valuatio~$22Bn / Round",
+          "value": "Series Seed",
+          "subValue": "(Verified)"
+        }
+      ],
+      "profile": {
+        "founderName": "Byju Raveendran",
+        "founderRole": "Founder & Former CEO",
+        "businessModelTitle": "Core Strategy & Architecture",
+        "businessModelPoints": [
+          "• Online learning platform providing digital education programs for students.",
+          "Generated revenue through paid learning programs, subscriptions and educational products.",
+          "Expanded rapidly through acquisitions and a large-scale customer acquisition strategy."
+        ]
+      },
+      "calloutBoxes": [
+        {
+          "id": "b1",
+          "icon": "trending",
+          "title": "Funding & Milestones",
+          "content": "Byju Raveendran turned his teaching background into a technology-driven education company that rapidly grew across India.",
+          "variant": "green"
+        },
+        {
+          "id": "b2",
+          "icon": "star",
+          "title": "Operator Playbook & Lesson",
+          "content": "BYJU’S expanded its products, users and geographical reach at remarkable speed, becoming a major name in global edtech.",
+          "variant": "green"
+        },
+        {
+          "id": "b3",
+          "icon": "lightbulb",
+          "title": "",
+          "content": "What this means for the broader ecosystem, Rising losses, debt obligations, financial disputes and the cost of aggressive expansion created increasing pressure on the company.competitors, and market landscape.",
+          "variant": "green"
+        }
+      ]
+    },
+    "company": null
+  },
+  {
+    "id": "4e21df66-72d4-4c33-aa52-41dd27302be5",
+    "type": "NEWS",
+    "title": "Koo: How India’s Twitter Challenger Ran Out of Road",
+    "slug": "koo-how-indias-twitter-challenger-ran-out-of-road",
+    "summary": "Koo was India’s ambitious multilingual social media platform, created to challenge Twitter with a stronger focus on Indian languages. The startup attracted millions of users, prominent personalities and over $60 million in funding, reaching a peak valuation of around $285 million. However, weak monetisation, rising costs, intense competition and failed acquisition talks eventually forced Koo to shut down in 2024.\n",
+    "body": "Koo was India’s ambitious multilingual social media platform, created to challenge Twitter with a stronger focus on Indian languages. The startup attracted millions of users, prominent personalities and over $60 million in funding, reaching a peak valuation of around $285 million. However, weak monetisation, rising costs, intense competition and failed acquisition talks eventually forced Koo to shut down in 2024.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": "IMRAN AHMAD",
+    "category_id": "7860f04f-3030-4a44-aed3-5c607ffb9284",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": "https://d3lzcn6mbbadaf.cloudfront.net/media/details/Koo_May132022051307143720220513073105.jpg",
+    "photo_credit": "ANI NEWS",
+    "read_time_minutes": 2,
+    "word_count": 60,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-09-15T15:45:28.352+00:00",
+    "view_count": 3,
+    "like_count": 2,
+    "seo_title": "Koo Failure: Why India's Twitter Rival Shut Down",
+    "seo_description": "Koo raised $60M+, reached a $285M valuation and millions of users. Here's why India's Twitter challenger ultimately shut down.",
+    "created_at": "2026-09-15T15:45:28.924461+00:00",
+    "updated_at": "2026-09-17T09:41:25.203209+00:00",
+    "canvas_data": {
+      "header": {
+        "tagline": "The Network Effect Trap",
+        "bannerBg": "#09090b",
+        "companyLogo": "wikipedia",
+        "founderPhoto": "https://d3lzcn6mbbadaf.cloudfront.net/media/details/Koo_May132022051307143720220513073105.jpg"
+      },
+      "metrics": [
+        {
+          "id": "m1",
+          "icon": "calendar",
+          "label": "Founded",
+          "value": "2020"
+        },
+        {
+          "id": "m2",
+          "icon": "unicorn",
+          "label": "$285M",
+          "value": "Series Seed",
+          "subValue": "2022 peak"
+        },
+        {
+          "id": "m3",
+          "icon": "funding",
+          "label": "Total Funding",
+          "value": "$60M+",
+          "subValue": "Reported before shutdown"
+        },
+        {
+          "id": "m4",
+          "icon": "calendar",
+          "label": "Peak Monthly User",
+          "value": "10M",
+          "subValue": "GlobalReported peak"
+        }
+      ],
+      "profile": {
+        "founderName": "Aprameya Radhakrishna · Mayank Bidawatka",
+        "founderRole": "CO FOUNDER",
+        "businessModelTitle": "Core Strategy & Architecture",
+        "businessModelPoints": [
+          "Multilingual Microblogging: Short-form social posts designed around Indian languages and local audiences.",
+          "Creator & User Network: Built a platform connecting creators, public figures and everyday users through native-language content.",
+          "• **Advertising & Brand Monetisation:** Planned to generate revenue by monetising its growing user base through advertising, sponsored content and other brand partnerships."
+        ]
+      },
+      "calloutBoxes": [
+        {
+          "id": "b1",
+          "icon": "trending",
+          "title": "Funding & Milestones",
+          "content": "Koo identified a genuine gap: India's internet audience is multilingual, while major global social platforms historically had stronger English-language positioning. The platform gained attention rapidly, especially during the 2021 Twitter-government conflict, and attracted politicians and public personalities. But social media has a structural problem: users create value for other users. A better language experience alone cannot easily overcome the network effect of an incumbent platform where creators, audiences and conversations already exist. Koo reached millions of users, but converting that attention into a durable, monetisable network proved much harder.",
+          "variant": "green"
+        },
+        {
+          "id": "b2",
+          "icon": "star",
+          "title": "Operator Playbook & Lesson",
+          "content": ".Product differentiation isn't enough: A multilingual product can solve a real problem without automatically creating a defensible network.\n\n• Network effects are brutally powerful: Social platforms compete not just on features, but on where the users and creators already are.\n\n• Funding must follow economics: Koo raised more than $60M, but struggled to secure additional capital when the funding environment tightened.\n\n• Acquisition cannot be the emergency plan: Koo explored multiple strategic partnerships and acquisition possibilities, including talks involving Dailyhunt, but none produced a viable outcome",
+          "variant": "blue"
+        },
+        {
+          "id": "b3",
+          "icon": "lightbulb",
+          "title": "Key Takeaway",
+          "content": "Koo reached roughly 10M monthly active users and a ~$285M peak valuation, but the combination of difficult monetisation, high technology costs and a prolonged funding winter ultimately overwhelmed the business. The real lesson: in social media, acquiring users is only half the battle—the harder job is creating a network valuable enough to survive without endless venture capital.",
+          "variant": "amber"
+        }
+      ]
+    },
+    "company": null
+  },
+  {
+    "id": "c8c68164-20ae-465a-a21b-2a32f90daad2",
+    "type": "NEWS",
+    "title": "Elon Musk’s X still failing to keep child abuse material off platform",
+    "slug": "elon-musks-x-still-failing-to-keep-child-abuse-material-off-platform",
+    "summary": "An investigation by The New York Times and a separate review by the Canadian Centre for Child Protection have found child sexual abuse material on X, including previously flagged images. The findings also show that Grok generated sexualised images of children before X introduced tighter restrictions on the chatbot.",
+    "body": "An investigation by The New York Times and a separate review by the Canadian Centre for Child Protection have found child sexual abuse material on X, including previously flagged images. The findings also show that Grok generated sexualised images of children before X introduced tighter restrictions on the chatbot.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": "imran",
+    "category_id": "7bcb8022-93e9-4017-b269-0dba1cc8cc60",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": "https://images.firstpost.com/uploads/2026/02/Firstpost-2026-02-04T121017.966-2026-02-2609142a06505337575517b55a15bbdd.jpg?im=Resize,width=720,aspect=fit,type=normal",
+    "photo_credit": "AI-generated representational image.",
+    "read_time_minutes": 2,
+    "word_count": 49,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-09-13T06:07:17.584+00:00",
+    "view_count": 8,
+    "like_count": 4,
+    "seo_title": "Elon musk, investment",
+    "seo_description": "New thing",
+    "created_at": "2026-09-13T06:07:18.033326+00:00",
+    "updated_at": "2026-09-18T09:54:12.327144+00:00",
+    "canvas_data": {
+      "header": {
+        "tagline": "Elon Musk's New Rivalry",
+        "bannerBg": "#09090b",
+        "companyLogo": "https://1000logos.net/wp-content/uploads/2018/02/Emblem-Tesla.jpg",
+        "founderPhoto": "https://images.firstpost.com/uploads/2026/02/Firstpost-2026-02-04T121017.966-2026-02-2609142a06505337575517b55a15bbdd.jpg?im=Resize,width=720,aspect=fit,type=normal"
+      },
+      "metrics": [
+        {
+          "id": "m2",
+          "icon": "unicorn",
+          "label": "Valuation / Round",
+          "value": "Mature Company ",
+          "subValue": "(Verified)"
+        },
+        {
+          "id": "m3",
+          "icon": "funding",
+          "label": "Key Metric",
+          "value": "1 T $",
+          "subValue": "(Growth)"
+        }
+      ],
+      "profile": {
+        "founderName": "Elon Musk ",
+        "founderRole": "CEO TESLA",
+        "businessModelTitle": "Core Strategy & Architecture",
+        "businessModelPoints": [
+          "High-throughput architecture & scaling flywheel",
+          "Zero-CAC distribution strategy & brand leverage",
+          "Sovereign margins & capital-efficient unit economics"
+        ]
+      },
+      "calloutBoxes": [
+        {
+          "id": "b1",
+          "icon": "trending",
+          "title": "Funding & Milestones",
+          "content": "A review by the Canadian Centre for Child Protection identified 65 cases in which Grok generated sexualised or exploitative images involving children before X stopped the chatbot from producing such material. Some of the images involved children already known to authorities as victims of sexual abuse.",
+          "variant": "green"
+        },
+        {
+          "id": "b2",
+          "icon": "star",
+          "title": "Operator Playbook & Lesson",
+          "content": "The findings, reported by The New York Times, add to concerns over the challenges faced by X as it tries to moderate both conventional user-generated content and material created with generative AI.",
+          "variant": "blue"
+        },
+        {
+          "id": "b3",
+          "icon": "lightbulb",
+          "title": "Key Takeaway",
+          "content": "The Canadian centre's review found that users were able to ask Grok to alter photographs of known victims of childhood sexual abuse, including by placing them in lingerie or bikinis. The chatbot's image-generation system was also used to produce depictions involving children who were partially undressed or placed in sexualised situations.",
+          "variant": "amber"
+        }
+      ]
+    },
+    "company": null
+  },
+  {
+    "id": "83669ca0-c806-45cb-acf6-8f444d28f318",
+    "type": "NEWS",
+    "title": "BlackRock: How a 1988 Startup Became a $15.3 Trillion Global Investment Platform",
+    "slug": "blackrock-bitcoin-etf-20b-aum",
+    "summary": "BlackRock started in 1988 with eight people and grew into one of the world’s largest asset-management companies. Its business spans investment management, ETFs, private markets and financial technology. Led by co-founder Larry Fink, BlackRock also developed Aladdin into a major investment technology platform. By June 2026, the company reported $15.3 trillion in assets under management.\n",
+    "body": "BlackRock's iShares Bitcoin Trust ETF has accumulated $20 billion in assets under management, becoming the fastest ETF in history to reach that milestone. Daily inflows averaged $240 million in Q3, displacing Grayscale's GBTC as the leading Bitcoin investment vehicle. Institutional adoption now accounts for 68% of ETF holdings.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": "imran ahmad",
+    "category_id": "7860f04f-3030-4a44-aed3-5c607ffb9284",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRObfCJ7Q8OrpYPR3t5N-nkc-pI6c3eBybdj2vWvpiv5A&s=10",
+    "photo_credit": "forbes",
+    "read_time_minutes": 2,
+    "word_count": 55,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-08-26T08:50:56.437+00:00",
+    "view_count": 5,
+    "like_count": 4,
+    "seo_title": "BlackRock: Business Model, Aladdin & $15.3T AUM",
+    "seo_description": "Explore BlackRock’s rise from an eight-person startup to a $15.3T asset manager, including Larry Fink, Aladdin, ETFs, private markets and its business model.",
+    "created_at": "2026-09-03T08:50:56.727383+00:00",
+    "updated_at": "2026-09-17T09:41:16.934245+00:00",
+    "canvas_data": {
+      "header": {
+        "tagline": "The $15.3T Investment Machine",
+        "bannerBg": "#09090b",
+        "companyLogo": "freebie supply",
+        "founderPhoto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRObfCJ7Q8OrpYPR3t5N-nkc-pI6c3eBybdj2vWvpiv5A&s=10"
+      },
+      "metrics": [
+        {
+          "id": "m1",
+          "icon": "calendar",
+          "label": "founded",
+          "value": "1988"
+        },
+        {
+          "id": "m2",
+          "icon": "unicorn",
+          "label": ": Assets Under Management",
+          "value": "$15.3T",
+          "subValue": "(Verified)"
+        },
+        {
+          "id": "m3",
+          "icon": "funding",
+          "label": "Aladdin Revenue",
+          "value": "$1.6B+",
+          "subValue": "(Growth)"
+        },
+        {
+          "id": "m4",
+          "icon": "award",
+          "label": "IPO",
+          "value": "1999",
+          "subValue": "Global"
+        }
+      ],
+      "profile": {
+        "founderName": "LARRY FINK",
+        "founderRole": "Co-Founder, Chairman & CEO — Larry Fink",
+        "businessModelTitle": "Core Strategy & Architecture",
+        "businessModelPoints": [
+          "• Asset Management: Investment products and portfolio management for institutional and individual investors.",
+          "• iShares ETFs: Exchange-traded funds providing diversified investment products across global markets.",
+          "• Financial Technology: Aladdin provides investment, risk-management, portfolio and analytics technology."
+        ]
+      },
+      "calloutBoxes": [
+        {
+          "id": "b1",
+          "icon": "trending",
+          "title": "Funding & Milestones",
+          "content": "BlackRock’s core advantage is the combination of investment management and financial technology. Its Aladdin platform brings together investment data, portfolio analytics and risk-management capabilities across the investment lifecycle. The company also used acquisitions to expand its product and distribution capabilities, most notably the acquisition of Barclays Global Investors, which brought the iShares ETF business into BlackRock. Over time, BlackRock expanded beyond traditional asset management into ETFs, technology and private markets, creating a broad financial-services ecosystem.\n",
+          "variant": "green"
+        },
+        {
+          "id": "b2",
+          "icon": "star",
+          "title": "Operator Playbook & Lesson",
+          "content": "• Technology can become a major business layer: Aladdin developed from an internal investment technology system into a large technology platform.\n\n• Scale compounds: BlackRock used acquisitions and distribution to expand its investment capabilities and reach.\n\n• Diversification matters: ETFs, asset management, technology and private markets provide multiple business engines.\n\n• Build infrastructure, not just products: A shared technology platform can connect investment management, analytics, risk and client workflows.\n",
+          "variant": "blue"
+        },
+        {
+          "id": "b3",
+          "icon": "lightbulb",
+          "title": "Key Takeaway",
+          "content": "BlackRock’s evolution shows how a financial-services company can build enormous scale by combining capital, distribution, technology and investment infrastructure—growing from an eight-person startup in 1988 into a company managing $15.3 trillion in assets by June 2026.\n\n",
+          "variant": "amber"
+        }
+      ]
+    },
+    "company": null
+  },
+  {
+    "id": "b18c771b-b5d1-4d65-8bb9-4aa94b5ff9b7",
+    "type": "NEWS",
+    "title": "Flam Raises $40 Million to Build an AI-Powered Social Platform from Bengaluru",
+    "slug": "flam-raises-40-million-to-build-an-ai-powered-social-platform-from-bengaluru",
+    "summary": "Bengaluru-based Flam has raised $40 million in fresh funding to accelerate its AI-powered social platform. The startup is building immersive digital experiences that blend artificial intelligence, social interaction and content. The new capital will support technology development, product expansion and global growth, highlighting Bengaluru’s growing role as a hub for ambitious AI-first consumer technology startups.\n\n",
+    "body": "Bengaluru-based Flam has raised $40 million in fresh funding to accelerate its AI-powered social platform. The startup is building immersive digital experiences that blend artificial intelligence, social interaction and content. The new capital will support technology development, product expansion and global growth, highlighting Bengaluru’s growing role as a hub for ambitious AI-first consumer technology startups.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": "Imran Ahmed",
+    "category_id": "a5e4cfdd-aabc-4985-9448-4fe24ad18930",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2BPN8UrAk3AxHAbfWfJyN-SUYL_rn3Kaon5KBUVuj6g&s=10",
+    "photo_credit": "digital terminal",
+    "read_time_minutes": 2,
+    "word_count": 55,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-09-16T14:55:48.691+00:00",
+    "view_count": 5,
+    "like_count": 1,
+    "seo_title": "Flam Raises $40M: Bengaluru’s AI Startup Story",
+    "seo_description": "Bengaluru startup Flam raises $40M to expand its AI-powered platform, product capabilities and global growth strategy.",
+    "created_at": "2026-09-16T14:55:49.254642+00:00",
+    "updated_at": "2026-09-16T16:06:08.525965+00:00",
+    "canvas_data": {
+      "header": {
+        "tagline": "AI Meets Social",
+        "bannerBg": "#09090b",
+        "companyLogo": "linkdin",
+        "founderPhoto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2BPN8UrAk3AxHAbfWfJyN-SUYL_rn3Kaon5KBUVuj6g&s=10"
+      },
+      "metrics": [
+        {
+          "id": "m1",
+          "icon": "calendar",
+          "label": "Founded",
+          "value": "2023"
+        },
+        {
+          "id": "m2",
+          "icon": "calendar",
+          "label": "RoundLatest Funding",
+          "value": "$40M",
+          "subValue": "(Verified)"
+        },
+        {
+          "id": "m3",
+          "icon": "building",
+          "label": "Headquarters",
+          "value": "Bengaluru, India",
+          "subValue": "(Growth)"
+        },
+        {
+          "id": "m4",
+          "icon": "trending",
+          "label": "Technology",
+          "value": "AI + Immersive Social",
+          "subValue": "Global"
+        }
+      ],
+      "profile": {
+        "founderName": "Suhasini Sampath",
+        "founderRole": "Co-Founder & CEO",
+        "businessModelTitle": "Core Strategy & Architecture",
+        "businessModelPoints": [
+          "AI-powered social experiences designed around interactive and immersive content.",
+          " Consumer platform that connects creators, users and digital experiences.",
+          "Enterprise and brand opportunities through interactive technology and AI-powered experiences."
+        ]
+      },
+      "calloutBoxes": [
+        {
+          "id": "b1",
+          "icon": "trending",
+          "title": "Funding & Milestones",
+          "content": ".Flam’s bigger idea is to make social interaction more immersive rather than treating content as something users simply scroll through. Its technology combines AI with interactive digital experiences, giving creators and brands new ways to engage audiences. The company is using Bengaluru’s startup and engineering ecosystem as a base while targeting a broader global market. The $40 million funding round gives Flam additional capital to develop its technology and expand its product footprint.\n",
+          "variant": "green"
+        },
+        {
+          "id": "b2",
+          "icon": "star",
+          "title": "Operator Playbook & Lesson",
+          "content": "• AI becomes more valuable when it is connected to a clear consumer experience.\n\n• Large funding rounds can accelerate product development, but adoption ultimately depends on user engagement.\n\n• Bengaluru continues to provide a strong base for startups combining software, AI and global ambitions.\n\n• Building for both consumers and enterprises can create multiple potential monetisation paths.\n\n",
+          "variant": "blue"
+        },
+        {
+          "id": "b3",
+          "icon": "lightbulb",
+          "title": "Key Takeaway",
+          "content": ".Flam’s $40 million raise puts a fresh spotlight on Bengaluru’s next generation of AI startups. Its challenge now is converting fresh capital and ambitious technology into sustained user engagement, scalable revenue and a defensible position in the rapidly evolving AI-powered social ecosystem.\n",
+          "variant": "amber"
+        }
+      ]
+    },
+    "company": null
+  },
+  {
+    "id": "0345d6a6-08a5-4a2c-b749-c468b0a2cf11",
+    "type": "NEWS",
+    "title": "Stripe Is Building the Payment Layer for the AI Shopping Era",
+    "slug": "stripe-6b-round-2027-ipo",
+    "summary": "Stripe is expanding beyond traditional online payments as AI agents begin shopping on behalf of consumers. Its latest integration with Meta’s Muse allows the AI agent to use Stripe’s Link wallet for purchases across the internet. The move highlights Stripe’s broader strategy to build payment infrastructure for an emerging economy where AI agents can discover, choose and buy products.\n",
+    "body": "Stripe has secured a .5 billion Series I at a  billion valuation, led by Sequoia and General Catalyst.",
+    "source_name": null,
+    "source_url": null,
+    "source_author": "Imran Ahmed",
+    "category_id": "7860f04f-3030-4a44-aed3-5c607ffb9284",
+    "author_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "cover_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-cbG82c9Aj8HhUckF5VFjSa_GBoiidNADWftk-71I-A&s=10",
+    "photo_credit": "forbes",
+    "read_time_minutes": 2,
+    "word_count": 59,
+    "status": "PUBLISHED",
+    "is_featured": false,
+    "is_trending": false,
+    "scheduled_for": null,
+    "published_at": "2026-09-02T08:50:56.436+00:00",
+    "view_count": 14,
+    "like_count": 5,
+    "seo_title": "Stripe: Building Payments for the AI Shopping Era",
+    "seo_description": "Stripe is building payment infrastructure for AI agents as Meta’s Muse integrates Link to shop across the internet.",
+    "created_at": "2026-09-03T08:50:54.877883+00:00",
+    "updated_at": "2026-09-17T09:41:07.066222+00:00",
+    "canvas_data": {
+      "header": {
+        "tagline": "Payments for AI",
+        "bannerBg": "#09090b",
+        "companyLogo": "freebies supply",
+        "founderPhoto": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-cbG82c9Aj8HhUckF5VFjSa_GBoiidNADWftk-71I-A&s=10"
+      },
+      "metrics": [
+        {
+          "id": "m1",
+          "icon": "calendar",
+          "label": "Founded",
+          "value": "2010"
+        },
+        {
+          "id": "m2",
+          "icon": "unicorn",
+          "label": "private valuation",
+          "value": "$159B",
+          "subValue": "(Verified)"
+        },
+        {
+          "id": "m3",
+          "icon": "users",
+          "label": "link businesses",
+          "value": "1M+",
+          "subValue": "(Growth)"
+        },
+        {
+          "id": "m4",
+          "icon": "building",
+          "label": "latest AI move",
+          "value": "meta mause",
+          "subValue": "Global"
+        }
+      ],
+      "profile": {
+        "founderName": "Patrick Collison & John Collison",
+        "founderRole": "CO FOUNDER stripe",
+        "businessModelTitle": "Core Strategy & Architecture",
+        "businessModelPoints": [
+          " Online payment processing and checkout infrastructure for businesses.",
+          "Billing, subscriptions, fraud prevention and financial-management tools.",
+          " AI-era commerce infrastructure, including payments for AI agents and token-based businesses."
+        ]
+      },
+      "calloutBoxes": [
+        {
+          "id": "b1",
+          "icon": "trending",
+          "title": "Funding & Milestones",
+          "content": "Stripe’s latest strategy goes beyond helping humans enter card details at checkout. Its Link wallet is being adapted for AI agents such as Meta’s Muse, allowing an agent to participate in online purchasing. Stripe says Muse can check out instantly at more than 1 million businesses that accept Link, while other merchants can be handled through a single-use virtual card. This positions Stripe around a new question: how should payments work when the buyer is an AI agent rather than a person?\n",
+          "variant": "green"
+        },
+        {
+          "id": "b2",
+          "icon": "star",
+          "title": "Operator Playbook & Lesson",
+          "content": "• Stripe is adapting its existing payment network instead of waiting for an entirely new commerce ecosystem.\n\n• AI agents create a new payment problem: software needs permission to discover, select and purchase products.\n\n• Distribution matters—Link already has a large merchant network that can become useful for agentic commerce.\n\n• Stripe’s AI strategy is expanding beyond payments into the broader economic infrastructure required by AI businesses.\n",
+          "variant": "blue"
+        },
+        {
+          "id": "b3",
+          "icon": "lightbulb",
+          "title": "Key Takeaway",
+          "content": "Stripe is betting that the next generation of online commerce may involve AI agents acting on behalf of humans. If that shift happens at scale, the payment company wants to provide the rails connecting those agents, merchants and financial transactions.\n",
+          "variant": "amber"
+        }
+      ]
+    },
+    "company": null
+  }
+]

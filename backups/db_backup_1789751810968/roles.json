@@ -1,0 +1,56 @@
+[
+  {
+    "id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "name": "SUPER_ADMIN",
+    "display_name": "Super Admin / Owner",
+    "description": "Full unrestricted owner privileges across all systems, roles, and users.",
+    "is_system": true,
+    "created_at": "2026-09-10T09:35:51.379603+00:00",
+    "updated_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "name": "ADMIN",
+    "display_name": "Administrator",
+    "description": "Administrative privileges for full content, media, and operational management.",
+    "is_system": true,
+    "created_at": "2026-09-10T09:35:51.379603+00:00",
+    "updated_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "name": "EDITOR",
+    "display_name": "Senior Editor",
+    "description": "Editorial control: publish, edit, schedule, and moderate all content desks.",
+    "is_system": true,
+    "created_at": "2026-09-10T09:35:51.379603+00:00",
+    "updated_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "name": "WRITER",
+    "display_name": "Staff Writer",
+    "description": "Content drafting and editing privileges for news briefs, case studies, and essays.",
+    "is_system": true,
+    "created_at": "2026-09-10T09:35:51.379603+00:00",
+    "updated_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "5532177d-d5ee-4369-9d99-2040a39d49c8",
+    "name": "REVIEWER",
+    "display_name": "Content Reviewer",
+    "description": "Review drafts, verify source links, and moderate reader comments.",
+    "is_system": false,
+    "created_at": "2026-09-10T09:35:51.379603+00:00",
+    "updated_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "26f255ae-3e6b-4dac-850f-3aceb2e91dbb",
+    "name": "MEDIA_MANAGER",
+    "display_name": "Media Manager",
+    "description": "Manage and curate visual assets, diagrams, and media library storage.",
+    "is_system": false,
+    "created_at": "2026-09-10T09:35:51.379603+00:00",
+    "updated_at": "2026-09-10T09:35:51.379603+00:00"
+  }
+]

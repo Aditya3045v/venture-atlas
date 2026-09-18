@@ -1,0 +1,62 @@
+[
+  {
+    "id": "7bcb8022-93e9-4017-b269-0dba1cc8cc60",
+    "name": "Unicorn",
+    "slug": "unicorn",
+    "description": "Billion-dollar valuations and blitzscaling",
+    "color": "#EC4899",
+    "display_order": 1,
+    "created_at": "2026-09-01T18:57:48.454284+00:00",
+    "updated_at": "2026-09-01T19:23:15.780751+00:00"
+  },
+  {
+    "id": "c8567a3e-da06-4f5d-8d7b-90811f4a4050",
+    "name": "Failure",
+    "slug": "failure",
+    "description": "Post-mortems and cautionary startup lessons",
+    "color": "#EF4444",
+    "display_order": 2,
+    "created_at": "2026-09-01T18:57:48.454284+00:00",
+    "updated_at": "2026-09-01T19:23:15.780751+00:00"
+  },
+  {
+    "id": "a5e4cfdd-aabc-4985-9448-4fe24ad18930",
+    "name": "Finance",
+    "slug": "finance",
+    "description": "Fintech rails and venture lending",
+    "color": "#10B981",
+    "display_order": 3,
+    "created_at": "2026-09-01T18:57:48.454284+00:00",
+    "updated_at": "2026-09-01T19:23:15.780751+00:00"
+  },
+  {
+    "id": "a731d048-57c5-4f99-b7ed-f3a548031700",
+    "name": "Crypto Web3",
+    "slug": "crypto-web3",
+    "description": "DeFi, L1 networks, and token economics",
+    "color": "#06B6D4",
+    "display_order": 4,
+    "created_at": "2026-09-01T18:57:48.454284+00:00",
+    "updated_at": "2026-09-01T19:23:15.780751+00:00"
+  },
+  {
+    "id": "80e59ca7-3a1c-45e2-aefb-d00850cfdb6c",
+    "name": "Founder Biography",
+    "slug": "founder-biography",
+    "description": "In-depth founder portraits and journeys",
+    "color": "#F59E0B",
+    "display_order": 5,
+    "created_at": "2026-09-01T18:57:48.454284+00:00",
+    "updated_at": "2026-09-01T19:23:15.780751+00:00"
+  },
+  {
+    "id": "7860f04f-3030-4a44-aed3-5c607ffb9284",
+    "name": "Case Studies",
+    "slug": "case-studies",
+    "description": "Startup architecture and teardown analyses",
+    "color": "#8B5CF6",
+    "display_order": 6,
+    "created_at": "2026-09-01T19:23:15.780751+00:00",
+    "updated_at": "2026-09-01T19:23:15.780751+00:00"
+  }
+]

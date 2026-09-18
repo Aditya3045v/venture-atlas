@@ -1,0 +1,584 @@
+[
+  {
+    "id": "0799c71e-3c7b-4cbc-803f-3b962e3dfbb9",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "96605fcf-6354-4c1e-94ff-4be3bc84dd68",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "2d4e44a7-a542-45ab-94c6-0fa456252ae2",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "05d15ba2-d7fd-4368-aa98-05862930d16c",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "7d40f0ed-ffbb-4fb0-bbc2-5ca4ae19efbe",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "e9cb390a-9c48-4a8d-9597-bf8351198e78",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "dfab0459-4dfd-4e9d-ad0e-9f4d8830b045",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "1abb50d2-90b2-4207-afe2-39cfd9f09545",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "57e3f277-4fb9-422d-b365-415d1852d9b0",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "0d44f14e-8a22-4e84-842a-990c2d99dc3a",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "14f83ed3-d6a2-4eba-b555-fb2a48426e67",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "6e148b1e-1e1c-46e4-b08d-93e0e4d4399d",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "190fadd3-a286-4475-8e85-9909184519b4",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "4f812efd-74aa-4139-bdae-029cc14aaa2f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "835a4f7f-ed6f-4b4b-8d0a-5b66cd7d6fdf",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "f99bd9b5-65ce-4c37-aa92-f6d4103000e7",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3d07d4ad-6f08-413f-8b4f-189203c1b5cc",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "d75dbcce-0b90-47ec-baef-baa0799cf5af",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "4af62063-51e7-4857-b016-446077dfe581",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "3eeea031-8219-4919-9462-8db0c94081e2",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "233579c2-2a7e-4776-a7dc-b14b047b886a",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "2c347d28-bf0b-4a09-ac1c-db7c8ea725b2",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "4895f97c-4888-4ad0-88be-288b8308aad9",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "d489b42b-caa6-4aff-bb21-653c497a2537",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "2b7c0b67-228b-4f38-962a-ba149f9d99f4",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "cbf81995-5f22-437a-a4de-ee4fedfb3488",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "5c83bd39-6930-45f7-91a2-d741efbb730d",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "5b8f584d-c3ef-4b12-bad0-96977916afa1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "eb691f36-3b30-467a-bead-4fe9bfb3ed26",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "d3a0ef86-0e60-47c9-ad96-669da05db1d0",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d8db0bed-2be3-4f42-badd-eaf5fdf24ef9",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "3777ed81-c60a-473a-aa13-5043ced60c3c",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "52d16f9d-dccf-4bb1-aa3d-0eea4d7f86b9",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "f4189c92-c5ea-49ed-b099-88a694d006fb",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d2036a2d-c191-4060-a27a-3f956e64347e",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "dd517657-ea39-472f-8bf2-e6ef722a81e1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "b053b960-4704-44df-a3bc-8daba6a4978d",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "ca9e2387-6827-465e-90ee-1b7094a35870",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "60199740-383e-4ebb-8d33-aed817292485",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "124a38d3-c74a-48e1-99bd-9780e82e080b",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "38d9376c-75a0-4e10-b50b-2863123726e1",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "999c3cdc-339b-4ded-8320-1c2036cac7db",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "c362f828-f773-4436-bed2-a02eebf6efe3",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "09dc85ec-1212-4319-acd4-e4d4d724f1c1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "b89b9f43-6d44-4268-8803-e8d334b528d2",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "a11134b5-ee55-4db6-b85b-7c017909c887",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "fb67075b-7271-49cd-b152-95d39595eff7",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "3690ff40-5872-43eb-bd90-42012e2a2a9f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "1ce94dc4-5a49-44e8-a476-87dd772236eb",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "64027cb4-4b86-4ff6-8645-53cc21942d04",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "74c63f99-f62e-477d-83a5-e4cee7aabf4e",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "1ef38afd-a09e-4fe4-8f03-ca5256ace85e",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3f696f59-6f57-4a1a-99a8-86a39da7b284",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "bb8baae8-e399-4f76-b8e7-99cdfd0ecc71",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "f8d844f5-6d67-470c-9bf7-2eaabd9e92f2",
+    "role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67",
+    "permission_id": "f32649a2-f8ea-4e80-b634-5896334e086f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "fb23a107-3e00-41a1-8adc-6d10605c9605",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "96605fcf-6354-4c1e-94ff-4be3bc84dd68",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "95176f6c-415b-4139-9d7e-2ba868e69b01",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "05d15ba2-d7fd-4368-aa98-05862930d16c",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "a34126b6-2293-45fb-863e-a93686d2e0b4",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "e9cb390a-9c48-4a8d-9597-bf8351198e78",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "90b056e0-58bb-4878-ab35-67201295c2a2",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "1abb50d2-90b2-4207-afe2-39cfd9f09545",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3b6b0ba9-8ef3-404e-a075-fa009ee17dc5",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "6e148b1e-1e1c-46e4-b08d-93e0e4d4399d",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "a1d37f26-2ac9-4ad9-888c-4e120acbde9b",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "4f812efd-74aa-4139-bdae-029cc14aaa2f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "1b7a0e61-54df-4caa-92b2-8c33994dbf40",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "f99bd9b5-65ce-4c37-aa92-f6d4103000e7",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "92d90dc8-0a4f-4022-8ecb-3dfb8625591d",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "d75dbcce-0b90-47ec-baef-baa0799cf5af",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3132d69b-fe50-4440-8ba0-30b65f925181",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "3eeea031-8219-4919-9462-8db0c94081e2",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "505c5635-8895-450f-8f8c-aa5362f4bf9c",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "2c347d28-bf0b-4a09-ac1c-db7c8ea725b2",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "6841aa9c-e7e2-4522-84c7-aab3d40ce624",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "d489b42b-caa6-4aff-bb21-653c497a2537",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "85c5ced1-7532-4b7e-a67a-f17a9ca9f09d",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "cbf81995-5f22-437a-a4de-ee4fedfb3488",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "6045a51c-0ac5-4b9b-b588-d2cc31315118",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "5b8f584d-c3ef-4b12-bad0-96977916afa1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "f74da7f6-8c96-429e-8632-c69634047c69",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "d3a0ef86-0e60-47c9-ad96-669da05db1d0",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "fc374101-715f-459c-8d35-bbe7e42b10b7",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "3777ed81-c60a-473a-aa13-5043ced60c3c",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "050d46b5-3962-44ab-a3c3-741bb881dcc9",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "f4189c92-c5ea-49ed-b099-88a694d006fb",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3cd5291e-5492-46a3-9655-b3c68aad9102",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "dd517657-ea39-472f-8bf2-e6ef722a81e1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "6e4791fb-6d02-4d27-a85b-3461aabb361b",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "ca9e2387-6827-465e-90ee-1b7094a35870",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "91951fab-6ec8-48cc-9110-79568e4c18b0",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "124a38d3-c74a-48e1-99bd-9780e82e080b",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d30fb356-52be-476e-8ab7-95f63e695e7d",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "999c3cdc-339b-4ded-8320-1c2036cac7db",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "f3022d6a-e9e5-41ba-b2eb-577a874ef370",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "09dc85ec-1212-4319-acd4-e4d4d724f1c1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "c34b60de-1034-4f35-930b-09a5556f6580",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "a11134b5-ee55-4db6-b85b-7c017909c887",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "91c92a1b-20bf-4708-84f5-bf630b5594f3",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "3690ff40-5872-43eb-bd90-42012e2a2a9f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "69bdcbf3-2db8-4cdb-871a-b9e1c7f74ef3",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "64027cb4-4b86-4ff6-8645-53cc21942d04",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d36efc3c-33ac-4f85-804b-b35f1bef8d0a",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "1ef38afd-a09e-4fe4-8f03-ca5256ace85e",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "ea345b02-5141-493a-9ae2-4afe0ccd840b",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "bb8baae8-e399-4f76-b8e7-99cdfd0ecc71",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "af55fd06-3feb-4f49-94e8-e59dff9d900e",
+    "role_id": "cb6bb70c-7bd6-43f4-890d-f693adeef295",
+    "permission_id": "f32649a2-f8ea-4e80-b634-5896334e086f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d4533d3f-cf3d-43a7-b908-c58609589a1b",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "6e148b1e-1e1c-46e4-b08d-93e0e4d4399d",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "21692ca3-a38f-4a2c-b32f-592a44dba3f0",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "4f812efd-74aa-4139-bdae-029cc14aaa2f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "8f6b73fe-acb6-4b77-94ff-6b6f39918155",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "f99bd9b5-65ce-4c37-aa92-f6d4103000e7",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "87844831-2051-49a8-8cf0-d3d23191c83c",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "d75dbcce-0b90-47ec-baef-baa0799cf5af",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "e8eb4000-2457-4254-afcc-27f1e62b9218",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "3eeea031-8219-4919-9462-8db0c94081e2",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "ed3d1219-48ff-4229-981b-457e207f5616",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "2c347d28-bf0b-4a09-ac1c-db7c8ea725b2",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "e42ca679-6cac-480f-b76a-5df71e7f8f76",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "d489b42b-caa6-4aff-bb21-653c497a2537",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3f142a5d-4fc1-4def-a4ba-cf79244ba4e6",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "cbf81995-5f22-437a-a4de-ee4fedfb3488",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "e67d9401-bc88-4d95-a68d-0f8270f66a7e",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "5b8f584d-c3ef-4b12-bad0-96977916afa1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "90588f76-2bc6-44e2-ba19-ce77442ea51c",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "d3a0ef86-0e60-47c9-ad96-669da05db1d0",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d04f3b1c-d60a-4eef-b0d9-e0e865facaaa",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "3777ed81-c60a-473a-aa13-5043ced60c3c",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "316616b8-e42a-4853-b6e9-2e2b80acd1e4",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "f4189c92-c5ea-49ed-b099-88a694d006fb",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "78b40b64-ad15-4c41-8ec7-21eb896893c0",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "dd517657-ea39-472f-8bf2-e6ef722a81e1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "c2e855fa-dbd1-4f87-94cf-52a8651aacc1",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "ca9e2387-6827-465e-90ee-1b7094a35870",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "08c8749b-a034-4f65-8591-eb6e922d2481",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "124a38d3-c74a-48e1-99bd-9780e82e080b",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "2550d171-6330-40ba-ac05-29ddc09d0eaf",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "999c3cdc-339b-4ded-8320-1c2036cac7db",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "18b8477f-abf1-470c-a3a9-30c110c1b123",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "09dc85ec-1212-4319-acd4-e4d4d724f1c1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "d84167e4-d715-425d-9b84-180071b43d62",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "a11134b5-ee55-4db6-b85b-7c017909c887",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "230a4714-eef3-4cbf-9cd0-5525edf0a802",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "3690ff40-5872-43eb-bd90-42012e2a2a9f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "5a7f7620-ed09-4ed9-a832-86ddfbfa1467",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "64027cb4-4b86-4ff6-8645-53cc21942d04",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "bf6c62a5-2da9-411a-94a7-6c8e3073ac9c",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "1ef38afd-a09e-4fe4-8f03-ca5256ace85e",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "4bc46b28-d199-4f00-9c5c-c69eda354310",
+    "role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41",
+    "permission_id": "bb8baae8-e399-4f76-b8e7-99cdfd0ecc71",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "7ebb2f3f-e760-4ca3-acdd-6da37cc5db2c",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "6e148b1e-1e1c-46e4-b08d-93e0e4d4399d",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "a976dcf6-a47a-46d5-af61-5b5162efe017",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "4f812efd-74aa-4139-bdae-029cc14aaa2f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "874f824d-091d-48f9-87e1-ca3a135292a8",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "f99bd9b5-65ce-4c37-aa92-f6d4103000e7",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "a696d0e3-b8ec-4a08-8a17-91500b92969c",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "2c347d28-bf0b-4a09-ac1c-db7c8ea725b2",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "a2764a42-82fc-400c-838c-cf05ea251f51",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "d489b42b-caa6-4aff-bb21-653c497a2537",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "3ae82615-01a7-4bb3-a4ad-97ba97ccad35",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "cbf81995-5f22-437a-a4de-ee4fedfb3488",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "7fa450cd-3fb7-46a7-a91b-63b456f272b6",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "3777ed81-c60a-473a-aa13-5043ced60c3c",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "f43a6e66-af5f-4cd9-9d1d-719feabc4716",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "f4189c92-c5ea-49ed-b099-88a694d006fb",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "cef65b37-9e2a-4d33-ac5b-a3c989f1849c",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "dd517657-ea39-472f-8bf2-e6ef722a81e1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "eee6a78a-58f1-4986-bd40-9dc0af33d1ff",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "09dc85ec-1212-4319-acd4-e4d4d724f1c1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "1ada8f6e-9dee-469d-83e6-05135bb84842",
+    "role_id": "be38772e-249c-4388-b4a2-494cf4c000a9",
+    "permission_id": "a11134b5-ee55-4db6-b85b-7c017909c887",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "6808342a-ef6b-4078-b179-f532394e808c",
+    "role_id": "5532177d-d5ee-4369-9d99-2040a39d49c8",
+    "permission_id": "6e148b1e-1e1c-46e4-b08d-93e0e4d4399d",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "4bae145e-6ec6-4e19-b5a0-a14a9b8198b8",
+    "role_id": "5532177d-d5ee-4369-9d99-2040a39d49c8",
+    "permission_id": "2c347d28-bf0b-4a09-ac1c-db7c8ea725b2",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "cf3c58b6-2658-4e4f-83f1-25942cbabb0d",
+    "role_id": "5532177d-d5ee-4369-9d99-2040a39d49c8",
+    "permission_id": "3777ed81-c60a-473a-aa13-5043ced60c3c",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "371eace1-379b-486f-a317-4d978a1b3941",
+    "role_id": "5532177d-d5ee-4369-9d99-2040a39d49c8",
+    "permission_id": "64027cb4-4b86-4ff6-8645-53cc21942d04",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "96509896-fbf6-4f0c-8a73-5a4b58064a5e",
+    "role_id": "5532177d-d5ee-4369-9d99-2040a39d49c8",
+    "permission_id": "f32649a2-f8ea-4e80-b634-5896334e086f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "f7b33d81-bb3b-46ec-b3d1-ef51842b37b3",
+    "role_id": "26f255ae-3e6b-4dac-850f-3aceb2e91dbb",
+    "permission_id": "6e148b1e-1e1c-46e4-b08d-93e0e4d4399d",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "e092d298-76aa-45ed-92b2-220ee5424e05",
+    "role_id": "26f255ae-3e6b-4dac-850f-3aceb2e91dbb",
+    "permission_id": "09dc85ec-1212-4319-acd4-e4d4d724f1c1",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "8ca076cb-3d6f-4ae9-a4ee-460a82c7326e",
+    "role_id": "26f255ae-3e6b-4dac-850f-3aceb2e91dbb",
+    "permission_id": "a11134b5-ee55-4db6-b85b-7c017909c887",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  },
+  {
+    "id": "dedd2e99-c39d-47d0-a22a-0eeb65c579db",
+    "role_id": "26f255ae-3e6b-4dac-850f-3aceb2e91dbb",
+    "permission_id": "3690ff40-5872-43eb-bd90-42012e2a2a9f",
+    "created_at": "2026-09-10T09:35:51.379603+00:00"
+  }
+]

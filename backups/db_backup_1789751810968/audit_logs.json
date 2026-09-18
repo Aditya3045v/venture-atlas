@@ -1,0 +1,4217 @@
+[
+  {
+    "id": "a3e75d6b-4f34-4f2c-a7e0-1388a727900e",
+    "actor_id": null,
+    "actor_email": "attacker@evil.com",
+    "actor_role": "ADMIN",
+    "action": "INJECTED_AUDIT_LOG",
+    "entity_type": "ATTACK",
+    "entity_id": "00000000-0000-0000-0000-000000000000",
+    "metadata": {
+      "injected": true
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-01T19:01:21.797097+00:00"
+  },
+  {
+    "id": "8d11b374-9b69-4f18-a957-f2e8e585ab5c",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788362804348@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "1514e135-065b-4f2b-860b-d457502b6e73",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788362809421",
+      "title": "Writer Test Draft Article 1788362809421",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:26:51.711253+00:00"
+  },
+  {
+    "id": "724a40ab-5bb6-4663-bc4e-f583632f65ec",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788362804348@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "1514e135-065b-4f2b-860b-d457502b6e73",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788362814127",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:26:56.766797+00:00"
+  },
+  {
+    "id": "8f06f52a-facb-4bb5-ab92-b179635ae1ea",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788362804348@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "4c96edc9-670e-47e2-b6fb-03b5d9f97fc2",
+    "metadata": {
+      "title": "jensen-huang-nvidia-30-year-moat (editor-edited) 1788362824067",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:27:04.329613+00:00"
+  },
+  {
+    "id": "93416cb6-1ef0-45e4-b4ff-3003cb517feb",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:46:17.797144+00:00"
+  },
+  {
+    "id": "eda57da6-b8e3-4cba-bab2-2c6be830b1f1",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:46:19.726958+00:00"
+  },
+  {
+    "id": "df7abd3e-533f-4f6a-af79-d70a42a35807",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:47:09.896877+00:00"
+  },
+  {
+    "id": "a09c46c2-c4a7-4d72-8c5a-5484cfb65744",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:47:11.443726+00:00"
+  },
+  {
+    "id": "9fb5c009-1a4e-43de-a77d-a08ce31a491a",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "725f0c59-3269-462d-8b7d-7e70d4a2a8f1",
+    "metadata": {
+      "title": "draft-elevenlabs-80m-valuation (editor-edited) 1788292031464",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:47:13.876819+00:00"
+  },
+  {
+    "id": "33d52f20-73c2-44a7-a22f-5682812881b8",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:47:07.762952+00:00"
+  },
+  {
+    "id": "54f4dfbc-04c7-4937-9830-ffcbe41c6978",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:47:09.670714+00:00"
+  },
+  {
+    "id": "255e2c15-7774-46ec-bd8d-44625b9a2eb8",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "725f0c59-3269-462d-8b7d-7e70d4a2a8f1",
+    "metadata": {
+      "title": "draft-elevenlabs-80m-valuation (editor-edited) 1788353231761",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:47:12.35126+00:00"
+  },
+  {
+    "id": "5092e8b1-2b3c-4e7f-a288-ceee7f481319",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:49:05.474001+00:00"
+  },
+  {
+    "id": "ba500248-74b7-4c7b-b827-33c229c6bbff",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "743b19a4-dd22-4228-a0b0-a40d10d80e43",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788291984513@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:46:26.897038+00:00"
+  },
+  {
+    "id": "40711c81-a7dd-4bab-8838-f825b08a3993",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "725f0c59-3269-462d-8b7d-7e70d4a2a8f1",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:46:28.770105+00:00"
+  },
+  {
+    "id": "50aaee11-2162-4f2b-9b43-56553e317c54",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "f36aa363-abe4-404a-bb45-f4fe9c06a089",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788292047848@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:47:30.102561+00:00"
+  },
+  {
+    "id": "5e7ad587-87ab-4e64-905c-15e9d5d9926b",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "6c90ea93-252e-4358-b2c4-125acced25e8",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:47:32.33213+00:00"
+  },
+  {
+    "id": "46eacb7b-7f78-4394-b74f-113602797a81",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "f36aa363-abe4-404a-bb45-f4fe9c06a089",
+    "metadata": {
+      "deletedUserId": "f36aa363-abe4-404a-bb45-f4fe9c06a089"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:47:36.075094+00:00"
+  },
+  {
+    "id": "dc2da642-1a63-4b57-bbf9-297b83aec997",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "3513d63d-a1fc-4f19-993d-e2067b9ff6fc",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788353238394@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:47:18.975158+00:00"
+  },
+  {
+    "id": "2e515a07-9e79-4f61-9c33-1d1f1c363ba4",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "b2f158fc-c8ab-4966-a922-3f19b1713a0d",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:48:02.744862+00:00"
+  },
+  {
+    "id": "35c22735-7043-48cb-ac16-78170ac821c5",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "3513d63d-a1fc-4f19-993d-e2067b9ff6fc",
+    "metadata": {
+      "deletedUserId": "3513d63d-a1fc-4f19-993d-e2067b9ff6fc"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:48:06.86193+00:00"
+  },
+  {
+    "id": "942afffb-0007-4c2b-ab7a-e95ba53de45f",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "c7c142f5-8653-4487-bafc-be64c7b74d19",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788353355993@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:49:16.794175+00:00"
+  },
+  {
+    "id": "d33a2c4e-346d-4cdc-bf96-ce0ae2500e51",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "e5f5a6dd-aabc-406d-a3dc-32bbdaee1b0e",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:49:19.239675+00:00"
+  },
+  {
+    "id": "a59d1bf8-cc8b-47da-9d3c-8027ec5ddf2d",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "c7c142f5-8653-4487-bafc-be64c7b74d19",
+    "metadata": {
+      "deletedUserId": "c7c142f5-8653-4487-bafc-be64c7b74d19"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:49:23.057909+00:00"
+  },
+  {
+    "id": "3c6008c5-94de-4692-b304-50ee2fad9f1a",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788362804348@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "60625624-a636-4e85-aea1-dea741ff9bee",
+    "metadata": {
+      "commentId": "60625624-a636-4e85-aea1-dea741ff9bee",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:27:18.243188+00:00"
+  },
+  {
+    "id": "51260cfb-ac48-4bbc-a15f-e96cce713a8d",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788362804348@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "c1f09041-8f10-4e10-a97b-0226ad80c816",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788362828908@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:27:09.551101+00:00"
+  },
+  {
+    "id": "e7e5fb35-b117-44fc-9948-5de50c2930ac",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788362804348@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "1514e135-065b-4f2b-860b-d457502b6e73",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:27:11.169535+00:00"
+  },
+  {
+    "id": "8836ffd2-1196-427e-8bde-825b7b12ae73",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788362804348@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "c1f09041-8f10-4e10-a97b-0226ad80c816",
+    "metadata": {
+      "deletedUserId": "c1f09041-8f10-4e10-a97b-0226ad80c816"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:27:14.188894+00:00"
+  },
+  {
+    "id": "2df42d52-759c-4183-ae17-ca23fc400a83",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788362871212@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "53d1d227-9f07-484a-9316-548ccfc95bf2",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788362875384",
+      "title": "Writer Test Draft Article 1788362875384",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:27:56.153722+00:00"
+  },
+  {
+    "id": "0c465ad0-d8d0-49ae-bad4-999ffcc06d90",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:31.469016+00:00"
+  },
+  {
+    "id": "3743e7fe-5b64-4c48-8a62-532d4b3087ab",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:33.416182+00:00"
+  },
+  {
+    "id": "774bfdaf-5159-40bf-8745-7a9d9db3730b",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "725f0c59-3269-462d-8b7d-7e70d4a2a8f1",
+    "metadata": {
+      "title": "draft-elevenlabs-80m-valuation (editor-edited) 1788353435507",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:36.130759+00:00"
+  },
+  {
+    "id": "8540a6b6-af84-49f4-9183-2e75cb336b94",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:56:41.962495+00:00"
+  },
+  {
+    "id": "e48d389a-8bbf-4a7e-aa22-dce62e79785c",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:56:44.212719+00:00"
+  },
+  {
+    "id": "e7d39bcd-4d5a-47f4-ab0d-c6297c6f3839",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "725f0c59-3269-462d-8b7d-7e70d4a2a8f1",
+    "metadata": {
+      "title": "draft-elevenlabs-80m-valuation (editor-edited) 1788353806337",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:56:47.082128+00:00"
+  },
+  {
+    "id": "8a59202e-4473-44c4-8e59-fc136ba28d5d",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:19.642851+00:00"
+  },
+  {
+    "id": "8ec8b0db-6664-4987-8027-7fe6c27e3142",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:21.806625+00:00"
+  },
+  {
+    "id": "90e5217d-e1f8-4fea-8ccf-99d116e9b436",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:21.961905+00:00"
+  },
+  {
+    "id": "61465133-2eca-4612-9bbc-a1581e3e04fb",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "b0a68f5a-dbe3-4938-9090-dc2752fd6276",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788353443022@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:43.839515+00:00"
+  },
+  {
+    "id": "05cb4a08-b60f-4f70-9571-64df1d2fa937",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "30c0a969-7b9b-48e0-91f8-6998f05384e7",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:46.366098+00:00"
+  },
+  {
+    "id": "e92ca847-61ee-4575-b8a5-05f50039f89b",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "b0a68f5a-dbe3-4938-9090-dc2752fd6276",
+    "metadata": {
+      "deletedUserId": "b0a68f5a-dbe3-4938-9090-dc2752fd6276"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:50.290085+00:00"
+  },
+  {
+    "id": "49bad8ee-101d-4852-b08d-ce220492b92a",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:58.907937+00:00"
+  },
+  {
+    "id": "35ddcd67-2f50-4e6c-a747-bab0892a86d7",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "187e3639-20ce-4d28-b5a1-57e31397fc88",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788353813557@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:56:54.383378+00:00"
+  },
+  {
+    "id": "524dff66-e1cf-4040-a66c-f70897e40756",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "f0cb5617-7b34-4c4c-8350-cdba1ef3e85b",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:56:56.964552+00:00"
+  },
+  {
+    "id": "ad2f74ac-58a8-44f1-bbb4-3ddfe9ec27c9",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "187e3639-20ce-4d28-b5a1-57e31397fc88",
+    "metadata": {
+      "deletedUserId": "187e3639-20ce-4d28-b5a1-57e31397fc88"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:57:01.121474+00:00"
+  },
+  {
+    "id": "5ecfcae3-aacf-4c5b-b2a2-5d838fad984e",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:57:11.195168+00:00"
+  },
+  {
+    "id": "114da34d-59a2-4bed-a712-a755d766dcaf",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "8c4b1532-b61e-4a6e-b3a2-e21633dbf0c7",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788356072144@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:32.593337+00:00"
+  },
+  {
+    "id": "0574d932-db26-4913-a268-335864c68714",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "38366e8b-4139-480b-ab6a-1ff849343456",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:36.108185+00:00"
+  },
+  {
+    "id": "249729f9-62b4-468f-a65a-bf2e3727d7a6",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "8c4b1532-b61e-4a6e-b3a2-e21633dbf0c7",
+    "metadata": {
+      "deletedUserId": "8c4b1532-b61e-4a6e-b3a2-e21633dbf0c7"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:41.29897+00:00"
+  },
+  {
+    "id": "bc1acf07-32c7-4832-ad9e-cd1af1eb6da5",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788362871212@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "dc835e9c-5352-4e92-88f7-9c085a7826dc",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:28:06.828044+00:00"
+  },
+  {
+    "id": "99185d33-8648-454d-bfb4-c1813928bd70",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788362871212@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "dc835e9c-5352-4e92-88f7-9c085a7826dc",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:28:08.257315+00:00"
+  },
+  {
+    "id": "e4a503cb-f414-483d-a5af-c52c124c3515",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788362871212@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "2a5ddc02-71f8-4103-ab27-0502379cbb48",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788362894891@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:28:15.292633+00:00"
+  },
+  {
+    "id": "a26a3dbd-7b9a-4554-92ac-dd0191acc53e",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788362871212@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "53d1d227-9f07-484a-9316-548ccfc95bf2",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:28:17.012257+00:00"
+  },
+  {
+    "id": "9e2ecf1e-9bc1-4d45-b227-0241642a5896",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788362871212@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "2a5ddc02-71f8-4103-ab27-0502379cbb48",
+    "metadata": {
+      "deletedUserId": "2a5ddc02-71f8-4103-ab27-0502379cbb48"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:28:20.039512+00:00"
+  },
+  {
+    "id": "570a8a75-57cd-4172-9125-b50f09fe3189",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788362871212@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "d1bbdd52-faaa-48b5-899c-16f7b89efbc2",
+    "metadata": {
+      "resetBy": "temp.admin.1788362871212@test.ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:28:45.724251+00:00"
+  },
+  {
+    "id": "104f6252-f52e-433f-9843-80432817b9e9",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788362871212@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "53d1d227-9f07-484a-9316-548ccfc95bf2",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788362878265",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:27:58.935677+00:00"
+  },
+  {
+    "id": "0c2d7079-57c0-4008-8efb-69a1e1623c8b",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788362871212@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "bb4a7d95-e7d5-470a-bb57-a2746f48f921",
+    "metadata": {
+      "title": "anduril-1-5b-defense-valuation (editor-edited) 1788362889851",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:28:10.152055+00:00"
+  },
+  {
+    "id": "6bc10d01-5dda-4296-a093-34aa0aa2b11a",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788362871212@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "1cfcaf50-86f7-4866-9002-0021c0aeeaaf",
+    "metadata": {
+      "commentId": "1cfcaf50-86f7-4866-9002-0021c0aeeaaf",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:28:23.45124+00:00"
+  },
+  {
+    "id": "fa9703da-62f5-47ba-b20d-5b2c35303af9",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788363644045@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "92e3d979-ce3f-4243-920b-0e3a6193d3da",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:41:10.180691+00:00"
+  },
+  {
+    "id": "bf1f01e6-e85d-4d96-a63b-b74bc53b3b74",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788363644045@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "01d2cc5f-77eb-49f0-9129-9d2bf0e68381",
+    "metadata": {
+      "deletedUserId": "01d2cc5f-77eb-49f0-9129-9d2bf0e68381"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:41:39.04123+00:00"
+  },
+  {
+    "id": "95a39d7a-00c0-4298-9c2a-66101bac3d87",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788363897092@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "692d97fd-f4a1-4a22-ab12-553c2cd63013",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788363901614",
+      "title": "Writer Test Draft Article 1788363901614",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:04.380918+00:00"
+  },
+  {
+    "id": "f21d8d51-d664-4648-bcd7-1ee132fed851",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788363897092@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "e6000e81-6625-4b7f-980c-6e88ff1dc18a",
+    "metadata": {
+      "commentId": "e6000e81-6625-4b7f-980c-6e88ff1dc18a",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:33.835826+00:00"
+  },
+  {
+    "id": "52a991fa-4472-40b6-8991-198ab17f1db9",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788363897092@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "fc60c38e-2c28-4b46-a913-a48564d98b67",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788363925331@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:25.748852+00:00"
+  },
+  {
+    "id": "3c329694-3934-4497-9f72-85b3e727e96b",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:42:42.613802+00:00"
+  },
+  {
+    "id": "2c98c0c3-488d-413d-87fa-f0747b7539d6",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:42:44.763538+00:00"
+  },
+  {
+    "id": "7a9bdebf-0240-4a38-9925-1be498c76c3b",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "ab15f383-551e-4c33-8acf-6af9bd16f409",
+    "metadata": {
+      "title": "databricks-35b-revenue-ipo (editor-edited) 1788356567320",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:42:47.335141+00:00"
+  },
+  {
+    "id": "a50a59a2-fef7-49f9-8bb5-faf0117e3533",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:13.390351+00:00"
+  },
+  {
+    "id": "77339799-0332-42a5-a503-2e027d1df36c",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:15.267095+00:00"
+  },
+  {
+    "id": "c53f8c31-86e8-461a-b13d-3a72359b818a",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "09847a8d-1fe9-47b9-a6fd-1836f1c475c6",
+    "metadata": {
+      "title": "convoy-shutdown-freight-collapse (editor-edited) 1788357018205",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:18.174064+00:00"
+  },
+  {
+    "id": "24387884-0296-4a0a-8567-375d903ef02a",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "122ff1d8-1a71-41f2-ade3-9c08a51f06fe",
+    "metadata": {
+      "commentId": "122ff1d8-1a71-41f2-ade3-9c08a51f06fe",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:37.264759+00:00"
+  },
+  {
+    "id": "f85900e1-00c5-4d58-9104-af2d94970ed6",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "99801be8-5a63-428f-9328-8437f3bddcb1",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788356494233@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:34.495681+00:00"
+  },
+  {
+    "id": "6cf4e94b-4478-4241-88e7-d98fa1817aa8",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e296c83-e935-4979-a615-53c9521dd90a",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:37.019188+00:00"
+  },
+  {
+    "id": "b4e15888-e58c-4587-8177-3bbdc6a44660",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "99801be8-5a63-428f-9328-8437f3bddcb1",
+    "metadata": {
+      "deletedUserId": "99801be8-5a63-428f-9328-8437f3bddcb1"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:40.891403+00:00"
+  },
+  {
+    "id": "ed3c20f4-954c-471a-80c0-4534e0daafbf",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:50.739361+00:00"
+  },
+  {
+    "id": "f07710d1-d208-414d-ac42-f289b3bcf669",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "14d6ba97-f0f1-4dda-8c0f-798c2c1e8ea5",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788356576197@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:42:56.773001+00:00"
+  },
+  {
+    "id": "2782210f-165b-4932-9167-f0ca995d7759",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "29e74222-bf64-4655-865b-642b4267c98c",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:42:59.375107+00:00"
+  },
+  {
+    "id": "bce8a72a-a3c5-4101-9c5c-0014d92c185d",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "14d6ba97-f0f1-4dda-8c0f-798c2c1e8ea5",
+    "metadata": {
+      "deletedUserId": "14d6ba97-f0f1-4dda-8c0f-798c2c1e8ea5"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:43:03.35218+00:00"
+  },
+  {
+    "id": "0f851d32-fe25-4f9f-a24b-fb85ada6829e",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:43:12.874964+00:00"
+  },
+  {
+    "id": "2754c8dd-c3d6-40eb-a5b6-141b47b640b5",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "780511e7-d696-4c86-95d4-a11577fd451f",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788357024569@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:25.158487+00:00"
+  },
+  {
+    "id": "38093da7-14ad-471a-84a4-2fb5f6b82666",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e18dd67-615f-4706-b977-14b6bb19a6f9",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:27.526841+00:00"
+  },
+  {
+    "id": "02a2f482-3cae-4310-9641-b4b9c9e1b09e",
+    "actor_id": null,
+    "actor_email": "temp.nav.admin.1788365758153@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "NAV_ITEM_CREATED",
+    "entity_type": "NAVIGATION",
+    "entity_id": "a33168cb-7008-4d2b-8adf-57c03d844099",
+    "metadata": {
+      "href": "/categories/deeptech",
+      "label": "DeepTech Intel"
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T16:16:02.335051+00:00"
+  },
+  {
+    "id": "fdcb9b1a-fdd6-4dc0-a821-2e3f44626993",
+    "actor_id": null,
+    "actor_email": "temp.nav.admin.1788365758153@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "NAV_ITEM_UPDATED",
+    "entity_type": "NAVIGATION",
+    "entity_id": "a33168cb-7008-4d2b-8adf-57c03d844099",
+    "metadata": {
+      "label": "DeepTech Global Intelligence",
+      "updated_at": "2026-09-02T16:16:04.182Z"
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T16:16:03.618839+00:00"
+  },
+  {
+    "id": "65676dda-d03a-4274-ae87-ef801dfd4bd7",
+    "actor_id": null,
+    "actor_email": "temp.nav.admin.1788365758153@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "NAV_ITEMS_REORDERED",
+    "entity_type": "NAVIGATION",
+    "entity_id": null,
+    "metadata": {
+      "itemCount": 2
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T16:16:05.296669+00:00"
+  },
+  {
+    "id": "60c88ff9-659b-4242-8736-e69aa0bd2382",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "46299d0d-18cc-4c0a-9255-5891b796d8d5",
+    "metadata": {
+      "commentId": "46299d0d-18cc-4c0a-9255-5891b796d8d5",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:52:49.115191+00:00"
+  },
+  {
+    "id": "4ec9924e-4a53-443d-b19d-a1b56626e819",
+    "actor_id": null,
+    "actor_email": "temp.cm.editor.1788363295278@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "190781ff-f29c-4c1f-ac32-50711b8ff9d6",
+    "metadata": {
+      "commentId": "190781ff-f29c-4c1f-ac32-50711b8ff9d6",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:34:58.702456+00:00"
+  },
+  {
+    "id": "4f8cf52c-f892-4d5d-8436-5ee162d9474b",
+    "actor_id": null,
+    "actor_email": "temp.cm.editor.1788363295278@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_REJECTED",
+    "entity_type": "COMMENT",
+    "entity_id": "190781ff-f29c-4c1f-ac32-50711b8ff9d6",
+    "metadata": {
+      "commentId": "190781ff-f29c-4c1f-ac32-50711b8ff9d6",
+      "newStatus": "REJECTED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:35:00.386123+00:00"
+  },
+  {
+    "id": "56ba42d1-3899-4973-b589-aee9704be97a",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788363644045@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "4c96edc9-670e-47e2-b6fb-03b5d9f97fc2",
+    "metadata": {
+      "title": "jensen-huang-nvidia-30-year-moat (editor-edited) 1788363671789",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:41:16.916302+00:00"
+  },
+  {
+    "id": "1eb62ac8-a717-442d-bdcd-d3e0f7ddeaaa",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788363897092@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "692d97fd-f4a1-4a22-ab12-553c2cd63013",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788363906501",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:08.827459+00:00"
+  },
+  {
+    "id": "f17cebd7-a842-4783-97a6-5361593655a5",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788363897092@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "2dd414f8-cd8a-4b8b-bec5-e115d1e34dd5",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:16.796592+00:00"
+  },
+  {
+    "id": "b8d2ac4d-966c-42af-9001-e51f0c2615fe",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788363897092@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "92e3d979-ce3f-4243-920b-0e3a6193d3da",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:27.500331+00:00"
+  },
+  {
+    "id": "4892de3f-597c-4602-b53f-853a3911bbc5",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788363897092@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "9ee226c5-305b-46a9-b8e5-2673008d8733",
+    "metadata": {
+      "resetBy": "temp.admin.1788363897092@test.ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:42.984313+00:00"
+  },
+  {
+    "id": "8ded26c1-96d6-45df-8997-85e1eea8fd96",
+    "actor_id": null,
+    "actor_email": "temp.nav.admin.1788365758153@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "NAV_ITEM_DELETED",
+    "entity_type": "NAVIGATION",
+    "entity_id": "a33168cb-7008-4d2b-8adf-57c03d844099",
+    "metadata": {
+      "href": "/categories/deeptech",
+      "label": "DeepTech Global Intelligence"
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T16:16:07.05843+00:00"
+  },
+  {
+    "id": "145cf9d8-d42e-4007-966f-6635648eaf9b",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "3db1bad7-943b-49cd-ae7f-d9469709ce72",
+    "metadata": {
+      "targetName": "Mark Senior Editor",
+      "targetEmail": "prov.editor.1788367558958@ventureatlas.io",
+      "assignedRole": "EDITOR"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T16:46:02.711224+00:00"
+  },
+  {
+    "id": "c8a5d4aa-88e6-4731-8b9a-6b5b1316465c",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "8b3ebc4e-8113-413c-8940-674543472a43",
+    "metadata": {
+      "targetName": "Jane Staff Writer",
+      "targetEmail": "prov.writer.1788367906174@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T16:51:49.593807+00:00"
+  },
+  {
+    "id": "83c1da79-2a4d-4536-bf27-814cbb313a5d",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0652a229-1dec-41c4-8843-27a23bc8d800",
+    "metadata": {
+      "slug": "clipconnect",
+      "title": "CLipconnect",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T16:56:27.91763+00:00"
+  },
+  {
+    "id": "ec5a6869-c8f7-4ff2-bceb-518adf44424b",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0652a229-1dec-41c4-8843-27a23bc8d800",
+    "metadata": {
+      "title": "CLipconnect",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T18:16:10.41632+00:00"
+  },
+  {
+    "id": "81600ac7-8167-4c94-985f-ab405613a99d",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "c024b982-b170-46f1-8b3e-daa011ac41bf",
+    "metadata": {
+      "slug": "valid-published-article-1788",
+      "title": "Valid Published Article 1788",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:18:34.321441+00:00"
+  },
+  {
+    "id": "632e2e0d-a7b3-466f-bf54-7425844e1349",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788425693645@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "a22c0057-c539-4843-83ff-385125d26085",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788425706425",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:06.625829+00:00"
+  },
+  {
+    "id": "cf44d232-a910-4e9a-a2f2-cc5aaf97c04a",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425693645@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "36fc7c7d-d4c1-4d94-ad37-9fe9ab04db20",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:17.269652+00:00"
+  },
+  {
+    "id": "c9efc591-0b83-487f-9773-c4bd7f1f633b",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425693645@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "b008e0d6-63b8-460b-b009-9aab0a784b71",
+    "metadata": {
+      "commentId": "b008e0d6-63b8-460b-b009-9aab0a784b71",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:31.837915+00:00"
+  },
+  {
+    "id": "b2537f7c-68e6-4d88-b841-1fe955bd3105",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425693645@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "5b3df971-6a52-474a-afe3-84aa43dda734",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:25.39813+00:00"
+  },
+  {
+    "id": "a96f886e-cd5c-4251-9ca4-3ffb754c3855",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788425735372@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "3afb637e-4c41-408c-9706-e2eed117ab19",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788425742859",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:42.421514+00:00"
+  },
+  {
+    "id": "df6033f9-1b43-4413-a05f-8d41b58560ad",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425735372@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "5721ed24-9850-4a0f-a54c-9f11a537edcb",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:51.061839+00:00"
+  },
+  {
+    "id": "288609f4-1bf8-4cd2-b5bf-66c0527f4e6b",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425735372@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "69a22762-7ae5-4a3e-ae8c-32a1ea114989",
+    "metadata": {
+      "commentId": "69a22762-7ae5-4a3e-ae8c-32a1ea114989",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:56:03.728895+00:00"
+  },
+  {
+    "id": "f7150255-ed1c-4039-b230-52be7ebbca48",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425735372@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "2bb5bb4c-4c88-48b6-aee0-93127228c18a",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788425735372@ventureatlas.in",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:56.860607+00:00"
+  },
+  {
+    "id": "8f132497-fc26-4bab-8004-d94d6f39405f",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425735372@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "2bb5bb4c-4c88-48b6-aee0-93127228c18a",
+    "metadata": {
+      "deletedUserId": "2bb5bb4c-4c88-48b6-aee0-93127228c18a"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:56:00.980865+00:00"
+  },
+  {
+    "id": "68c6fc30-7db9-40fa-9438-a0d1f27dc184",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788425808061@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "29f5131f-8d01-49d1-a18a-6a2a436880f4",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788425813036",
+      "title": "Writer Test Draft Article 1788425813036",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:56:52.920196+00:00"
+  },
+  {
+    "id": "8c63ab6b-a402-4aac-83b2-93bb86218a33",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425808061@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "1ea34561-00b5-4ba7-bad3-ad769da29683",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:57:04.63269+00:00"
+  },
+  {
+    "id": "a53336dc-9869-43cd-8caf-cc22706628ec",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425808061@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "7858e4d2-91bb-432b-b594-82dce67f60e6",
+    "metadata": {
+      "title": "Ephemeral Admin Published (editor-edited) 1788425808061",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:57:06.897505+00:00"
+  },
+  {
+    "id": "8cb4c2bf-9d19-4191-9102-daae95a7a1f4",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "17b63d80-86ad-4bff-8454-3237ac930417",
+    "metadata": {
+      "title": "New one ",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:56:29.282226+00:00"
+  },
+  {
+    "id": "7d9f58bb-997c-4d51-bae5-db6195c800b4",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788363644045@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "de893400-22ee-4c44-a188-fb33c404eed2",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788363648322",
+      "title": "Writer Test Draft Article 1788363648322",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:40:48.923903+00:00"
+  },
+  {
+    "id": "b7f5d873-291b-47fe-8f37-21ee3ed2e400",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788363644045@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "febc972d-f44a-45ac-bb96-f788760713b1",
+    "metadata": {
+      "commentId": "febc972d-f44a-45ac-bb96-f788760713b1",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:41:46.461772+00:00"
+  },
+  {
+    "id": "ef643791-b794-4d70-abf1-e1c52c81fedf",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788363644045@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "01d2cc5f-77eb-49f0-9129-9d2bf0e68381",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788363683537@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:41:24.288527+00:00"
+  },
+  {
+    "id": "fa663210-bdda-4da6-b555-67d968d1434c",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788363897092@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "2dd414f8-cd8a-4b8b-bec5-e115d1e34dd5",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:18.28179+00:00"
+  },
+  {
+    "id": "7d4b4fbc-7924-4641-995d-8091b40f9793",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788363897092@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "fc60c38e-2c28-4b46-a913-a48564d98b67",
+    "metadata": {
+      "deletedUserId": "fc60c38e-2c28-4b46-a913-a48564d98b67"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:30.375383+00:00"
+  },
+  {
+    "id": "610f8117-6bc4-4506-82df-2748fb13359c",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "6c90ea93-252e-4358-b2c4-125acced25e8",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788292015932",
+      "title": "Writer Test Draft Article 1788292015932",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:46:58.207079+00:00"
+  },
+  {
+    "id": "0f0670ce-e0e7-4740-965e-8a4cd70e5438",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "6c90ea93-252e-4358-b2c4-125acced25e8",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788292018967",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-01T19:47:01.287111+00:00"
+  },
+  {
+    "id": "b79a6068-387d-410d-87ba-4ddec524ee0a",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "b2f158fc-c8ab-4966-a922-3f19b1713a0d",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788353207825",
+      "title": "Writer Test Draft Article 1788353207825",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:46:51.477237+00:00"
+  },
+  {
+    "id": "08d14d54-7741-4a10-837d-4b9040a86c7b",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "b2f158fc-c8ab-4966-a922-3f19b1713a0d",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788353214792",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:46:56.255417+00:00"
+  },
+  {
+    "id": "8e2ebd61-0db1-42d3-acb5-0a1f38ebc1c2",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "e5f5a6dd-aabc-406d-a3dc-32bbdaee1b0e",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788353330054",
+      "title": "Writer Test Draft Article 1788353330054",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:48:51.13913+00:00"
+  },
+  {
+    "id": "999f53ac-c147-4b56-9b92-11014092046c",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "e5f5a6dd-aabc-406d-a3dc-32bbdaee1b0e",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788353334044",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:48:55.008228+00:00"
+  },
+  {
+    "id": "68566c1d-cd31-4d1d-a9b9-3a39dbd30404",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "30c0a969-7b9b-48e0-91f8-6998f05384e7",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788353415924",
+      "title": "Writer Test Draft Article 1788353415924",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:16.604415+00:00"
+  },
+  {
+    "id": "067e1e40-e733-4979-841a-8e3fc957a295",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "30c0a969-7b9b-48e0-91f8-6998f05384e7",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788353419507",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:50:20.138326+00:00"
+  },
+  {
+    "id": "6e2d59b9-5652-4280-ac38-7872de5ab68e",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:06:48.805946+00:00"
+  },
+  {
+    "id": "c7a68f8c-f927-4e96-aa62-cca616ee8c66",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:06:50.216151+00:00"
+  },
+  {
+    "id": "76c3d826-a562-4ba7-9ba9-2c0cab027de5",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "4c96edc9-670e-47e2-b6fb-03b5d9f97fc2",
+    "metadata": {
+      "title": "jensen-huang-nvidia-30-year-moat (editor-edited) 1788358012548",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:06:52.05291+00:00"
+  },
+  {
+    "id": "91f0f703-7622-4343-ab4d-7d69bcb00ca1",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:52:55.964142+00:00"
+  },
+  {
+    "id": "05224414-0046-4ef8-b5b3-2ab1701f815c",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "536aa647-d4af-4c6b-a732-93559b6a088c",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788358017073@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:06:56.655018+00:00"
+  },
+  {
+    "id": "e1d5f319-9edf-4c70-a0ba-655d2237d64a",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "e5f797a4-bda2-46c1-8f6c-c3d9a056145d",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:06:58.219169+00:00"
+  },
+  {
+    "id": "344074f6-21ba-4359-8002-1b28ffa06879",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "536aa647-d4af-4c6b-a732-93559b6a088c",
+    "metadata": {
+      "deletedUserId": "536aa647-d4af-4c6b-a732-93559b6a088c"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:07:00.881715+00:00"
+  },
+  {
+    "id": "13d3fac4-4cdb-4e1f-b2f5-57cde61625c5",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:07:14.758855+00:00"
+  },
+  {
+    "id": "678db3b3-697e-4f72-9889-f26fba55776f",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "a5ce2ad9-6050-4557-891c-82fc8326c02e",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788360356897@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:45:56.494492+00:00"
+  },
+  {
+    "id": "e8cfb54b-3d36-4be4-8134-9884c949d582",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "e69a2c30-8cf7-4f87-80bc-3bd317db2ef0",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:45:58.167758+00:00"
+  },
+  {
+    "id": "475de48e-c14f-4514-8bb1-c4e62c94d503",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "a5ce2ad9-6050-4557-891c-82fc8326c02e",
+    "metadata": {
+      "deletedUserId": "a5ce2ad9-6050-4557-891c-82fc8326c02e"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:46:00.946935+00:00"
+  },
+  {
+    "id": "2c1f7d30-324f-49ec-ac8f-b09560ac43de",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:46:13.475454+00:00"
+  },
+  {
+    "id": "d3645a80-4054-4a65-a215-ae9c5fb3af44",
+    "actor_id": null,
+    "actor_email": "temp.nav.admin.1788365699347@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "NAV_ITEM_CREATED",
+    "entity_type": "NAVIGATION",
+    "entity_id": "3ff4fcf3-d8fc-4803-a4c0-f9319c05a712",
+    "metadata": {
+      "href": "/categories/deeptech",
+      "label": "DeepTech Intel"
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T16:15:06.94275+00:00"
+  },
+  {
+    "id": "917faa2b-8f1a-44d0-8cf7-c90604567a55",
+    "actor_id": null,
+    "actor_email": "temp.nav.admin.1788365699347@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "NAV_ITEM_UPDATED",
+    "entity_type": "NAVIGATION",
+    "entity_id": "3ff4fcf3-d8fc-4803-a4c0-f9319c05a712",
+    "metadata": {
+      "label": "DeepTech Global Intelligence",
+      "updated_at": "2026-09-02T16:15:09.630Z"
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T16:15:09.017527+00:00"
+  },
+  {
+    "id": "ae34eed0-7c63-4a9d-9f74-e5ac282e87af",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "f0cb5617-7b34-4c4c-8350-cdba1ef3e85b",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788353785219",
+      "title": "Writer Test Draft Article 1788353785219",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:56:26.182043+00:00"
+  },
+  {
+    "id": "9dfd495b-c41e-45d7-80e1-6f06e3edcece",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "f0cb5617-7b34-4c4c-8350-cdba1ef3e85b",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788353789079",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:56:29.679272+00:00"
+  },
+  {
+    "id": "11fdd14d-177c-4ccc-91e2-ed0cd5c20a89",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "38366e8b-4139-480b-ab6a-1ff849343456",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788356041945",
+      "title": "Writer Test Draft Article 1788356041945",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:02.536771+00:00"
+  },
+  {
+    "id": "f1d53daa-abe6-4575-85db-62ccec023c29",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "38366e8b-4139-480b-ab6a-1ff849343456",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788356045947",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:06.106928+00:00"
+  },
+  {
+    "id": "a8ad91a1-e966-4b99-a0d5-de0008ba8143",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e296c83-e935-4979-a615-53c9521dd90a",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788356464338",
+      "title": "Writer Test Draft Article 1788356464338",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:04.905157+00:00"
+  },
+  {
+    "id": "2bcc3c31-9e24-4ad1-acc8-7cd40bf175f9",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e296c83-e935-4979-a615-53c9521dd90a",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788356468577",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:10.280541+00:00"
+  },
+  {
+    "id": "e11d31ba-b8ff-4882-b6c2-5d1e4b7442b4",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "29e74222-bf64-4655-865b-642b4267c98c",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788356548332",
+      "title": "Writer Test Draft Article 1788356548332",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:42:28.368178+00:00"
+  },
+  {
+    "id": "180343b7-6595-44ab-9dbe-69ce1fe8aac7",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "29e74222-bf64-4655-865b-642b4267c98c",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788356552006",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:42:32.036199+00:00"
+  },
+  {
+    "id": "f5be5ecb-cc45-4dd0-9d1e-ddcda57abb15",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e18dd67-615f-4706-b977-14b6bb19a6f9",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788356999792",
+      "title": "Writer Test Draft Article 1788356999792",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:49:59.841799+00:00"
+  },
+  {
+    "id": "e7a229c9-7e02-46aa-992f-c37d2df9d0e4",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e18dd67-615f-4706-b977-14b6bb19a6f9",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788357003205",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:03.298054+00:00"
+  },
+  {
+    "id": "972f985f-2651-4ce7-a5b8-a1251b13cfc3",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "221f236b-125c-4195-9952-f376c2027c6f",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788357059655",
+      "title": "Writer Test Draft Article 1788357059655",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:59.69828+00:00"
+  },
+  {
+    "id": "7a05338d-01ac-4904-8b4a-242b454f2c1d",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "221f236b-125c-4195-9952-f376c2027c6f",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788357062943",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:51:03.054432+00:00"
+  },
+  {
+    "id": "4a21049d-13f9-4480-a507-69a9da8b3b15",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "e5f797a4-bda2-46c1-8f6c-c3d9a056145d",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788358001191",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:06:40.743233+00:00"
+  },
+  {
+    "id": "8d269abb-e0a1-4cc0-8dd8-333b6351b499",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "e69a2c30-8cf7-4f87-80bc-3bd317db2ef0",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788360337360",
+      "title": "Writer Test Draft Article 1788360337360",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:45:37.568151+00:00"
+  },
+  {
+    "id": "938b4a20-c5a8-47c5-847b-a306eecdeda9",
+    "actor_id": null,
+    "actor_email": "writer.test@ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "e69a2c30-8cf7-4f87-80bc-3bd317db2ef0",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788360340368",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:45:39.988001+00:00"
+  },
+  {
+    "id": "559cfa28-5a87-4138-a77a-87f065340e0c",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:49:07.320746+00:00"
+  },
+  {
+    "id": "67bb386e-fdc4-4312-b017-e9b91cab3f70",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "725f0c59-3269-462d-8b7d-7e70d4a2a8f1",
+    "metadata": {
+      "title": "draft-elevenlabs-80m-valuation (editor-edited) 1788353349349",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:49:09.964205+00:00"
+  },
+  {
+    "id": "e84e4cb6-6d95-4c23-a377-ce7dcc47deed",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "7c0b45f8-369b-4257-8cb4-687cdccb36aa",
+    "metadata": {
+      "title": "stripe-6b-round-2027-ipo (editor-edited) 1788356064457",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:24.674547+00:00"
+  },
+  {
+    "id": "5dc0de5f-5912-4f33-b0b9-0e05f3b4028e",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:24.022835+00:00"
+  },
+  {
+    "id": "7a732129-ab6b-46f5-ac78-02cc6387c793",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "bb4a7d95-e7d5-470a-bb57-a2746f48f921",
+    "metadata": {
+      "title": "anduril-1-5b-defense-valuation (editor-edited) 1788356486636",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:41:26.572182+00:00"
+  },
+  {
+    "id": "9cef48f9-467c-49c0-bc7c-9375e518c30e",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:52:27.253735+00:00"
+  },
+  {
+    "id": "d285a002-01f0-46a1-98fb-9b201e4c6bd9",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:52:33.870859+00:00"
+  },
+  {
+    "id": "4fce37de-de95-4c1a-8fb1-0676406ef260",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "27b9fbe3-edf4-4802-8f87-93462ece43bd",
+    "metadata": {
+      "title": "stability-ai-governance-crisis (editor-edited) 1788357156243",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:52:35.791429+00:00"
+  },
+  {
+    "id": "963a7545-6857-4153-9a26-eeb56aad4a42",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "618bc70d-a668-496c-84dd-9fe4f1891723",
+    "metadata": {
+      "commentId": "618bc70d-a668-496c-84dd-9fe4f1891723",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:07:06.224665+00:00"
+  },
+  {
+    "id": "7299d83f-4ace-4b25-81f1-1de7afb68894",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "7c0b45f8-369b-4257-8cb4-687cdccb36aa",
+    "metadata": {
+      "title": "Stripe Closes $6.5B Round at $65B Valuation [Revalidated 1788358754857]",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:19:22.8919+00:00"
+  },
+  {
+    "id": "9f24698f-5ee9-4959-bbd3-2bff4b376dde",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "7c0b45f8-369b-4257-8cb4-687cdccb36aa",
+    "metadata": {
+      "title": "Stripe Closes $6.5B Round at $65B Valuation, Eyes 2027 IPO",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:19:28.505087+00:00"
+  },
+  {
+    "id": "4c6946e9-2f3a-4658-988f-712e4e921c77",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:45:48.311647+00:00"
+  },
+  {
+    "id": "8d5784e2-0eed-42ee-bb36-9df3da9e28cf",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0e846496-04d3-4362-af72-6ef8ed20ed01",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:45:49.767554+00:00"
+  },
+  {
+    "id": "84fa19b9-3d89-4d2a-8299-ddd7ff784948",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "78baadb3-4f71-4093-b144-2ff3f638a3d9",
+    "metadata": {
+      "title": "mercury-5m-credit-seed-startups (editor-edited) 1788360352093",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:45:51.617735+00:00"
+  },
+  {
+    "id": "18e54330-5d7e-4b82-a2b2-7031de940384",
+    "actor_id": null,
+    "actor_email": "editor.test@ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "e9e276d3-df39-41c9-9e34-99e0698d10e4",
+    "metadata": {
+      "commentId": "e9e276d3-df39-41c9-9e34-99e0698d10e4",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T14:46:05.433966+00:00"
+  },
+  {
+    "id": "c05f8f0d-d7e6-4ebe-b288-0e523cdc2d25",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T12:49:32.445067+00:00"
+  },
+  {
+    "id": "636558be-4f28-4dca-a2b0-0458d7c694b0",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:34:51.485747+00:00"
+  },
+  {
+    "id": "a97db2b4-dbd4-443c-a055-e23c0000ebf5",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "780511e7-d696-4c86-95d4-a11577fd451f",
+    "metadata": {
+      "deletedUserId": "780511e7-d696-4c86-95d4-a11577fd451f"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:31.279414+00:00"
+  },
+  {
+    "id": "18647dc0-c379-4a72-81d5-ca3730e9cbe9",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "a0f7efb9-b1dc-4c33-9dca-b5c87d564b42",
+    "metadata": {
+      "resetBy": "admin.test@ventureatlas.io",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:50:46.962115+00:00"
+  },
+  {
+    "id": "2da7e412-7a85-414d-9203-c11c3e5d5e1b",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "7b8a29e5-f608-47b4-b702-ea3e76f88f20",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788357161832@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:52:41.449957+00:00"
+  },
+  {
+    "id": "b7712c34-8b72-45d2-92d5-543aebfbfe53",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "221f236b-125c-4195-9952-f376c2027c6f",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:52:43.086962+00:00"
+  },
+  {
+    "id": "94398450-730a-4687-bb05-3a55f0db4c38",
+    "actor_id": null,
+    "actor_email": "admin.test@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "7b8a29e5-f608-47b4-b702-ea3e76f88f20",
+    "metadata": {
+      "deletedUserId": "7b8a29e5-f608-47b4-b702-ea3e76f88f20"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T13:52:46.184793+00:00"
+  },
+  {
+    "id": "877e4d88-f70c-4d94-8056-f80180842de4",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788363644045@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "de893400-22ee-4c44-a188-fb33c404eed2",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788363651019",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:40:51.424423+00:00"
+  },
+  {
+    "id": "24a3a56e-2a22-4dab-821f-d331e640e2fb",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788363644045@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "92e3d979-ce3f-4243-920b-0e3a6193d3da",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:41:07.100805+00:00"
+  },
+  {
+    "id": "6eb5a669-fbd7-4d22-a157-63ec04fd2950",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788363644045@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "dc835e9c-5352-4e92-88f7-9c085a7826dc",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:41:27.245825+00:00"
+  },
+  {
+    "id": "e987b413-ac7f-415d-9ad9-aadb04bc7982",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788363897092@test.ventureatlas.io",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "27b9fbe3-edf4-4802-8f87-93462ece43bd",
+    "metadata": {
+      "title": "stability-ai-governance-crisis (editor-edited) 1788363919863",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T15:45:20.520803+00:00"
+  },
+  {
+    "id": "541f707d-b318-42c7-a4f9-dd726cb9828f",
+    "actor_id": null,
+    "actor_email": "temp.nav.admin.1788365699347@test.ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "NAV_ITEM_DELETED",
+    "entity_type": "NAVIGATION",
+    "entity_id": "3ff4fcf3-d8fc-4803-a4c0-f9319c05a712",
+    "metadata": {
+      "href": "/categories/deeptech",
+      "label": "DeepTech Global Intelligence"
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T16:15:11.85377+00:00"
+  },
+  {
+    "id": "1ceb3492-db86-4e81-bdb0-a8f709a02069",
+    "actor_id": null,
+    "actor_email": "temp.nav.writer.1788365699347@test.ventureatlas.io",
+    "actor_role": "WRITER",
+    "action": "NAV_ITEM_CREATED",
+    "entity_type": "NAVIGATION",
+    "entity_id": "eb33351e-b37c-4bf5-a3be-670a6850d7ab",
+    "metadata": {
+      "href": "/hacked",
+      "label": "Hacked Link"
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T16:15:04.747932+00:00"
+  },
+  {
+    "id": "964d81a8-026c-4db1-83d7-9b3d8b710fa7",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "9923684a-4ce1-4618-b287-de22dfec5958",
+    "metadata": {
+      "targetName": "Jane Staff Writer",
+      "targetEmail": "prov.writer.1788367558958@ventureatlas.io",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T16:46:01.252965+00:00"
+  },
+  {
+    "id": "2ac59f7a-e4c9-417c-baba-959dd24891c6",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "MFA_ENROLL_INITIATED",
+    "entity_type": "USER",
+    "entity_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "metadata": {
+      "factorId": "ef02b824-3a29-46a6-b7c4-3be2e6d772da"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T16:47:35.062408+00:00"
+  },
+  {
+    "id": "1117bcec-9779-40ec-b94d-c591dd5319bb",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "11477767-e299-4ff6-a789-660a80ae9016",
+    "metadata": {
+      "targetName": "Mark Senior Editor",
+      "targetEmail": "prov.editor.1788367906174@ventureatlas.io",
+      "assignedRole": "EDITOR"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T16:51:52.346831+00:00"
+  },
+  {
+    "id": "f65cd162-2cb2-4eb0-8312-a37c9b5a36de",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "NAV_ITEM_UPDATED",
+    "entity_type": "NAVIGATION",
+    "entity_id": "01162715-d2a4-4c60-b9f2-ad7dd383be76",
+    "metadata": {
+      "href": "/categories/crypto-web3",
+      "label": "Crypto Web3",
+      "updated_at": "2026-09-02T17:08:56.572Z"
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-02T17:08:56.052324+00:00"
+  },
+  {
+    "id": "7cc5fa97-a654-44fe-a691-0be90da8fd8a",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.io",
+    "actor_role": "ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0652a229-1dec-41c4-8843-27a23bc8d800",
+    "metadata": {
+      "title": "CLipconnect",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-02T18:16:22.767456+00:00"
+  },
+  {
+    "id": "49c5d66a-896d-4a22-88ac-3343c7edd54f",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788425693645@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "a22c0057-c539-4843-83ff-385125d26085",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788425700486",
+      "title": "Writer Test Draft Article 1788425700486",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:02.800931+00:00"
+  },
+  {
+    "id": "5072d24a-9539-405c-a07e-e307004f3e14",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425693645@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "36fc7c7d-d4c1-4d94-ad37-9fe9ab04db20",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:15.843671+00:00"
+  },
+  {
+    "id": "8ebf17cf-ff1b-4b1c-8953-1411b78ebaf9",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425693645@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "7ae3e1e8-a630-471e-b96f-fbe5d4006ae1",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788425693645@ventureatlas.in",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:23.270621+00:00"
+  },
+  {
+    "id": "43b48124-6d70-40ce-95f5-dd2cbe0f554f",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425693645@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "7ae3e1e8-a630-471e-b96f-fbe5d4006ae1",
+    "metadata": {
+      "deletedUserId": "7ae3e1e8-a630-471e-b96f-fbe5d4006ae1"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:28.174738+00:00"
+  },
+  {
+    "id": "59953e7a-30b1-4a86-baf0-fbb5734859c4",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425693645@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "8ce99aea-e359-411c-abfc-d41ce58379ea",
+    "metadata": {
+      "resetBy": "temp.admin.1788425693645@test.ventureatlas.in",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:42.328594+00:00"
+  },
+  {
+    "id": "681bceaa-bd82-447f-82b9-9e1cd8ae8b77",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788425735372@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "3afb637e-4c41-408c-9706-e2eed117ab19",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788425740722",
+      "title": "Writer Test Draft Article 1788425740722",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:39.929405+00:00"
+  },
+  {
+    "id": "210b404c-872d-494e-883f-5ce8e632a473",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425735372@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "5721ed24-9850-4a0f-a54c-9f11a537edcb",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:49.669293+00:00"
+  },
+  {
+    "id": "278833e8-9226-4cd9-88a1-e48c63188765",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425735372@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "90c728f3-0b98-4e43-9ac2-c19c7b838cee",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:55:58.270575+00:00"
+  },
+  {
+    "id": "39de1826-9e94-4714-9ef2-66778cf87eb7",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425735372@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "0c8c9ccb-919a-40b5-bd0b-72acc20720f3",
+    "metadata": {
+      "resetBy": "temp.admin.1788425735372@test.ventureatlas.in",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:56:11.306092+00:00"
+  },
+  {
+    "id": "94f993af-cc36-402d-a12d-4dc4787e4952",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425808061@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "1ea34561-00b5-4ba7-bad3-ad769da29683",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:57:03.097683+00:00"
+  },
+  {
+    "id": "a5d25df1-198f-4022-80f3-3f814c2a19fe",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425808061@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "aa47d520-5e1c-4ea9-bf87-154608662565",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788425808061@ventureatlas.in",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:57:12.926441+00:00"
+  },
+  {
+    "id": "db35fe2d-b0de-48d3-8aca-f065bcf481ed",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425808061@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "aa47d520-5e1c-4ea9-bf87-154608662565",
+    "metadata": {
+      "deletedUserId": "aa47d520-5e1c-4ea9-bf87-154608662565"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:57:17.114135+00:00"
+  },
+  {
+    "id": "b26df808-c28d-4e66-8ff9-a433704bf5d4",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788425808061@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "178db755-6bea-4034-87ac-8516c9458c9e",
+    "metadata": {
+      "commentId": "178db755-6bea-4034-87ac-8516c9458c9e",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:57:19.954688+00:00"
+  },
+  {
+    "id": "4e7876b4-2692-4645-b082-2e65c267d683",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425808061@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "59e27cd3-a55f-4582-b86b-a923b41d4ce4",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:57:14.381274+00:00"
+  },
+  {
+    "id": "76604e67-3d05-43bc-8f20-73beb2fe3a53",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788425808061@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "ecce3166-4a9b-444d-9d77-35e89ff42f99",
+    "metadata": {
+      "resetBy": "temp.admin.1788425808061@test.ventureatlas.in",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:57:26.546321+00:00"
+  },
+  {
+    "id": "3636e6f9-d561-40a8-8837-dabe3347019f",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788425808061@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "29f5131f-8d01-49d1-a18a-6a2a436880f4",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788425815957",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T08:56:55.430802+00:00"
+  },
+  {
+    "id": "7d13f91d-79ad-4097-be65-83374048e8c4",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788426448599@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "20a0e7e0-fea1-49ae-9ddc-ef028d70d767",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788426454727",
+      "title": "Writer Test Draft Article 1788426454727",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:07:35.887081+00:00"
+  },
+  {
+    "id": "5240fd9a-588c-42fa-9d8c-229b0ba34531",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788426448599@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "20a0e7e0-fea1-49ae-9ddc-ef028d70d767",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788426458886",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:07:38.876584+00:00"
+  },
+  {
+    "id": "c72b4710-b4c7-411b-9439-36f698df9a91",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788426448599@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "698c3e98-ff6c-40db-b697-824f2f64f273",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788426448599@ventureatlas.in",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:07:54.290751+00:00"
+  },
+  {
+    "id": "8cbef302-3298-417a-85ab-2e3ced85e7a9",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788426498374@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "844daa8f-c758-4bc8-b275-bfea3f9777e0",
+    "metadata": {
+      "slug": "writer-test-draft-article-1788426503108",
+      "title": "Writer Test Draft Article 1788426503108",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:24.800288+00:00"
+  },
+  {
+    "id": "458ac8bd-cd11-4f47-8b5a-53604f9fa6de",
+    "actor_id": null,
+    "actor_email": "temp.writer.1788426498374@test.ventureatlas.in",
+    "actor_role": "WRITER",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "844daa8f-c758-4bc8-b275-bfea3f9777e0",
+    "metadata": {
+      "title": "Writer Test Draft Article (edited) 1788426507776",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:27.861461+00:00"
+  },
+  {
+    "id": "98c9e6da-c8fb-466b-9ac1-a142ab7e194c",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788426498374@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "0d189b29-4516-40c9-909c-d5fc598ec49b",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:36.761319+00:00"
+  },
+  {
+    "id": "b5588ddc-147f-42ba-bb24-cca39d1a4295",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788426498374@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "STATUS_CHANGE_DRAFT",
+    "entity_type": "ARTICLE",
+    "entity_id": "0d189b29-4516-40c9-909c-d5fc598ec49b",
+    "metadata": {
+      "to": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:38.217116+00:00"
+  },
+  {
+    "id": "6b98158a-dce4-457b-a7cb-2cd83a933fac",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788426498374@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "752e947d-5e96-4248-b20b-c039ff8fe5f5",
+    "metadata": {
+      "title": "Ephemeral Admin Published (editor-edited) 1788426498374",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:40.072665+00:00"
+  },
+  {
+    "id": "80885169-6973-4cc0-994a-58262c881fb5",
+    "actor_id": null,
+    "actor_email": "temp.editor.1788426498374@test.ventureatlas.in",
+    "actor_role": "EDITOR",
+    "action": "COMMENT_APPROVED",
+    "entity_type": "COMMENT",
+    "entity_id": "35e4cc74-c881-43ce-a0ae-7198643cd252",
+    "metadata": {
+      "commentId": "35e4cc74-c881-43ce-a0ae-7198643cd252",
+      "newStatus": "APPROVED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:53.727525+00:00"
+  },
+  {
+    "id": "cf2d89bf-20b7-4922-901f-860e475c33b2",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788426498374@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "CREATE_USER",
+    "entity_type": "USER",
+    "entity_id": "880bdadb-366f-4966-ab22-ae08e7115030",
+    "metadata": {
+      "targetName": "Temp Staff",
+      "targetEmail": "temp.staff.1788426498374@ventureatlas.in",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:46.050419+00:00"
+  },
+  {
+    "id": "6a2bc12a-2a73-47f6-81dc-ea1029bc2e8c",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788426498374@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "STATUS_CHANGE_PUBLISHED",
+    "entity_type": "ARTICLE",
+    "entity_id": "a1d2d0e4-ec97-4b9b-b338-308064761b07",
+    "metadata": {
+      "to": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:47.469252+00:00"
+  },
+  {
+    "id": "5d39343b-51e0-47e4-b0f7-407d021c2df8",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788426498374@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "DELETE_USER",
+    "entity_type": "USER",
+    "entity_id": "880bdadb-366f-4966-ab22-ae08e7115030",
+    "metadata": {
+      "deletedUserId": "880bdadb-366f-4966-ab22-ae08e7115030"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:08:50.210904+00:00"
+  },
+  {
+    "id": "30b9dc09-ddfa-4285-9300-7d283d7206a2",
+    "actor_id": null,
+    "actor_email": "temp.admin.1788426498374@test.ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "MFA_RESET",
+    "entity_type": "USER",
+    "entity_id": "4169c19e-de11-489e-a42b-fa9495755f9c",
+    "metadata": {
+      "resetBy": "temp.admin.1788426498374@test.ventureatlas.in",
+      "factorsRemoved": 1
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-03T09:09:04.670386+00:00"
+  },
+  {
+    "id": "e1b35e82-4395-4827-8fcd-f9d3a0c9795a",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "MFA_ENROLL_INITIATED",
+    "entity_type": "USER",
+    "entity_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "metadata": {
+      "factorId": "6414b604-fe93-4bf9-a7a8-cd23cba8f5e8"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-05T12:51:49.567991+00:00"
+  },
+  {
+    "id": "e5258de0-b14e-4089-9a54-0713babea20d",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "17b63d80-86ad-4bff-8454-3237ac930417",
+    "metadata": {
+      "slug": "advsasd",
+      "title": "advsasd",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-09T17:30:10.778811+00:00"
+  },
+  {
+    "id": "239718cc-19b6-4225-9f40-dca9ff7f8f85",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "15dda43d-4e0e-4c8d-a064-8d7f26cee47c",
+    "metadata": {
+      "slug": "super-admin-verified-article-posting-test",
+      "title": "Super Admin Verified Article Posting Test",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:27:44.504296+00:00"
+  },
+  {
+    "id": "ccbd8b29-4fe4-47d0-a82a-7de07854abc5",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "DELETE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "15dda43d-4e0e-4c8d-a064-8d7f26cee47c",
+    "metadata": {
+      "id": "15dda43d-4e0e-4c8d-a064-8d7f26cee47c"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:27:48.517577+00:00"
+  },
+  {
+    "id": "3a3c4357-d0bb-4519-b792-802c095c97ae",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "CREATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "6c42cdf8-94be-49c2-870b-e4d6ef47578a",
+    "metadata": {
+      "slug": "verification-story-for-edit-and-publish-1789036744430",
+      "title": "Verification Story For Edit And Publish 1789036744430",
+      "status": "DRAFT"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:38:54.996875+00:00"
+  },
+  {
+    "id": "ace7db58-09e6-4124-a967-86cdb6e40bb7",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "6c42cdf8-94be-49c2-870b-e4d6ef47578a",
+    "metadata": {
+      "title": "Updated Headline After Super Admin Edit 1789036748071",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:38:57.086953+00:00"
+  },
+  {
+    "id": "0c2a5315-0ace-4641-acae-d304a4eb93eb",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "6c42cdf8-94be-49c2-870b-e4d6ef47578a",
+    "metadata": {
+      "title": "Updated via Cookie Auth 1789036751332",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:39:00.318168+00:00"
+  },
+  {
+    "id": "88284d4a-0c91-44df-acee-766c89e1f617",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "DELETE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "6c42cdf8-94be-49c2-870b-e4d6ef47578a",
+    "metadata": {
+      "id": "6c42cdf8-94be-49c2-870b-e4d6ef47578a"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:39:01.928692+00:00"
+  },
+  {
+    "id": "df235469-fa03-439b-9552-258537a92d83",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "17b63d80-86ad-4bff-8454-3237ac930417",
+    "metadata": {
+      "title": "advsasd",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:46:54.907142+00:00"
+  },
+  {
+    "id": "36dfe075-973e-41fa-9cd1-c3b46596547d",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "17b63d80-86ad-4bff-8454-3237ac930417",
+    "metadata": {
+      "title": "advsasd",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:51:16.346326+00:00"
+  },
+  {
+    "id": "8deb26a5-a76d-4ba3-bc5e-2e0a77a6abaf",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "1c895290-db1b-4af1-baaa-9b1ceb268037",
+    "metadata": {
+      "slug": "automated-real-browser-end-to-end-test-1789037569558",
+      "title": "Automated Real Browser End-to-End Test 1789037569558",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:52:38.276169+00:00"
+  },
+  {
+    "id": "cd9a862a-bf2b-4894-86be-2857916983b4",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "1c895290-db1b-4af1-baaa-9b1ceb268037",
+    "metadata": {
+      "title": "Updated Headline via Real Browser PUT 1789037576976",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:52:45.753288+00:00"
+  },
+  {
+    "id": "5918f481-0cc6-4497-b49d-d14ba29ad87e",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "DELETE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "1c895290-db1b-4af1-baaa-9b1ceb268037",
+    "metadata": {
+      "id": "1c895290-db1b-4af1-baaa-9b1ceb268037"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:52:53.070038+00:00"
+  },
+  {
+    "id": "86ee524a-2ab8-42e8-9b8a-eb9edbc0da26",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "90807f4a-0a11-4ec3-b64f-7fe3b818b3db",
+    "metadata": {
+      "slug": "automated-headless-test-headline-verified",
+      "title": "Automated Headless Test Headline Verified",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-10T10:55:47.475435+00:00"
+  },
+  {
+    "id": "50604acf-2311-4640-888e-209fa2facb76",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "NAV_ITEMS_REORDERED",
+    "entity_type": "NAVIGATION",
+    "entity_id": null,
+    "metadata": {
+      "itemCount": 8
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-13T06:12:13.19803+00:00"
+  },
+  {
+    "id": "0e5c4294-8065-4011-8a48-ead86d5f4b6b",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "USER_CREATED",
+    "entity_type": "USER",
+    "entity_id": "b87c7d1f-417e-49fc-b7a7-db97b2f8bae0",
+    "metadata": {
+      "targetName": "Test Staff",
+      "targetEmail": "teststaff_1789148572320@ventureatlas.in",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:42:55.003088+00:00"
+  },
+  {
+    "id": "adc62fb9-b3c3-4491-b59e-99c2286112f2",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "c22797c5-c789-4918-9051-0a6ce5e06ff7",
+    "metadata": {
+      "slug": "automated-test-article-1789148585956",
+      "title": "Automated Test Article 1789148585956",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:43:07.292811+00:00"
+  },
+  {
+    "id": "19760c7f-edbc-4ca8-8ca2-dbe3b2765326",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0345d6a6-08a5-4a2c-b749-c468b0a2cf11",
+    "metadata": {
+      "title": "Stripe Closes .5B Round at  Valuation, Eyes 2027 IPO",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:43:09.362598+00:00"
+  },
+  {
+    "id": "53e641ca-6317-451d-8c5d-44b1bedc7ad2",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "35aa7ee2-7cee-4231-9730-c369a67f59bf",
+    "metadata": {
+      "slug": "automated-test-article",
+      "title": "Automated Test Article",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:43:16.96499+00:00"
+  },
+  {
+    "id": "0a295bdc-b405-4a23-869c-6bc8502c847e",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "fe5d4ecb-be8e-4f47-9bc2-8e4742b7fc6b",
+    "metadata": {
+      "slug": "anthropic-unveils-claude-37-sonnet-with-hybrid-reasoning-1789148915093",
+      "title": "Anthropic Unveils Claude 3.7 Sonnet with Hybrid Reasoning 1789148915093",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:48:38.567818+00:00"
+  },
+  {
+    "id": "c4f0a6ea-47d1-405c-9237-601d6cfa233e",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "fe5d4ecb-be8e-4f47-9bc2-8e4742b7fc6b",
+    "metadata": {
+      "title": "Anthropic Unveils Claude 3.7 Sonnet with Hybrid Reasoning (Updated)",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:48:40.555005+00:00"
+  },
+  {
+    "id": "ed6ee2b8-3718-4ad8-b593-1b376ff30c73",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "USER_CREATED",
+    "entity_type": "USER",
+    "entity_id": "beb38893-a6cf-443f-b5c6-2c2d4aa1ca97",
+    "metadata": {
+      "targetName": "Rohan Verma",
+      "targetEmail": "staff_1789148930706@ventureatlas.in",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:48:52.93591+00:00"
+  },
+  {
+    "id": "9537db2c-5436-41de-81c7-dc0805e551ab",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "USER_UPDATED",
+    "entity_type": "USER",
+    "entity_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "metadata": {
+      "newName": "Venture Atlas Super Admin"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:49:20.040482+00:00"
+  },
+  {
+    "id": "1150ce9a-32db-454e-a4d5-8c95626d416f",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "USER_CREATED",
+    "entity_type": "USER",
+    "entity_id": "a9c339e0-6792-493d-8c79-68d8bf439058",
+    "metadata": {
+      "targetName": "Kavita Nair",
+      "targetEmail": "kavita@ventureatlas.in",
+      "assignedRole": "WRITER"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:50:46.209818+00:00"
+  },
+  {
+    "id": "19308c03-e082-43eb-94ff-9ce515bff6b4",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "b80a5839-e386-4bd5-a266-ae96258b04b6",
+    "metadata": {
+      "slug": "scale-ai-reaches-14b-valuation-on-surge-in-enterprise-data-annotation",
+      "title": "Scale AI Reaches $14B Valuation on Surge in Enterprise Data Annotation",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:51:45.328604+00:00"
+  },
+  {
+    "id": "d0a5829c-f3b8-4083-a5a2-bb8f3a2b0dd8",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "b80a5839-e386-4bd5-a266-ae96258b04b6",
+    "metadata": {
+      "title": "Scale AI Reaches $14B Valuation as Enterprise Demand Surges (Updated)",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T17:52:13.93536+00:00"
+  },
+  {
+    "id": "e62e2626-43bf-4c77-8807-ee08e7960a3e",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0345d6a6-08a5-4a2c-b749-c468b0a2cf11",
+    "metadata": {
+      "title": "Stripe Closes .5B Round at  Valuation, Eyes 2027 IPO jhbjsd sdv",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-11T18:00:44.68877+00:00"
+  },
+  {
+    "id": "34333286-1b3b-4234-bbef-e6a9470dc53e",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "17b63d80-86ad-4bff-8454-3237ac930417",
+    "metadata": {
+      "title": "New one ",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T01:07:22.588464+00:00"
+  },
+  {
+    "id": "51dd4495-ede5-47c7-af99-1a7b5607f2ac",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "17b63d80-86ad-4bff-8454-3237ac930417",
+    "metadata": {
+      "title": "New one ",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T01:10:15.764146+00:00"
+  },
+  {
+    "id": "48f08d1e-71be-4c70-a7de-b2142ad80659",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "DELETE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "17b63d80-86ad-4bff-8454-3237ac930417",
+    "metadata": {
+      "id": "17b63d80-86ad-4bff-8454-3237ac930417"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T06:02:10.320263+00:00"
+  },
+  {
+    "id": "b643db91-1979-4817-aee9-5b8ba52c5812",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "c8c68164-20ae-465a-a21b-2a32f90daad2",
+    "metadata": {
+      "slug": "elon-musks-x-still-failing-to-keep-child-abuse-material-off-platform",
+      "title": "Elon Musk’s X still failing to keep child abuse material off platform",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T06:07:18.331655+00:00"
+  },
+  {
+    "id": "5d6b4fc8-6d96-4035-a871-2eff95bc358e",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_BLOG",
+    "entity_type": "BLOG",
+    "entity_id": "77e6d9e2-ec1f-4d22-9d48-90585fb6e97b",
+    "metadata": {
+      "slug": "dario-amodei",
+      "title": "Dario Amodei"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T06:11:10.223691+00:00"
+  },
+  {
+    "id": "9e6c1a7d-7f45-453f-b1c1-ab17f82a6978",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "CREATE_CASE_STUDY",
+    "entity_type": "CASE_STUDY",
+    "entity_id": "3f7a05c4-e239-47f1-b975-4adb65e14f65",
+    "metadata": {
+      "slug": "anthropic-pbc89-is-an-american-artificial-intelligence-ai-public-benefit-corporation-headquartered-in-san-francisco-california",
+      "title": "Anthropic, PBC[8][9] is an American artificial intelligence (AI) public benefit corporation headquartered in San Francisco, California.[",
+      "company": "Anthropic"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T06:19:55.458699+00:00"
+  },
+  {
+    "id": "6bf35fa4-ce96-4556-9913-dd8e025c6534",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "USER_CREATED",
+    "entity_type": "USER",
+    "entity_id": "4a8779b1-6804-4154-a519-dfabef299921",
+    "metadata": {
+      "targetName": "Ashif",
+      "targetEmail": "ashif@ventureatlas.in",
+      "assignedRole": "EDITOR"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T06:23:46.397038+00:00"
+  },
+  {
+    "id": "cedc474e-8c60-41b1-b5fc-c32707f57adb",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_BLOG",
+    "entity_type": "BLOG",
+    "entity_id": "42c429d8-b67a-4fbd-9285-5561f7fb83ba",
+    "metadata": {
+      "slug": "dunzo-indias-1-billion-startup-dream-that-ran-out-of-road",
+      "title": "Dunzo: India’s $1 Billion Startup Dream That Ran Out of Road"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T11:17:06.147729+00:00"
+  },
+  {
+    "id": "b2fadee7-f5f1-441c-8392-251a1de35d40",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_BLOG",
+    "entity_type": "BLOG",
+    "entity_id": "dbc61dd4-8bab-429d-9661-b3fd0b8bd610",
+    "metadata": {
+      "slug": "dunzo-indias-1-billion-startup-dream-that-ran-out-of-road-mtzqmjpb",
+      "title": "Dunzo: India’s $1 Billion Startup Dream That Ran Out of Road"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T11:35:36.85649+00:00"
+  },
+  {
+    "id": "06e801f4-7b2e-4a35-9514-fc4d3fb4edc9",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "b9e29a53-af8e-4696-a0fd-5777d0e9e4de",
+    "metadata": {
+      "slug": "byjus-how-indias-biggest-edtech-dream-turned-into-a-startup-crisis",
+      "title": "BYJU’S: How India’s Biggest EdTech Dream Turned Into a Startup Crisis",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T15:59:34.093738+00:00"
+  },
+  {
+    "id": "5827e133-f28a-4037-9553-7681e0095bcf",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_BLOG",
+    "entity_type": "BLOG",
+    "entity_id": "e77faeb8-3959-4a2d-8f4f-a354a8a909b0",
+    "metadata": {
+      "slug": "pixxel-how-an-indian-space-startup-is-building-the-intelligence-layer-for-earth",
+      "title": "Pixxel: How an Indian Space Startup Is Building the Intelligence Layer for Earth"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-13T16:14:31.93831+00:00"
+  },
+  {
+    "id": "53f4b1ef-3e56-48df-b2df-2a94bf34a1fa",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_BLOG",
+    "entity_type": "BLOG",
+    "entity_id": "fd8e5321-9fd6-45db-b666-fafea69b064d",
+    "metadata": {
+      "slug": "blusmart-how-indias-ev-ride-hailing-bet-lost-its-way",
+      "title": "BluSmart: How India’s EV Ride-Hailing Bet Lost Its Way"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-15T15:07:08.909033+00:00"
+  },
+  {
+    "id": "538ca176-7114-4f90-b67c-b3fdeed3e076",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "4e21df66-72d4-4c33-aa52-41dd27302be5",
+    "metadata": {
+      "slug": "koo-how-indias-twitter-challenger-ran-out-of-road",
+      "title": "Koo: How India’s Twitter Challenger Ran Out of Road",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-15T15:45:30.711837+00:00"
+  },
+  {
+    "id": "b0d040d9-dd7c-4386-8ed8-02d91378b119",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "NAV_ITEMS_REORDERED",
+    "entity_type": "NAVIGATION",
+    "entity_id": null,
+    "metadata": {
+      "itemCount": 8
+    },
+    "ip_hash": null,
+    "user_agent": null,
+    "created_at": "2026-09-16T15:59:56.072086+00:00"
+  },
+  {
+    "id": "db4ed8a8-8922-4de4-ae82-fa79ce2a6ffa",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "4e21df66-72d4-4c33-aa52-41dd27302be5",
+    "metadata": {
+      "title": "Koo: How India’s Twitter Challenger Ran Out of Road",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-15T15:48:25.991247+00:00"
+  },
+  {
+    "id": "66705061-72dc-4f87-9327-2d98f29a99a7",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_BLOG",
+    "entity_type": "BLOG",
+    "entity_id": "bab5b0a0-d4da-4e1e-9d34-3c3dc6b5caac",
+    "metadata": {
+      "slug": "circle-launches-arc-the-stablecoin-giant-is-building-its-own-blockchain",
+      "title": "Circle Launches Arc: The Stablecoin Giant Is Building Its Own Blockchain"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T14:35:32.611485+00:00"
+  },
+  {
+    "id": "90dcc71e-9521-4765-aaee-d688a7611838",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "PUBLISH_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "b18c771b-b5d1-4d65-8bb9-4aa94b5ff9b7",
+    "metadata": {
+      "slug": "flam-raises-40-million-to-build-an-ai-powered-social-platform-from-bengaluru",
+      "title": "Flam Raises $40 Million to Build an AI-Powered Social Platform from Bengaluru",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T14:55:50.030282+00:00"
+  },
+  {
+    "id": "c04022a4-8e60-4142-8bfa-c16ba46dbfe7",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "b18c771b-b5d1-4d65-8bb9-4aa94b5ff9b7",
+    "metadata": {
+      "title": "Flam Raises $40 Million to Build an AI-Powered Social Platform from Bengaluru",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T14:56:24.162134+00:00"
+  },
+  {
+    "id": "6e8bf870-8f9b-44b7-b2aa-22a7201098fd",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "4e21df66-72d4-4c33-aa52-41dd27302be5",
+    "metadata": {
+      "title": "Koo: How India’s Twitter Challenger Ran Out of Road",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T14:57:48.043195+00:00"
+  },
+  {
+    "id": "57dfd0d9-ec09-43cc-8289-ea20bab157e5",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "b9e29a53-af8e-4696-a0fd-5777d0e9e4de",
+    "metadata": {
+      "title": "BYJU’S: How India’s Biggest EdTech Dream Turned Into a Startup Crisis",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T14:58:08.049864+00:00"
+  },
+  {
+    "id": "3977659d-f79e-4af1-9e3b-d18e2009d755",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "c8c68164-20ae-465a-a21b-2a32f90daad2",
+    "metadata": {
+      "title": "Elon Musk’s X still failing to keep child abuse material off platform",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T14:58:27.666076+00:00"
+  },
+  {
+    "id": "32794e8f-44c9-49e1-b0d4-fd6984663022",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "0345d6a6-08a5-4a2c-b749-c468b0a2cf11",
+    "metadata": {
+      "title": "Stripe Is Building the Payment Layer for the AI Shopping Era",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T15:21:12.563388+00:00"
+  },
+  {
+    "id": "2b200773-f070-4d0b-9f5d-d3dd42ee7416",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "83669ca0-c806-45cb-acf6-8f444d28f318",
+    "metadata": {
+      "title": "BlackRock: How a 1988 Startup Became a $15.3 Trillion Global Investment Platform",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T15:59:33.953587+00:00"
+  },
+  {
+    "id": "a994a0a2-0567-47d8-b214-219d6d0862e3",
+    "actor_id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "actor_email": "admin@ventureatlas.in",
+    "actor_role": "SUPER_ADMIN",
+    "action": "UPDATE_ARTICLE",
+    "entity_type": "ARTICLE",
+    "entity_id": "83669ca0-c806-45cb-acf6-8f444d28f318",
+    "metadata": {
+      "title": "BlackRock: How a 1988 Startup Became a $15.3 Trillion Global Investment Platform",
+      "status": "PUBLISHED"
+    },
+    "ip_hash": "127.0.0.1",
+    "user_agent": "Server Internal",
+    "created_at": "2026-09-16T16:02:36.509801+00:00"
+  }
+]

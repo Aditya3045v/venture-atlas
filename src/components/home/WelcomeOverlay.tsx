@@ -20,15 +20,24 @@ export const WelcomeOverlay: React.FC = () => {
 
   useEffect(() => {
     setMounted(true);
-    // Don't show gate on admin routes or auth pages
-    if (pathname.startsWith('/admin') || pathname === '/imprint' || pathname === '/privacy' || pathname === '/terms') {
+    // Don't show gate on admin routes, auth pages, or the landing page itself
+    if (
+      pathname.startsWith('/admin') ||
+      pathname === '/landing' ||
+      pathname === '/imprint' ||
+      pathname === '/privacy' ||
+      pathname === '/terms'
+    ) {
       setIsOpen(false);
       return;
     }
 
-    // Check if user has already entered their email
+    // Check if user has already entered their email (cookie OR any localStorage key)
     const hasReaderCookie = document.cookie.includes('va_reader=');
-    const hasLocalKey = localStorage.getItem('va_reader_verified') === 'true';
+    const hasLocalKey =
+      localStorage.getItem('va_reader_verified') === 'true' ||
+      localStorage.getItem('va_reader_active') === 'true' ||
+      localStorage.getItem('va_email_unlocked') === 'true';
 
     if (!hasReaderCookie && !hasLocalKey) {
       setIsOpen(true);
@@ -56,6 +65,7 @@ export const WelcomeOverlay: React.FC = () => {
       if (res.ok && data.success) {
         setSuccess(true);
         localStorage.setItem('va_reader_verified', 'true');
+        localStorage.setItem('va_reader_active', 'true');
         localStorage.setItem('va_reader_email', email.trim().toLowerCase());
         toast('Welcome to Venture Atlas! Feed unlocked.', 'success');
 
@@ -114,7 +124,7 @@ export const WelcomeOverlay: React.FC = () => {
             </h1>
             <p className="text-xs sm:text-sm font-mono text-amber-500 font-bold flex items-center justify-center gap-1.5">
               <Zap size={14} className="fill-current" />
-              <span>Strictly 60-Word Briefs · Real-Time Deal Flow</span>
+              <span>High-Density Intelligence · Real-Time Deal Flow</span>
             </p>
           </div>
 
@@ -170,7 +180,7 @@ export const WelcomeOverlay: React.FC = () => {
             <div className="text-[9px] font-mono text-text-tertiary mt-0.5">Instant Entry</div>
           </div>
           <div className="p-2 rounded-xl bg-surface-muted/60 text-center">
-            <div className="text-[10px] font-mono font-bold text-text-primary uppercase">60-Word Max</div>
+            <div className="text-[10px] font-mono font-bold text-text-primary uppercase">Wire Briefs</div>
             <div className="text-[9px] font-mono text-text-tertiary mt-0.5">Zero Fluff</div>
           </div>
           <div className="p-2 rounded-xl bg-surface-muted/60 text-center">

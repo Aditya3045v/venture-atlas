@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data: assets, error } = await supabaseAdmin
       .from('media_assets')
-      .select('id, title, url, category, uploaded_by, created_at, uploader:profiles(name, email)')
+      .select('id, filename, original_name, url, mime_type, size_bytes, width, height, uploaded_by, created_at, uploader:profiles(name, email)')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -45,11 +45,11 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const { title, url, category } = body;
+    const { url, filename, original_name, mime_type, size_bytes, width, height } = body;
 
-    if (!title || !url) {
+    if (!url) {
       return NextResponse.json(
-        { error: 'Title and image URL are required.' },
+        { error: 'Image URL is required.' },
         { status: 400 }
       );
     }
@@ -62,12 +62,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Derive a fallback filename from the URL if not provided
+    let derivedFilename = filename;
+    if (!derivedFilename) {
+      try {
+        const urlObj = new URL(normalizedUrl);
+        const parts = urlObj.pathname.split('/');
+        derivedFilename = parts[parts.length - 1] || 'image';
+      } catch {
+        derivedFilename = 'image';
+      }
+    }
+
     const { data: asset, error } = await supabaseAdmin
       .from('media_assets')
       .insert({
-        title: title.trim(),
+        filename: derivedFilename,
+        original_name: original_name || derivedFilename,
         url: normalizedUrl,
-        category: category ? String(category).trim() : 'General',
+        mime_type: mime_type || 'image/jpeg',
+        size_bytes: Number(size_bytes) || 1024,
+        width: width ? Number(width) : null,
+        height: height ? Number(height) : null,
         uploaded_by: user.id,
       })
       .select()
@@ -82,7 +98,7 @@ export async function POST(req: NextRequest) {
       entityType: 'MEDIA' as any,
       entityId: asset.id,
       actor: user,
-      metadata: { title: asset.title, url: asset.url },
+      metadata: { filename: asset.filename, url: asset.url },
     });
 
     return NextResponse.json({ success: true, asset }, { status: 201 });

@@ -17,18 +17,10 @@ export const MobileNav: React.FC = () => {
     { label: 'Account', href: '/account', icon: <UserCircle size={19} /> },
   ];
 
-  if (pathname.startsWith('/admin')) return null;
+  if (pathname.startsWith('/admin') || pathname === '/landing') return null;
 
-  const handleNavClick = (e: React.MouseEvent, targetHref: string) => {
-    if (pathname === '/landing' && !targetHref.startsWith('/admin')) {
-      e.preventDefault();
-      toast('Please enter your email on the landing page first to unlock the news feed!', 'info');
-      const input = document.getElementById('work-email-input');
-      if (input) {
-        input.focus();
-        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
+  const handleNavClick = (_e: React.MouseEvent, _targetHref: string) => {
+    // Normal navigation
   };
 
   return (

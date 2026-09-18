@@ -1,0 +1,39 @@
+[
+  {
+    "id": "4a8779b1-6804-4154-a519-dfabef299921",
+    "email": "ashif@ventureatlas.in",
+    "name": "Ashif",
+    "role": "EDITOR",
+    "avatar": null,
+    "plan": "ENTERPRISE",
+    "bio": null,
+    "created_at": "2026-09-13T06:23:44.685+00:00",
+    "updated_at": "2026-09-13T06:23:45.115489+00:00",
+    "mfa_recovery_codes": [],
+    "is_active": true,
+    "custom_role_id": "9bc5c8c3-20db-44b3-9b14-e749430efa41"
+  },
+  {
+    "id": "3e78fffb-51ee-47cc-9a50-533475822164",
+    "email": "admin@ventureatlas.in",
+    "name": "Venture Atlas Super Admin",
+    "role": "SUPER_ADMIN",
+    "avatar": null,
+    "plan": "ENTERPRISE",
+    "bio": "Editorial & Founder Leadership",
+    "created_at": "2026-09-01T19:21:22.61518+00:00",
+    "updated_at": "2026-09-11T17:49:19.799908+00:00",
+    "mfa_recovery_codes": [
+      "18970fd2b10402b71d058a383c4149de4d15419c4485716b3e4609ca022bf9ad",
+      "abb0c1a47d0e00602acc595b0a82a5b96180782598a87d12625a181abb61bb5d",
+      "021f4920d6ab5d3931f33d4e2c02e029e59845fcce45962309ae6c7c038d53df",
+      "ba1de9eadaa60f4df54905fce9f9016e77f6a60af92e78e7e1dd47ce91d9d0ab",
+      "7ec5f3a304a7a1edafec44de3434d073ece6fea0dbbdac85aeebb4ddc18c9137",
+      "ad49ccc140ea33b1b02a073b0ca48bec67571d3cae428f875390c15d57d91e07",
+      "8e3f54b352c1c59704fbd53ca73386a6ecc5cdb3c38fe10b9fc08b55f5ebdf5e",
+      "69876daee146a133e73dac790317b4a7ce2fb06f064a10d636744d623f4aa69f"
+    ],
+    "is_active": true,
+    "custom_role_id": "e7db18d0-2370-40a3-8a37-abf63cf9ed67"
+  }
+]

@@ -216,10 +216,17 @@ export const StoryDetailSheet: React.FC<StoryDetailSheetProps> = ({ article, onC
     }
   };
 
-  // Drop-cap initial letter calculation
-  const summaryText = article.summary || article.body || '';
-  const firstLetter = summaryText.charAt(0) || 'V';
-  const remainingFirstParagraph = summaryText.slice(1);
+  // Lead text and paragraph segmentation
+  const hasDistinctBody = Boolean(
+    article.body?.trim() &&
+    article.summary?.trim() &&
+    article.body.trim() !== article.summary.trim()
+  );
+  const primaryText = article.summary?.trim() || article.body?.trim() || '';
+  const realQuote =
+    (article as any)?.strategy ||
+    (article as any)?.challenge ||
+    (article as any)?.canvasData?.profile?.businessModelPoints?.[0];
 
   const modalContent = (
     <div className="fixed inset-0 z-[9999] flex flex-col bg-black sm:bg-black/85 sm:backdrop-blur-md animate-fadeIn overflow-hidden">
@@ -343,33 +350,48 @@ export const StoryDetailSheet: React.FC<StoryDetailSheetProps> = ({ article, onC
               </button>
             </div>
 
-            {/* Main Editorial Text with Drop-Cap */}
-            <div className="space-y-4 text-text-secondary leading-relaxed font-body text-sm sm:text-base">
-              <p className="text-text-primary font-medium text-base sm:text-lg">
-                <span className="float-left text-4xl sm:text-5xl font-black font-display text-blue-600 mr-2.5 leading-none pt-1">
-                  {firstLetter}
-                </span>
-                {remainingFirstParagraph}
-              </p>
-
-              {/* High-Retention Quote / Analytical Callout Box */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-blue-500/[0.07] dark:bg-blue-500/[0.1] border-l-4 border-blue-600 text-text-primary space-y-1">
-                <div className="text-xs font-mono font-bold uppercase text-blue-600 dark:text-blue-400">
-                  Key Moat Breakdown
+            {/* Main Editorial Text */}
+            <div className="space-y-5 text-text-secondary leading-relaxed font-body text-sm sm:text-base">
+              {/* If both summary and body are present & distinct, show executive summary block */}
+              {hasDistinctBody && article.summary && (
+                <div className="p-4 sm:p-5 rounded-2xl bg-surface-muted/90 border border-border space-y-2">
+                  <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                    EXECUTIVE WIRE BRIEF
+                  </div>
+                  <div
+                    className="text-text-primary font-medium text-sm sm:text-base leading-relaxed"
+                    dangerouslySetInnerHTML={{
+                      __html: formatSimpleMarkdown(article.summary),
+                    }}
+                  />
                 </div>
-                <p className="text-sm italic font-medium leading-relaxed">
-                  "{(article as any)?.strategy || (article as any)?.challenge || 'High throughput and zero-CAC distribution unlocked sovereign margins and sustainable unit economics.'}"
-                </p>
-              </div>
+              )}
 
-              {/* Formatted Markdown Body */}
-              {article.body && article.body !== article.summary && (
+              {/* Complete Written Content / Report Body */}
+              <div className="space-y-4">
+                {hasDistinctBody && (
+                  <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-text-tertiary">
+                    FULL EDITORIAL REPORT & WIRE DETAILS
+                  </h4>
+                )}
                 <div
-                  className="pt-2 text-sm leading-relaxed text-text-secondary space-y-2"
+                  className="prose dark:prose-invert max-w-none text-sm sm:text-base leading-relaxed text-text-secondary space-y-4"
                   dangerouslySetInnerHTML={{
-                    __html: formatSimpleMarkdown(article.body),
+                    __html: formatSimpleMarkdown(hasDistinctBody ? (article.body || '') : primaryText),
                   }}
                 />
+              </div>
+
+              {/* Optional Real Analytical Quote Box if genuine data exists */}
+              {realQuote && (
+                <div className="p-4 sm:p-5 rounded-2xl bg-blue-500/[0.07] dark:bg-blue-500/[0.1] border-l-4 border-blue-600 text-text-primary space-y-1">
+                  <div className="text-xs font-mono font-bold uppercase text-blue-600 dark:text-blue-400">
+                    Key Moat Breakdown
+                  </div>
+                  <p className="text-sm italic font-medium leading-relaxed">
+                    "{realQuote}"
+                  </p>
+                </div>
               )}
             </div>
 

@@ -1,0 +1,81 @@
+{
+  "profiles": {
+    "status": "ok",
+    "count": 2,
+    "file": "profiles.json"
+  },
+  "roles": {
+    "status": "ok",
+    "count": 6,
+    "file": "roles.json"
+  },
+  "permissions": {
+    "status": "ok",
+    "count": 28,
+    "file": "permissions.json"
+  },
+  "role_permissions": {
+    "status": "ok",
+    "count": 97,
+    "file": "role_permissions.json"
+  },
+  "user_roles": {
+    "status": "ok",
+    "count": 2,
+    "file": "user_roles.json"
+  },
+  "articles": {
+    "status": "ok",
+    "count": 10,
+    "file": "articles.json"
+  },
+  "blog_posts": {
+    "status": "ok",
+    "count": 7,
+    "file": "blog_posts.json"
+  },
+  "case_studies": {
+    "status": "ok",
+    "count": 2,
+    "file": "case_studies.json"
+  },
+  "categories": {
+    "status": "ok",
+    "count": 6,
+    "file": "categories.json"
+  },
+  "media_assets": {
+    "status": "ok",
+    "count": 0,
+    "file": "media_assets.json"
+  },
+  "comments": {
+    "status": "ok",
+    "count": 1,
+    "file": "comments.json"
+  },
+  "newsletter_subscribers": {
+    "status": "ok",
+    "count": 47,
+    "file": "newsletter_subscribers.json"
+  },
+  "audit_logs": {
+    "status": "ok",
+    "count": 265,
+    "file": "audit_logs.json"
+  },
+  "view_events": {
+    "status": "ok",
+    "count": 51,
+    "file": "view_events.json"
+  },
+  "bookmarks": {
+    "status": "ok",
+    "count": 1,
+    "file": "bookmarks.json"
+  },
+  "article_likes": {
+    "status": "error",
+    "error": "Could not find the table 'public.article_likes' in the schema cache"
+  }
+}

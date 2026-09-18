@@ -6,12 +6,13 @@ import { ArticleItem, CategoryItem, ContentStatus, CanvasData } from '../../type
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useToast } from '../providers/ToastProvider';
-import { countWords } from '../../lib/sanitize';
+import { countWords, slugify } from '../../lib/sanitize';
 import { normalizeImageUrl } from '../../lib/validation';
 import { adminFetch } from '@/lib/api/adminClient';
 import { CanvasBlockEditor } from './CanvasBlockEditor';
 import { StoryCard } from '../news/StoryCard';
 import { CanvasStoryView } from '../canvas/CanvasStoryView';
+import { COVER_PRESETS } from '@/lib/constants/cover-presets';
 import {
   ArrowLeft,
   Check,
@@ -38,52 +39,6 @@ interface ArticleEditorFormProps {
   categories: CategoryItem[];
 }
 
-const COVER_PRESETS = [
-  {
-    label: '🦄 Unicorn Scale',
-    url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Enterprise Lens',
-  },
-  {
-    label: '📈 Capital Markets',
-    url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Capital Markets',
-  },
-  {
-    label: '⚡ AI & Compute',
-    url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Compute Lab',
-  },
-  {
-    label: '🌐 Crypto Web3',
-    url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Web3 Protocol',
-  },
-  {
-    label: '👤 Founder Leadership',
-    url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Founder Archive',
-  },
-  {
-    label: '🏢 Modern Enterprise',
-    url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Architecture',
-  },
-  {
-    label: '💥 Post-Mortem Glitch',
-    url: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&q=80',
-    credit: 'Unsplash / Cautionary Lens',
-  },
-];
-
-function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
   initialArticle,
@@ -235,7 +190,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
   // Auto-generate slug from title
   useEffect(() => {
     if (!isCustomSlug && title) {
-      setSlug(generateSlug(title));
+      setSlug(slugify(title));
     }
   }, [title, isCustomSlug]);
 
@@ -348,8 +303,6 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
   }, [isDirty, title, summary]);
 
   const wordCount = countWords(summary);
-  const isOverWordBudget = wordCount > 60;
-  const progressPercent = Math.min(100, Math.round((wordCount / 60) * 100));
 
   const selectedCategory = categories.find(c => c.id === categoryId) || categories[0] || {
     id: 'cat-1',
@@ -411,8 +364,8 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
     }
 
     if (isOverWordBudget) {
-      toast(`Summary exceeds 60 words (${wordCount}/60). Please condense.`, 'error');
-      return;
+      // Soft warning: notify the editor but do not block save/publish
+      toast(`Summary is ${wordCount} words (recommended: ≤60). Proceeding anyway.`, 'info');
     }
 
     if (targetStatus === 'SCHEDULED' && !scheduledFor) {
@@ -455,10 +408,10 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
 
     const payload = {
       title,
-      slug: slug.trim() || generateSlug(title),
+      slug: slug.trim() || slugify(title),
       summary,
       body: body.trim() || summary,
-      categoryId: categoryId || categories[0]?.id || '7bcb8022-93e9-4017-b269-0dba1cc8cc60',
+      categoryId: categoryId || categories[0]?.id || '',
       sourceName: sourceName.trim() || null,
       sourceUrl: cleanSourceUrl || null,
       sourceAuthor: sourceAuthor.trim() || null,
@@ -779,7 +732,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-text-tertiary">
-                {initialArticle ? 'EDITING BRIEF' : 'CREATING 60-WORD BRIEF'}
+                {initialArticle ? 'EDITING BRIEF' : 'CREATING INTELLIGENCE BRIEF'}
               </span>
               {lastAutosaved && (
                 <span className="text-[10px] font-mono text-text-tertiary flex items-center gap-1">
@@ -788,7 +741,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
               )}
             </div>
             <h1 className="text-2xl font-black font-display uppercase tracking-tight text-text-primary">
-              {initialArticle ? 'Edit Article Brief' : 'New 60-Word Executive Brief'}
+              {initialArticle ? 'Edit Article Brief' : 'New Intelligence Briefing'}
             </h1>
           </div>
         </div>
@@ -870,17 +823,17 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-mono font-bold uppercase text-text-tertiary">
-                    60-Word Overview Summary
+                    Executive Overview & Wire Summary
                   </label>
-                  <span className={`text-xs font-mono font-bold ${isOverWordBudget ? 'text-red-500' : 'text-text-secondary'}`}>
-                    {wordCount}/60 words
+                  <span className="text-xs font-mono font-bold text-text-secondary">
+                    {wordCount} words
                   </span>
                 </div>
                 <textarea
                   rows={2}
                   value={summary}
                   onChange={e => setSummary(e.target.value)}
-                  placeholder="Type the 60-word concise news overview..."
+                  placeholder="Type the concise news overview and key takeaways..."
                   className="w-full text-xs font-body p-3 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand resize-none"
                 />
               </div>
@@ -1034,7 +987,7 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                     value={slug}
                     onChange={e => {
                       setIsCustomSlug(true);
-                      setSlug(generateSlug(e.target.value));
+                      setSlug(slugify(e.target.value));
                     }}
                     placeholder="article-url-slug"
                     className="w-full text-xs font-mono p-2 bg-surface-muted border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
@@ -1043,20 +996,14 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
               </div>
             </div>
 
-            {/* 60-Word Executive Brief */}
+            {/* Executive Summary & Briefing Overview */}
             <div className="p-5 rounded-2xl border border-border bg-surface shadow-card space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-text-secondary">
-                  Executive Short Summary · Hard 60-Word Budget
+                  Executive Briefing & Wire Summary
                 </span>
-                <div
-                  className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${
-                    isOverWordBudget
-                      ? 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 animate-pulse'
-                      : 'bg-brand-muted text-brand'
-                  }`}
-                >
-                  {wordCount} / 60 words
+                <div className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-surface-muted text-text-secondary border border-border">
+                  {wordCount} words
                 </div>
               </div>
 
@@ -1064,19 +1011,9 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                 rows={4}
                 value={summary}
                 onChange={e => setSummary(e.target.value)}
-                placeholder="Type the 60-word concise news summary here. Focus on what happened, companies involved, valuation, and immediate market impact..."
+                placeholder="Type the news summary and wire brief here. Focus on what happened, companies involved, valuation, and immediate market impact..."
                 className="w-full text-sm font-body leading-relaxed p-3.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand resize-none"
               />
-
-              {/* Word Progress Bar */}
-              <div className="w-full h-1.5 bg-surface-muted rounded-full overflow-hidden border border-border/50">
-                <div
-                  className={`h-full transition-all duration-200 ${
-                    isOverWordBudget ? 'bg-red-500' : 'bg-brand'
-                  }`}
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
             </div>
 
             {/* Dedicated Cover Photo Section */}
@@ -1088,11 +1025,11 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                 Detailed Article Body (Markdown & Context)
               </div>
               <textarea
-                rows={8}
+                rows={14}
                 value={body}
                 onChange={e => setBody(e.target.value)}
                 placeholder="### Background Context&#10;&#10;Detailed reporting for readers who tap 'Full story'..."
-                className="w-full text-sm font-mono p-3.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand font-normal"
+                className="w-full text-sm font-mono p-3.5 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand font-normal resize-y"
               />
             </div>
 

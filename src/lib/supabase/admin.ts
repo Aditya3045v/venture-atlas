@@ -1,4 +1,29 @@
 import { createClient } from '@supabase/supabase-js';
+import dns from 'dns';
+
+// DNS Override: Resolve Supabase directly to Cloudflare Anycast IPs to bypass ISP DNS sinkholing
+if (typeof dns.lookup === 'function' && !(global as any).__supabaseDnsPatched) {
+  (global as any).__supabaseDnsPatched = true;
+  const origLookup = dns.lookup.bind(dns);
+  (dns as any).lookup = function(hostname: string, options: any, callback: any) {
+    let cb = callback;
+    let opts = options;
+    if (typeof opts === 'function') {
+      cb = opts;
+      opts = {};
+    }
+    if (hostname === 'fckmhqyhglfnqhpjzrvu.supabase.co') {
+      if (opts && opts.all) {
+        return cb(null, [
+          { address: '104.18.38.10', family: 4 },
+          { address: '172.64.149.246', family: 4 },
+        ]);
+      }
+      return cb(null, '104.18.38.10', 4);
+    }
+    return origLookup(hostname, options, callback);
+  };
+}
 
 const supabaseUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||

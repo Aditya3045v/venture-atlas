@@ -31,6 +31,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
   const [shareOpen, setShareOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authAction, setAuthAction] = useState<'like' | 'bookmark'>('like');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const isCurrentAudio = currentTrack?.id === article.id && isPlaying;
 
@@ -238,8 +239,8 @@ export const StoryCard: React.FC<StoryCardProps> = ({
             );
           })()}
 
-          {/* Title & 60-Word Brief */}
-          <div className="space-y-2">
+          {/* Title & Full Intelligence Brief Content */}
+          <div className="space-y-2.5">
             <Link
               href={`/articles/${article.slug}`}
               onClick={e => {
@@ -254,9 +255,49 @@ export const StoryCard: React.FC<StoryCardProps> = ({
               </h3>
             </Link>
 
-            <p className="font-body text-xs sm:text-sm text-text-secondary line-clamp-3 leading-relaxed font-normal">
-              {article.summary}
-            </p>
+            <div className="font-body text-xs sm:text-sm text-text-secondary leading-relaxed font-normal whitespace-pre-line">
+              {(() => {
+                const fullText = article.summary?.trim() || article.body?.trim() || '';
+                if (!fullText) return null;
+
+                const isLong = fullText.length > 360;
+                if (isLong && !isExpanded) {
+                  return (
+                    <div>
+                      <span>{fullText.slice(0, 320)}...</span>
+                      <button
+                        type="button"
+                        onClick={e => {
+                          e.stopPropagation();
+                          setIsExpanded(true);
+                        }}
+                        className="ml-1.5 text-blue-600 dark:text-blue-400 hover:underline font-mono text-[11px] font-bold inline-flex items-center gap-0.5"
+                      >
+                        Read more ▾
+                      </button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div>
+                    <span>{fullText}</span>
+                    {isLong && isExpanded && (
+                      <button
+                        type="button"
+                        onClick={e => {
+                          e.stopPropagation();
+                          setIsExpanded(false);
+                        }}
+                        className="block mt-1 text-blue-600 dark:text-blue-400 hover:underline font-mono text-[11px] font-bold"
+                      >
+                        Show less ▴
+                      </button>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
           </div>
         </div>
 

@@ -52,6 +52,24 @@ export async function POST(req: NextRequest) {
       slug = `${slug}-${Date.now().toString(36)}`;
     }
 
+    // Verify author profile exists to guarantee foreign key integrity
+    const { data: authorProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!authorProfile) {
+      await supabaseAdmin.from('profiles').upsert({
+        id: user.id,
+        email: user.email || 'admin@ventureatlas.in',
+        name: user.name || 'Venture Atlas Staff',
+        role: user.role || 'SUPER_ADMIN',
+        plan: 'ENTERPRISE',
+        is_active: true,
+      });
+    }
+
     const blogPayload = {
       title: validated.title,
       slug,
