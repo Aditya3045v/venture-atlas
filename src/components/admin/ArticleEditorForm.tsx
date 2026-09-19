@@ -832,6 +832,25 @@ export const ArticleEditorForm: React.FC<ArticleEditorFormProps> = ({
                   className="w-full text-xs font-body p-3 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand resize-none"
                 />
               </div>
+
+              {/* Full Editorial Body in Canvas Mode */}
+              <div className="md:col-span-2">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-mono font-bold uppercase text-text-tertiary">
+                    Full Editorial Body & Reporting (Optional Long-Form Markdown)
+                  </label>
+                  <span className="text-[10px] font-mono text-text-tertiary">
+                    Displayed in reader detail view and article page
+                  </span>
+                </div>
+                <textarea
+                  rows={5}
+                  value={body}
+                  onChange={e => setBody(e.target.value)}
+                  placeholder="Detailed multi-paragraph reporting, technical teardowns, financial background, or markdown formatting..."
+                  className="w-full text-xs font-mono p-3 bg-surface-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand font-normal resize-y"
+                />
+              </div>
             </div>
 
             {/* Writer / Reporter Attribution */}
