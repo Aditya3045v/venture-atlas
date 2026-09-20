@@ -46,7 +46,7 @@ export function formatMetaTitle(rawTitle: string, isCategory = false): string {
  * Formats meta description to strictly stay under 155 characters.
  */
 export function formatMetaDescription(rawDesc: string): string {
-  if (!rawDesc) return 'Executive startup intelligence and venture capital briefs in 60 words.';
+  if (!rawDesc) return 'Executive startup intelligence and high-signal venture briefs.';
   return truncateAtWordBoundary(rawDesc, 155);
 }
 
@@ -308,7 +308,7 @@ export function generateWebSiteJsonLd(baseUrl = APP_BASE_URL) {
     '@id': `${baseUrl}#website`,
     name: SITE_NAME,
     url: baseUrl,
-    description: 'Startup & Business News in 60 Words',
+    description: 'Real-Time Startup Intelligence & Venture Briefs',
     publisher: {
       '@id': `${baseUrl}#organization`,
     },

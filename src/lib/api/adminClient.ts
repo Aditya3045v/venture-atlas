@@ -1,10 +1,11 @@
-import { createClient } from '@/lib/supabase/client';
-
 /**
  * Universal authenticated fetch utility for all admin forms and components.
  * Automatically resolves the live Supabase session access token and attaches:
  * 1. Authorization: Bearer <token>
  * 2. credentials: 'include' (cookies)
+ *
+ * Fully resilient against ISP DNS sinkholing (e.g. ACT Fibernet / Airtel in India)
+ * by prioritizing client cookies and local storage tokens without blocking on external Supabase network calls.
  */
 export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
   const headers = new Headers(init.headers || {});
@@ -12,26 +13,8 @@ export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {
   try {
     let token: string | undefined;
 
-    // 1. Try Supabase browser client session (with auto-refresh if near expiry)
-    try {
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.access_token) {
-        token = session.access_token;
-        const now = Math.floor(Date.now() / 1000);
-        if (session.expires_at && session.expires_at - now < 300) {
-          try {
-            const { data: refreshed } = await supabase.auth.refreshSession();
-            if (refreshed.session?.access_token) {
-              token = refreshed.session.access_token;
-            }
-          } catch {}
-        }
-      }
-    } catch {}
-
-    // 2. Fallback: check document.cookie for va_admin_token or sb-*-auth-token chunks
-    if (!token && typeof document !== 'undefined') {
+    // 1. Fast path: check document.cookie for explicit va_admin_token
+    if (typeof document !== 'undefined') {
       const cookieStr = document.cookie || '';
 
       const match = cookieStr.match(/(?:^|;\s*)va_admin_token=([^;]+)/);
@@ -39,6 +22,7 @@ export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {
         token = decodeURIComponent(match[1]);
       }
 
+      // Reassemble chunked Supabase cookies if va_admin_token wasn't set
       if (!token) {
         const cookies: Record<string, string> = {};
         cookieStr.split(';').forEach(c => {
@@ -68,7 +52,7 @@ export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {
       }
     }
 
-    // 3. Fallback: check localStorage for any Supabase auth token
+    // 2. Fast path fallback: check localStorage for any Supabase auth token
     if (!token && typeof window !== 'undefined' && window.localStorage) {
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -87,17 +71,28 @@ export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {
       }
     }
 
+    // 3. Fallback: try Supabase browser client session with a 1.2s timeout so it never hangs on blocked ISPs
+    if (!token) {
+      try {
+        const { createClient } = await import('@/lib/supabase/client');
+        const supabase = createClient();
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Supabase getSession timeout')), 1200)
+        );
+
+        const result: any = await Promise.race([sessionPromise, timeoutPromise]);
+        if (result?.data?.session?.access_token) {
+          token = result.data.session.access_token;
+        }
+      } catch {}
+    }
+
     if (token && !headers.has('Authorization')) {
       headers.set('Authorization', `Bearer ${token}`);
     }
-
-    if (typeof document !== 'undefined') {
-      if (document.cookie.includes('va_admin_session=1')) {
-        headers.set('x-admin-session', '1');
-      }
-    }
   } catch (err) {
-    console.warn('[adminFetch] Could not retrieve Supabase session access token:', err);
+    console.warn('[adminFetch] Could not retrieve session access token:', err);
   }
 
   return fetch(input, {

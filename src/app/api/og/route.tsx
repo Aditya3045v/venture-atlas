@@ -6,7 +6,7 @@ export const runtime = 'edge';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const title = searchParams.get('title') || 'Venture Atlas — Startup & Business News in 60 Words';
+    const title = searchParams.get('title') || 'Venture Atlas — Real-Time Startup Intelligence & Venture Briefs';
     const section = searchParams.get('section') || 'Venture Capital';
     const date = searchParams.get('date') || 'Executive Dispatch';
 

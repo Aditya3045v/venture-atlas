@@ -25,60 +25,34 @@ function AdminLoginForm() {
     setErrorMsg(null);
 
     try {
-      const { createClient } = await import('@/lib/supabase/client');
-      const supabase = createClient();
-
-      // 1. Sign in with Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password,
+      // 1. Authenticate via Server API route (immune to client-side ISP DNS sinkholing)
+      const res = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+        }),
       });
 
-      if (authError || !authData.user) {
-        setErrorMsg('Invalid login credentials or clearance rejected.');
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.success) {
+        setErrorMsg(data.error || 'Invalid login credentials or clearance rejected.');
         setLoading(false);
         return;
       }
 
-      // 2. Query user profile & role to verify staff authorization
-      const isOwner = email.trim().toLowerCase() === 'admin@ventureatlas.in';
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role, is_active')
-        .eq('id', authData.user.id)
-        .single();
-
-      if (profile?.is_active === false && !isOwner) {
-        await supabase.auth.signOut();
-        setErrorMsg('This account has been deactivated. Please contact the administrator.');
-        setLoading(false);
-        return;
+      // Ensure client cookie fallback is synced in document.cookie
+      if (data.token) {
+        document.cookie = `va_admin_token=${data.token}; path=/; max-age=2592000; SameSite=Lax`;
       }
+      document.cookie = 'va_admin_session=1; path=/; max-age=2592000; SameSite=Lax';
 
-      const userRole = (isOwner ? 'SUPER_ADMIN' : (profile?.role || authData.user.user_metadata?.role)) as string;
-
-      // Allow SUPER_ADMIN, ADMIN, EDITOR, WRITER, REVIEWER, MEDIA_MANAGER or any active staff role
-      const isAuthorized = isOwner || (userRole && !['READER', 'USER'].includes(userRole));
-
-      if (!isAuthorized) {
-        await supabase.auth.signOut();
-        setErrorMsg('This account does not have editorial access.');
-        setLoading(false);
-        return;
-      }
-
-      // 3. Successful login - ensure session cookies are synced and redirect
-      try {
-        document.cookie = 'va_admin_session=1; path=/; max-age=2592000; SameSite=Lax';
-        if (authData.session?.access_token) {
-          document.cookie = `va_admin_token=${authData.session.access_token}; path=/; max-age=2592000; SameSite=Lax`;
-        }
-      } catch {}
-      await new Promise(r => setTimeout(r, 150));
+      await new Promise(r => setTimeout(r, 100));
       window.location.href = returnTo;
     } catch {
-      setErrorMsg('An authentication error occurred. Please try again.');
+      setErrorMsg('An authentication error occurred. Please check your network connection.');
       setLoading(false);
     }
   };

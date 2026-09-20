@@ -4,7 +4,6 @@ import { fetchArticles, fetchCaseStudies, fetchBlogs, fetchCategories } from '@/
 import { FeaturedStory } from '@/components/news/FeaturedStory';
 import { FeedStream } from '@/components/news/FeedStream';
 import { HomeMobileView } from '@/components/home/HomeMobileView';
-import { WelcomeOverlay } from '@/components/home/WelcomeOverlay';
 import {
   IconBriefcase,
   IconBook2,
@@ -30,7 +29,10 @@ export default async function CoreHomePage() {
   // Top running news articles for the Hero Carousel (up to 5 published stories)
   const heroArticles = articles.slice(0, 5);
   const featuredArticle = heroArticles[0] || articles[0];
-  const feedArticles = articles.filter(a => a.id !== featuredArticle?.id);
+  const heroIds = new Set(heroArticles.map(a => a.id));
+  const feedArticles = articles.length > 5
+    ? articles.filter(a => !heroIds.has(a.id))
+    : articles.filter(a => a.id !== featuredArticle?.id);
 
   const orgJsonLd = generateOrganizationJsonLd();
   const webSiteJsonLd = generateWebSiteJsonLd();

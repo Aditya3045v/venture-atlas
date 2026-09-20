@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyUnsubscribeToken } from '@/lib/auth/reader';
+import { verifyUnsubscribeToken, verifyReaderToken, READER_COOKIE_NAME } from '@/lib/auth/reader';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
@@ -12,13 +12,17 @@ export async function POST(req: NextRequest) {
 
     if (token) {
       targetEmail = verifyUnsubscribeToken(token);
-    } else if (rawEmail && typeof rawEmail === 'string' && rawEmail.includes('@')) {
-      targetEmail = rawEmail.trim().toLowerCase();
+    } else {
+      const readerCookie = req.cookies.get(READER_COOKIE_NAME)?.value;
+      const reader = readerCookie ? verifyReaderToken(readerCookie) : null;
+      if (reader && rawEmail && typeof rawEmail === 'string' && reader.email.toLowerCase() === rawEmail.trim().toLowerCase()) {
+        targetEmail = reader.email;
+      }
     }
 
     if (!targetEmail) {
       return NextResponse.json(
-        { error: 'Invalid or expired unsubscribe token.' },
+        { error: 'Invalid or missing unsubscribe authorization. Please use the link in your email.' },
         { status: 400 }
       );
     }

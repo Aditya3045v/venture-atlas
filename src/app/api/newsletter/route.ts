@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { z } from 'zod';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { signReaderToken, READER_COOKIE_NAME } from '@/lib/auth/reader';
+import { getCurrentUser, canEdit } from '@/lib/auth/staff';
 
 export const dynamic = 'force-dynamic';
 
@@ -127,7 +128,12 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const staff = await getCurrentUser(req);
+  if (!staff || !canEdit(staff.role)) {
+    return NextResponse.json({ error: 'Unauthorized: Staff credentials required.' }, { status: 403 });
+  }
+
   try {
     const { data, count, error } = await supabaseAdmin
       .from('newsletter_subscribers')

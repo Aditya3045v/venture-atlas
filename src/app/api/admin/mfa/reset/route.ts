@@ -6,7 +6,7 @@ import { logAuditEvent } from '@/lib/audit';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser(req);
   if (!currentUser || !canManageUsers(currentUser.role)) {
     return NextResponse.json({ error: 'Unauthorized: Admin privileges required.' }, { status: 403 });
   }

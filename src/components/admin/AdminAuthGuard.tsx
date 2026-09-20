@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 import type { StaffUser } from '@/lib/auth/staff';
 import type { UserRole } from '@/types';
 import type { Session } from '@supabase/supabase-js';
@@ -52,6 +51,10 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
 
   const signOut = useCallback(async () => {
     try {
+      await fetch('/api/admin/auth/logout', { method: 'POST' });
+    } catch {}
+    try {
+      const { createClient } = await import('@/lib/supabase/client');
       const supabase = createClient();
       await supabase.auth.signOut();
     } catch {}
@@ -64,116 +67,59 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
 
   useEffect(() => {
     let isMounted = true;
-    const supabase = createClient();
 
     const checkAndRestoreSession = async () => {
+      // 1. If server already validated this user (via Server Components), use it directly
+      if (initialUser) {
+        if (isMounted) {
+          setUser(initialUser);
+          setIsAuthorized(true);
+          setLoading(false);
+        }
+        syncAdminCookie(true);
+        return;
+      }
+
+      // 2. Server-side session verification via API (immune to client ISP DNS sinkholing)
       try {
-        // 1. Restore the existing Supabase session using getSession()
-        let { data: { session: currentSession }, error } = await supabase.auth.getSession();
-
-        // If session is expiring soon or expired, refresh it
-        if (currentSession?.expires_at) {
-          const now = Math.floor(Date.now() / 1000);
-          if (currentSession.expires_at - now < 300) {
-            try {
-              const { data: refreshed } = await supabase.auth.refreshSession();
-              if (refreshed.session) {
-                currentSession = refreshed.session;
-              }
-            } catch {}
-          }
-        }
-
-        if (error || !currentSession || !currentSession.user) {
-          const hasCookieClearance = typeof document !== 'undefined' && document.cookie.includes('va_admin_session=1');
-          
-          if (initialUser) {
+        const res = await fetch('/api/admin/auth/session');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated && data.user) {
             if (isMounted) {
-              setUser(initialUser);
-              setLoading(false);
+              setUser(data.user);
               setIsAuthorized(true);
+              setLoading(false);
             }
             syncAdminCookie(true);
             return;
           }
-
-          if (hasCookieClearance) {
-            const superUser: StaffUser = {
-              id: '3e78fffb-51ee-47cc-9a50-533475822164',
-              email: 'admin@ventureatlas.in',
-              name: 'Venture Atlas Super Admin',
-              role: 'SUPER_ADMIN',
-              avatar: null,
-              plan: 'ENTERPRISE',
-              bio: null,
-              is_active: true,
-              mfaEnabled: false,
-            };
-            if (isMounted) {
-              setUser(superUser);
-              setLoading(false);
-              setIsAuthorized(true);
-            }
-            syncAdminCookie(true);
-            return;
-          }
-
-          syncAdminCookie(false);
-          if (isMounted) {
-            setLoading(false);
-            setIsAuthorized(false);
-          }
-          router.replace('/admin/login');
-          return;
         }
+      } catch {}
 
-        const authUser = currentSession.user;
-        const isRootAdmin = authUser.email === 'admin@ventureatlas.in';
-        const metaRole = (authUser.user_metadata?.role || authUser.app_metadata?.role) as UserRole | undefined;
+      // 3. Client Supabase fallback (with 1.5s timeout so it never hangs indefinitely)
+      try {
+        const { createClient } = await import('@/lib/supabase/client');
+        const supabase = createClient();
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500));
+        const result: any = await Promise.race([sessionPromise, timeoutPromise]);
 
-        let resolvedRole: UserRole | null = (isRootAdmin ? 'SUPER_ADMIN' : (metaRole || null)) as UserRole | null;
-        let resolvedName = authUser.user_metadata?.name || (isRootAdmin ? 'Venture Atlas Super Admin' : 'Staff Member');
-
-        // Check profiles table if needed
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role, name, is_active')
-          .eq('id', authUser.id)
-          .single();
-
-        if (profile?.is_active === false) {
-          syncAdminCookie(false);
-          if (isMounted) {
-            setUser(null);
-            setSession(null);
-            setIsAuthorized(false);
-            setLoading(false);
-          }
-          router.replace('/admin/login');
-          return;
-        }
-
-        if (profile?.role) {
-          resolvedRole = (isRootAdmin ? 'SUPER_ADMIN' : profile.role) as UserRole;
-          if (profile.name) resolvedName = profile.name;
-        }
-
-        const isAuthorizedStaff = isRootAdmin || (resolvedRole && resolvedRole !== 'READER');
-
-        if (isAuthorizedStaff) {
-          const finalRole: UserRole = resolvedRole || (isRootAdmin ? 'SUPER_ADMIN' : 'ADMIN');
+        if (result?.data?.session?.user) {
+          const currentSession = result.data.session;
+          const authUser = currentSession.user;
+          const isRoot = authUser.email === 'admin@ventureatlas.in';
           const staffUser: StaffUser = {
             id: authUser.id,
             email: authUser.email || '',
-            name: resolvedName,
-            role: finalRole,
+            name: authUser.user_metadata?.name || (isRoot ? 'Venture Atlas Super Admin' : 'Staff Member'),
+            role: (isRoot ? 'SUPER_ADMIN' : ((authUser.user_metadata?.role as UserRole) || 'WRITER')),
             avatar: null,
             plan: 'ENTERPRISE',
             bio: null,
             is_active: true,
             mfaEnabled: false,
           };
-
           if (isMounted) {
             setUser(staffUser);
             setSession(currentSession);
@@ -181,56 +127,44 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
             setLoading(false);
           }
           syncAdminCookie(true, currentSession.access_token);
-        } else {
-          syncAdminCookie(false);
-          if (isMounted) {
-            setUser(null);
-            setSession(null);
-            setIsAuthorized(false);
-            setLoading(false);
-          }
-          router.replace('/admin/login');
+          return;
         }
-      } catch (err) {
-        console.warn('[AdminAuthGuard] Error restoring session:', err);
-        const hasCookieClearance = typeof document !== 'undefined' && document.cookie.includes('va_admin_session=1');
-        if ((initialUser || hasCookieClearance) && isMounted) {
-          setIsAuthorized(true);
-          setLoading(false);
-          if (initialUser) setUser(initialUser);
-        } else if (isMounted) {
-          setLoading(false);
-          router.replace('/admin/login');
-        }
+      } catch {}
+
+      // 4. If all session validation fails, redirect to login
+      syncAdminCookie(false);
+      if (isMounted) {
+        setLoading(false);
+        setIsAuthorized(false);
       }
+      router.replace('/admin/login');
     };
 
     checkAndRestoreSession();
 
-    // 2. Centralized listener for auth state changes (token refresh, signout, cross-tab sync)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
-      if (!isMounted) return;
-
-      const hasCookieClearance = typeof document !== 'undefined' && document.cookie.includes('va_admin_session=1');
-
-      if (event === 'SIGNED_OUT') {
-        if (!hasCookieClearance) {
-          syncAdminCookie(false);
-          setUser(null);
-          setSession(null);
-          setIsAuthorized(false);
-          setLoading(false);
-          router.replace('/admin/login');
-        }
-      } else if (newSession && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
-        setSession(newSession);
-        syncAdminCookie(true, newSession.access_token);
-      }
-    });
+    // 5. Optional background listener for token refresh
+    let subscription: any = null;
+    try {
+      import('@/lib/supabase/client').then(({ createClient }) => {
+        try {
+          const supabase = createClient();
+          const { data } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+            if (!isMounted) return;
+            if (newSession && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+              setSession(newSession);
+              syncAdminCookie(true, newSession.access_token);
+            }
+          });
+          subscription = data?.subscription;
+        } catch {}
+      }).catch(() => {});
+    } catch {}
 
     return () => {
       isMounted = false;
-      subscription.unsubscribe();
+      if (subscription?.unsubscribe) {
+        subscription.unsubscribe();
+      }
     };
   }, [initialUser, router, syncAdminCookie]);
 
@@ -257,7 +191,7 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
               </span>
             </div>
             <p className="text-[11px] font-mono text-text-tertiary">
-              Restoring authenticated Supabase session...
+              Restoring authenticated editorial session...
             </p>
           </div>
         </div>

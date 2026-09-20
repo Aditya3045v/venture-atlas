@@ -36,7 +36,7 @@ const verificationConfig = (googleVerification || bingVerification)
   : undefined;
 
 export const metadata: Metadata = {
-  title: 'Venture Atlas — Startup & Business News in 60 Words',
+  title: 'Venture Atlas — Real-Time Startup Intelligence & Venture Briefs',
   description:
     'Venture Atlas delivers rapid, high-impact news and editorial deep-dives across venture capital, startups, tech breakthroughs, founders, and public markets.',
   keywords: [
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Venture Atlas Editorial Board' }],
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: 'Venture Atlas — Startup & Business News in 60 Words',
+    title: 'Venture Atlas — Real-Time Startup Intelligence & Venture Briefs',
     description:
       'Venture Atlas delivers rapid, high-impact news across venture capital, startups, and tech-business.',
     url: SITE_URL,

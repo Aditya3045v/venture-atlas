@@ -18,6 +18,10 @@ function mapCaseStudy(item: any): CaseStudyItem {
     outcome: item.outcome,
     body: item.body,
     coverImage: item.cover_image,
+    photoCredit: item.photo_credit,
+    canvasData: item.canvas_data,
+    seoTitle: item.seo_title,
+    seoDescription: item.seo_description,
     categoryId: item.category_id,
     category: item.category
       ? {

@@ -257,27 +257,7 @@ export async function getCurrentUser(req?: Request | any): Promise<StaffUser | n
       if (staff) return staff;
     }
 
-    // 3. Direct inspection of va_admin_session cookie on req
-    const hasAdminSessionOnReq =
-      req?.cookies?.get?.('va_admin_session')?.value === '1' ||
-      (req?.headers?.get?.('cookie') || '').includes('va_admin_session=1') ||
-      req?.headers?.get?.('x-admin-session') === '1';
-
-    if (hasAdminSessionOnReq) {
-      return {
-        id: '3e78fffb-51ee-47cc-9a50-533475822164',
-        email: 'admin@ventureatlas.in',
-        name: 'Venture Atlas Super Admin',
-        role: 'SUPER_ADMIN',
-        avatar: null,
-        plan: 'ENTERPRISE',
-        bio: null,
-        is_active: true,
-        mfaEnabled: false,
-      };
-    }
-
-    // 4. Next.js headers & cookies context fallback (for Server Components where req is not passed)
+    // 3. Next.js headers & cookies context fallback (for Server Components where req is not passed)
     try {
       const { cookies, headers } = await import('next/headers');
       const headerStore = headers();
@@ -296,21 +276,6 @@ export async function getCurrentUser(req?: Request | any): Promise<StaffUser | n
           email: adminEmail || '',
           name: adminName || (isOwner ? 'Venture Atlas Super Admin' : 'Staff Member'),
           role: isOwner ? 'SUPER_ADMIN' : adminRole,
-          avatar: null,
-          plan: 'ENTERPRISE',
-          bio: null,
-          is_active: true,
-          mfaEnabled: false,
-        };
-      }
-
-      // Check va_admin_session in cookieStore
-      if (cookieStore.get('va_admin_session')?.value === '1') {
-        return {
-          id: '3e78fffb-51ee-47cc-9a50-533475822164',
-          email: 'admin@ventureatlas.in',
-          name: 'Venture Atlas Super Admin',
-          role: 'SUPER_ADMIN',
           avatar: null,
           plan: 'ENTERPRISE',
           bio: null,
