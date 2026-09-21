@@ -47,6 +47,12 @@ function AdminLoginForm() {
       if (data.token) {
         document.cookie = `va_admin_token=${data.token}; path=/; max-age=2592000; SameSite=Lax`;
       }
+      if (data.staffSession) {
+        document.cookie = `va_staff_session=${data.staffSession}; path=/; max-age=2592000; SameSite=Lax`;
+        try {
+          localStorage.setItem('va_staff_session', data.staffSession);
+        } catch {}
+      }
       document.cookie = 'va_admin_session=1; path=/; max-age=2592000; SameSite=Lax';
 
       await new Promise(r => setTimeout(r, 100));

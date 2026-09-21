@@ -13,9 +13,14 @@ export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {
   try {
     let token: string | undefined;
 
-    // 1. Fast path: check document.cookie for explicit va_admin_token
+    // 1. Fast path: check document.cookie for explicit va_staff_session and va_admin_token
     if (typeof document !== 'undefined') {
       const cookieStr = document.cookie || '';
+
+      const staffMatch = cookieStr.match(/(?:^|;\s*)va_staff_session=([^;]+)/);
+      if (staffMatch && staffMatch[1]) {
+        headers.set('x-staff-session', decodeURIComponent(staffMatch[1]));
+      }
 
       const match = cookieStr.match(/(?:^|;\s*)va_admin_token=([^;]+)/);
       if (match && match[1]) {
@@ -52,21 +57,30 @@ export async function adminFetch(input: RequestInfo | URL, init: RequestInit = {
       }
     }
 
-    // 2. Fast path fallback: check localStorage for any Supabase auth token
-    if (!token && typeof window !== 'undefined' && window.localStorage) {
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && (key.includes('-auth-token') || key.includes('sb-'))) {
-          try {
-            const raw = localStorage.getItem(key);
-            if (raw) {
-              const parsed = JSON.parse(raw);
-              if (parsed?.access_token) {
-                token = parsed.access_token;
-                break;
+    // 2. Fast path fallback: check localStorage for staff session or Supabase auth token
+    if (typeof window !== 'undefined' && window.localStorage) {
+      if (!headers.has('x-staff-session')) {
+        const storedStaff = localStorage.getItem('va_staff_session');
+        if (storedStaff) {
+          headers.set('x-staff-session', storedStaff);
+        }
+      }
+
+      if (!token) {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.includes('-auth-token') || key.includes('sb-'))) {
+            try {
+              const raw = localStorage.getItem(key);
+              if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed?.access_token) {
+                  token = parsed.access_token;
+                  break;
+                }
               }
-            }
-          } catch {}
+            } catch {}
+          }
         }
       }
     }

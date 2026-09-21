@@ -35,6 +35,12 @@ async function performSignOut(request: Request) {
       path: '/',
       maxAge: 0,
     });
+    response.cookies.set({
+      name: 'va_staff_session',
+      value: '',
+      path: '/',
+      maxAge: 0,
+    });
   } catch {
     // Ignore
   }

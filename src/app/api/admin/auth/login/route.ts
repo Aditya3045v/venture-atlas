@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { logAuditEvent } from '@/lib/audit';
+import { signStaffSession, STAFF_SESSION_COOKIE } from '@/lib/auth/staff-session';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,11 +75,14 @@ export async function POST(req: NextRequest) {
       mfaEnabled: false,
     };
 
+    const staffSessionToken = signStaffSession(staffUser as any);
+
     // 3. Prepare response and set secure session cookies
     const response = NextResponse.json({
       success: true,
       user: staffUser,
       token: authData.session.access_token,
+      staffSession: staffSessionToken,
       expiresAt: authData.session.expires_at,
     });
 
@@ -92,6 +96,14 @@ export async function POST(req: NextRequest) {
 
     // 30-day explicit admin access token cookie
     response.cookies.set('va_admin_token', authData.session.access_token, {
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60,
+      sameSite: 'lax',
+      httpOnly: false,
+    });
+
+    // 30-day HMAC-signed staff session cookie
+    response.cookies.set(STAFF_SESSION_COOKIE, staffSessionToken, {
       path: '/',
       maxAge: 30 * 24 * 60 * 60,
       sameSite: 'lax',

@@ -35,16 +35,26 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
   const [loading, setLoading] = useState<boolean>(!initialUser);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(!!initialUser);
 
-  const syncAdminCookie = useCallback((isActive: boolean, token?: string | null) => {
+  const syncAdminCookie = useCallback((isActive: boolean, token?: string | null, staffSession?: string | null) => {
     try {
       if (isActive) {
         document.cookie = 'va_admin_session=1; path=/; max-age=2592000; SameSite=Lax';
         if (token) {
           document.cookie = `va_admin_token=${token}; path=/; max-age=2592000; SameSite=Lax`;
         }
+        if (staffSession) {
+          document.cookie = `va_staff_session=${staffSession}; path=/; max-age=2592000; SameSite=Lax`;
+          try {
+            localStorage.setItem('va_staff_session', staffSession);
+          } catch {}
+        }
       } else {
         document.cookie = 'va_admin_session=; path=/; max-age=0; SameSite=Lax';
         document.cookie = 'va_admin_token=; path=/; max-age=0; SameSite=Lax';
+        document.cookie = 'va_staff_session=; path=/; max-age=0; SameSite=Lax';
+        try {
+          localStorage.removeItem('va_staff_session');
+        } catch {}
       }
     } catch {}
   }, []);
@@ -91,7 +101,7 @@ export function AdminAuthGuard({ children, initialUser }: AdminAuthGuardProps) {
               setIsAuthorized(true);
               setLoading(false);
             }
-            syncAdminCookie(true);
+            syncAdminCookie(true, undefined, data.staffSession);
             return;
           }
         }
